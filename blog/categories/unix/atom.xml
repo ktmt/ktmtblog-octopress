@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Blog kỹ thuật máy tính]]></title>
-  <link href="http://ktmt.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: unix | Blog kỹ thuật máy tính]]></title>
+  <link href="http://ktmt.github.com/blog/categories/unix/atom.xml" rel="self"/>
   <link href="http://ktmt.github.com/"/>
   <updated>2013-04-01T00:45:09+07:00</updated>
   <id>http://ktmt.github.com/</id>
@@ -19,7 +19,7 @@
     <updated>2013-04-01T00:39:00+07:00</updated>
     <id>http://ktmt.github.com/blog/2013/04/01/gioi-thieu-ve-unix-process</id>
     <content type="html"><![CDATA[<p>Là một kỹ sư lập trình hệ thống, một server guy, hay là một sys admin, sys dev,
-sys ops,&#8230; phần lớn thời gian bạn sẽ phải làm việc trên hệ thống Unix.
+sys ops,... phần lớn thời gian bạn sẽ phải làm việc trên hệ thống Unix.
 Để làm việc trên Unix, chúng ta tương tác với hệ điều hành thông qua các
 lệnh (command). Mỗi lệnh trên Unix khi thực thi sẽ run một process hoặc một
 group các processes.</p>
@@ -42,7 +42,7 @@ ra. Nói cách khác mỗi dòng code của bạn, sẽ được thực thi trê
 
 <p>Unix cung cấp tool <code>ps</code> để list ra tất cả các process đang chạy trên hệ thống</p>
 
-<div>
+<p><div>
   <pre><code class='bash'>$&gt; ps -e -opid,ppid,user,rss,command
 PID   PPID  USER     RSS      COMMAND
 1     0     root     152      init [2]
@@ -58,7 +58,7 @@ PID   PPID  USER     RSS      COMMAND
 24480 24479 vagrant  2328     -bash
 24591 24480 vagrant  1060     ps -e -opid,ppid,user,rss,command</code></pre>
 </div>
-
+</p>
 
 <p>Ở đây, mình chạy lênh <code>ps</code> và show ra các thuộc tính <code>pid,ppid,user,rss,command</code>
 của process (chú ý (1) <code>ps</code> có rất nhiều option để chạy, nếu bạn muốn hiểu chỉ
@@ -92,15 +92,19 @@ tuỳ vào từng hệ thống.</p>
 <p>Trên Linux bạn có thể xem và thay đổi giá trị mặc định của Process ID maximum
 bằng cách thay đổi file <code>/proc/sys/kernel/pid_max</code></p>
 
-<div>
-  <pre><code class='bash'># read current maximum value of process id
-$&gt; cat /proc/sys/kernel/pid_max
-32768
+<p><div>
+  <pre><code class='bash'>&lt;/p&gt;
 
-# set maximum value for process id
-$&gt; echo 40000 &gt; /proc/sys/kernel/pid_max</code></pre>
+&lt;h1&gt;read current maximum value of process id&lt;/h1&gt;
+
+&lt;p&gt;$&gt; cat /proc/sys/kernel/pid_max
+32768&lt;/p&gt;
+
+&lt;h1&gt;set maximum value for process id&lt;/h1&gt;
+
+&lt;p&gt;$&gt; echo 40000 &gt; /proc/sys/kernel/pid_max</code></pre>
 </div>
-
+</p>
 
 <p>Khi process ID tăng đến giá trị maximum value, hệ điều hành (OS) sẽ quay trở lại
 đánh số từ một giá trị cụ thế (một số tài liệu nói giá trị này với Linux là 300,
@@ -113,24 +117,29 @@ bài viết này của tôi sẽ tập trung vào ngôn ngữ Ruby</p>
 
 <p>Trong Ruby, muốn lấy Process ID của process hiện tai, bạn sử dụng <code>Process.pid</code>.</p>
 
-<div>
-  <pre><code class='ruby'># file test_pid.rb
-puts &quot;Process pid: #{Process.pid}&quot;</code></pre>
-</div>
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
 
+&lt;h1&gt;file test_pid.rb&lt;/h1&gt;
+
+&lt;p&gt;puts &quot;Process pid: #{Process.pid}&quot;</code></pre>
+</div>
+</p>
 
 <p>Dòng code trên gọi tới hàm <code>puts</code> - hàm này có tác dụng in một String ra màn hình.
 Chúng ta có thể manipulate các String trong Ruby thông qua các syntax #{}. Code
 ruby trong #{ } sẽ được thực hiện trước khi truyền cho String</p>
 
-<div>
-  <pre><code class='ruby'>$&gt; irb
+<p><div>
+  <pre><code class='ruby'>$&gt; irb&lt;/p&gt;
 
-irb(main):001:0&gt; puts &quot;Example for String manipulate: 1 + 2 = #{1 + 2}&quot;
+&lt;p&gt;irb(main):001:0&gt; puts &quot;Example for String manipulate: 1 + 2 = #{1 + 2}&quot;
 Example for String manipulate: 1 + 2 = 3
-=&gt; nil</code></pre>
-</div>
+=&gt; nil&lt;/p&gt;
 
+&lt;p&gt;</code></pre>
+</div>
+</p>
 
 <p>(Các file Ruby có extension là .rb. Để chạy một file ruby, bạn dùng lệnh
  <code>ruby &lt;file_name&gt;</code>. Không cần phải compile, rất đơn giản phải không)</p>
@@ -153,11 +162,14 @@ của một node chính là các process con của process ứng với node đó
 
 <p>Trong Ruby, để lấy ra parent process id của một process, chúng ta sử dung <code>Process.ppid</code></p>
 
-<div>
-  <pre><code class='ruby'># file test_ppid.rb
-puts &quot;Process id #{Process.pid}, parent process id #{Process.ppid}&quot;</code></pre>
-</div>
+<p><div>
+  <pre><code class='ruby'>&lt;/p&gt;
 
+&lt;h1&gt;file test_ppid.rb&lt;/h1&gt;
+
+&lt;p&gt;puts &quot;Process id #{Process.pid}, parent process id #{Process.ppid}&quot;</code></pre>
+</div>
+</p>
 
 <p>Cũng rõ ràng đấy chứ. Liệu tôi có quên gì nữa không nhỉ?</p>
 
@@ -207,7 +219,7 @@ Vì sao ư? Vì process con được tạo ra với fork có 2 đặc điểm:</
 <p>Điều này có nghĩa là nếu trong process cha, bạn đã định nghĩa biến a, và gán
 giá trị cho nó, process con cũng có thể sử dụng biến đó.</p>
 
-<p>Uhm&#8230; Không phải như thế sẽ dẫn đến tình trạng 2 process cùng thay đổi một biến
+<p>Uhm... Không phải như thế sẽ dẫn đến tình trạng 2 process cùng thay đổi một biến
 hay sao, vả lại chẳng phải các process là độc lập về bộ nhớ.</p>
 
 <p>À, tức là thế này, khi fork một process mới, bộ nhớ của process con và process
@@ -235,7 +247,7 @@ incomming connection tới các children process là được thực hiện trê
 Điều này làm cho việc dispatch các incomming connection là rất nhanh</li>
 <li>Mỗi process sẽ accept các connection từ shared socket và xử lý chúng riêng biệt</li>
 <li>Main process sẽ kiểm soát các children process. (cung cấp lệnh để tắt tất cả
-các children process, tạo một child process mới khi một child process bị crash&#8230;)</li>
+các children process, tạo một child process mới khi một child process bị crash...)</li>
 </ul>
 
 
@@ -251,7 +263,7 @@ thuật ban đầu với Process. Còn rất nhiều vấn đề chưa đề c�
 <ul>
 <li>Tương tác giữa các process (IPC)</li>
 <li>Điều khiển các process</li>
-<li>Orphaned, daemon, zoombie, process &#8230;</li>
+<li>Orphaned, daemon, zoombie, process ...</li>
 </ul>
 
 
