@@ -9,8 +9,8 @@
   <meta name="author" content="kỹ thuật máy tính">
 
   
-  <meta name="description" content="Là một kỹ sư lập trình hệ thống, một server guy, hay là một sys admin, sys dev,
-sys ops,&#8230; phần lớn thời gian bạn sẽ phải làm việc trên hệ thống &hellip;">
+  <meta name="description" content="Mở đầu Khi học C cơ bản, chắc hẳn bạn sẽ gặp cách dùng từ khoá static như ví dụ dưới đây: #include &lt;stdio.h&gt; void count(int i)
+{ static int num &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,190 @@ sys ops,&#8230; phần lớn thời gian bạn sẽ phải làm việc trên h�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/06/tu-khoa-static-trong-c/">Ý Nghĩa Của Từ Khóa Static Trong C</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-06T00:00:00+07:00" pubdate data-updated="true">Apr 6<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/04/06/tu-khoa-static-trong-c/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Mở đầu</h2>
+
+<p>Khi học C cơ bản, chắc hẳn bạn sẽ gặp cách dùng từ khoá static như ví dụ dưới đây:</p>
+
+<div>
+  <pre><code class='c'>#include &lt;stdio.h&gt;
+
+void count(int i)
+{
+    static int num = 0;
+    num += i;
+    printf(&quot;current value of num: %d\n&quot;, num);
+}
+
+int main()
+{
+    count(1);
+    count(3);
+    return 0;
+}</code></pre>
+</div>
+
+
+<p>Kết quả khi chạy chương trình sẽ là:</p>
+
+<div>
+  <pre><code class='bash'>current value of num: 1
+current value of num: 4</code></pre>
+</div>
+
+
+<p>Biến num khai báo static như trên có 2 đặc điểm:</p>
+
+<ol>
+<li>Do được khai báo static nên chỉ được khởi tạo 1 lần duy nhất và tồn tại suốt thời gian chạy của chương trình. Giá trị của biến count sẽ được tích luỹ mỗi khi hàm count được gọi.</li>
+<li>Do khai báo trong nội bộ hàm count nên biến chỉ có thể được nhìn thấy bởi các câu lệnh trong hàm count. Nói cách khác, biến nm là 1 biến nội bộ (local variable).</li>
+</ol>
+
+
+<p>Tuy vậy bạn sẽ bất ngờ khi bắt gặp những cách sử dung static trong như ví dụ dưới đây:</p>
+
+<div>
+  <pre><code class='c'>#include &lt;stdio.h&gt;
+
+static int a = 0;
+
+static void count(int i)
+{
+    static int num = 0;
+    num += i;
+    printf(&quot;current value of num: %d\n&quot;, num);
+}
+
+int main()
+{
+    a += 1;
+    printf(&quot;value of a: %d\n&quot;, a);
+    count(1);
+    count(3);
+    return 0;
+}</code></pre>
+</div>
+
+
+<p>ta bắt gặp static ở 2 nơi nữa:</p>
+
+<ol>
+<li>static trong khai báo hàm</li>
+<li>static trong khai báo biến toàn cục</li>
+</ol>
+
+
+<h2>2 từ khoá static này có ngữ nghĩa như thế nào?</h2>
+
+<p>Để hiểu được ngữ nghĩa mới của static này, ta cần hiểu 1 khái niệm: đơn vị biên dịch (translation unit).</p>
+
+<p>Mỗi project thường được viết trên nhiều file (vì mục đích phân chia module, đảm bảo tính dễ bảo trì). Mỗi file.c trong dự án sẽ là 1 đơn vị biên dịch. Quá trình biên dịch 1 project C sẽ là: biên dịch các đơn vị độc lập <em>.c ra các object file </em>.o (*.obj) và liên kết (link) các đơn vị object file thành chương trình.</p>
+
+<p>Mỗi đơn vị sẽ có các thủ tục (procedure) hoặc function riêng. Code ở 1 đơn vị biên dịch có thể sử dụng thủ tục hoặc hàm, hay cả biến toàn cục ở đơn vị biên dịch khác. Ví dụ:</p>
+
+<div>
+  <pre><code class='c'>//-----------------------
+//A.c
+
+int avar;
+
+void a() {};
+
+void b() {};
+
+// -----------------------
+//C.c
+
+extern int avar;
+
+void c() {};
+
+void d() {};</code></pre>
+</div>
+
+
+<p>thì trong a() của A.c ta có thể gọi c() một cách thoải mái. Biến avar sẽ được sử dụng cả ở A.c và C.c (biến toàn cục thực thụ!)</p>
+
+<p>Để hạn chế việc sử dụng này (tránh va đụng tên hàm giữa các đơn vị biên dịch), người ta đưa khái niệm hàm tĩnh (static function) và biến tĩnh (static global variable).</p>
+
+<p>Ngữ nghĩa:</p>
+
+<ul>
+<li>Biến toàn cục tĩnh sẽ có phạm vi trên đơn vị biên dịch. Điều đó có nghĩa là đơn vị khác không có cách nào truy cập được biến này.</li>
+<li>Hàm tĩnh sẽ có phạm vi trên đơn vị biên dịch. Điều đó có nghĩa đơn vị khác không thể truy cập được hàm này.</li>
+</ul>
+
+
+<p>Do đó</p>
+
+<div>
+  <pre><code class='c'>//-----------------
+//A.c
+
+static int avar;
+
+static void a() {};
+
+void b() {};
+
+//------------------
+//C.c
+
+extern int avar;
+
+void c() {};
+
+void d() {};</code></pre>
+</div>
+
+
+<p>Nếu ta khai báo static như trên, các hàm c, d trong C.c sẽ không thể nào truy cập được hàm a cũng như biến avar (dù rằng avar được khai báo extern trong C.c).</p>
+
+<h2>Tóm lược</h2>
+
+<p>static có 2 ngữ nghĩa:</p>
+
+<ul>
+<li>Khi được sử dụng trong phạm vi toàn cục của 1 đơn vị biên dịch, static hạn chế truy cập từ các đơn vị biên dịch khác (áp dụng với cả hàm và biến toàn cục).</li>
+<li>Khi được sự dụng trong phạm vi cục bộ của 1 thủ tục hay hàm, static có nghĩa là biến được khai báo tồn tại trong suốt thời gian chạy của chương trình và chỉ được khởi tạo 1 lần duy nhất.</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -362,6 +546,10 @@ thuật ban đầu với Process. Còn rất nhiều vấn đề chưa đề c�
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/06/tu-khoa-static-trong-c/">Ý nghĩa của từ khóa static trong C</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/01/gioi-thieu-ve-unix-process/">Giới thiệu về Unix process</a>
