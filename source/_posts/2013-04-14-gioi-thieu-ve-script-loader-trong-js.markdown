@@ -30,9 +30,5 @@ dependent scripts, và bảo đảm dependency của các script đó.
 
 
 Một ví dụ đơn giản:
-{% gist 5378918  %}
 Và kết quả đạt được là:
 =>Load script bằng script loader:
-
-
-
