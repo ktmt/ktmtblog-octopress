@@ -9,9 +9,9 @@ categories:
 ##I.Script loader là gì và tại sao lại cần nó ##
 Trong javascript, khi cần include một thư viện, hay một module từ ngoài vào, chắc hản mọi
 web developer đều nghĩ ngay đến việc include vào html:
-{% highlight html %}
+{% codeblock include direct - include.html %}
  <script src="http://yourhost/script.js" ></script>
-{% endhighlight %} 
+{% endcodeblock %} 
 
 Vậy include trực tiếp script tag vào html có gì không tốt?
 
@@ -59,9 +59,9 @@ các script/module và các dependency của chúng từ ngoài vào một cách
 Thực tế gọi là một qui chuẩn, nhưng AMD chỉ đơn thuần qui định 2 rule cơ bản:
 
 * Interface cho hàm define()
-{% highlight javascript %}
+{% codeblock define define.js %}
  define(id?, dependencies?, factory);
-{% endhighlight %} 
+{% endcodeblock %} 
 + param id: qui định id của module được load vào, [?] là do param này là optional, có thể bỏ qua
 + param dependencies: là 1 **array** các module dependency của module được load vào, param này cũng là optional
 + param factory: là đoạn script dùng để initialze cho module sẽ được load vào. factory() sẽ chỉ được execute một lần 
@@ -76,11 +76,11 @@ Function define **nên** có property tên là amd. Việc này giúp tránh con
 là define, và trong property này sẽ định nghĩa là module của bạn có cho phép nhiều version trên cùng một document không
  ( khi module của bạn đã conform theo AMD, thì chắc chắn trong hàm require phải có đoạn check là đã có property
 này hay chưa  và check giá trị của nó).
-{% highlight javascript %}
+{% codeblock amd - amd.js %}
 define.amd = {
   multiversion: true
 };
-{% endhighlight %}
+{% endcodeblock %}
 Nói đến đây thì chấc sẽ có bạn thắc mắc, hoặc chưa hiểu rõ use case của cái AMD này như thế nào, nó được dùng ở đâu, ở script
 loader, ở module, hay ở dom. Câu trả lời là AMD sẽ được dùng ở script loader và ở module. Cụ thể hơn là trong module của bạn,
 nếu bạn muốn module đó được load async thông qua script loader, mà script loader đó lại load theo chuẩn AMD, thì đương nhiên
@@ -88,15 +88,15 @@ module của bạn cũng sẽ phải conform theo AMD, bằng cách là có hàm
 Còn script loader bản thân cũng là một module, thì tất nhiên cũng phải tuân theo AMD.
 
 Một cách ngắn gọn, giả sử bạn có một module X
-{% highlight javascript %}
+{% codeblock module - module.js %}
 X = (function() {
   var prop = {};
   return prop;  
 })()
-{% endhighlight %}
+{% endcodeblock %}
 Bạn muốn module đó nói với bên ngoài là: tao lã X, tao có các dependency là Y, Z, khi init tao thì mày làm thế này, thế này nhé
 thì bạn sẽ làm theo AMD api theo cách như sau: 
-{% highlight javascript %}
+{% codeblock module with amd module.js %}
 X = (function() {
   var prop = {};
   prop.define = function(name, deps, callback) {  
@@ -107,7 +107,7 @@ X = (function() {
   
   return prop;  
 })()
-{% endhighlight %} 
+{% endcodeblock %} 
 
 Và khi script loader nhìn vào cái define của bạn, nó sẽ biêt nên làm thê nào. Rất đơn giản phải không.
 
@@ -128,7 +128,7 @@ tại có jQuery là support AMD internally, còn lại thì phần nhiều các
 angular đểu không support AMD internally. Để sử dụng các module này với một script loader theo chuẩn AMD 
 như require.js thì bạn đơn giản chỉ cần viết lại hàm define tại app của bạn, ví dụ như trong trường hợp của 
 backbone:
-{% highlight javascript %}
+{% codeblock backbone with amd - bbamd.js %}
 require.config({
   paths: {
     jquery: 'libs/jquery/jquery',
@@ -144,7 +144,7 @@ require([
       App.initialize();
     }
 );
-{% endhighlight %}
+{% endcodeblock %}
 
 Vậy tại sao AMD có rất nhiều merit như thê mà một số module nổi tiêng lại bỏ qua việc conform theo AMD, ví dụ 
 tiêu biểu nhất là emberjs. Theo như Tom Dale, một trong những creator của emberjs thì AMD yêu cầu quá nhiều

@@ -212,13 +212,14 @@ end
 
 desc "Default deploy task"
 task :deploy do
+  #first push to octopress repo
+  Rake::Task[:push_octopress]
   # Check if preview posts exist, which should not be published
   if File.exists?(".preview-mode")
     puts "## Found posts in preview mode, regenerating files ..."
     File.delete(".preview-mode")
     Rake::Task[:generate].execute
   end
-
   Rake::Task[:copydot].invoke(source_dir, public_dir)
   Rake::Task["#{deploy_default}"].execute
 end
@@ -380,4 +381,13 @@ desc "list tasks"
 task :list do
   puts "Tasks: #{(Rake::Task.tasks - [Rake::Task[:list]]).join(', ')}"
   puts "(type rake -T for more detail)\n\n"
+end
+
+desc "push to octopress also"
+task :push_octopress do
+  puts "pushing to octopress repo"
+  system "git add ."
+  system "git commit -m \"Octopress push new post\""
+  puts "current branch is not master" and return unless branch == 'master'
+  system "git push octopress master"
 end
