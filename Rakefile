@@ -390,3 +390,10 @@ task :push_octopress do
   system "git commit -m \"Octopress push new post\""
   system "git push octopress master"
 end
+
+desc "do all"
+task :do do
+  Rake::Task[:generate]
+  Rake::Task[:deploy]
+  Rake::Task[:push_octopress]
+end

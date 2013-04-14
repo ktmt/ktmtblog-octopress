@@ -37,8 +37,21 @@ và insert vào dom. Việc này khác việc include script bằng html là nó
 là request đến server chứa script cần load thông qua XHR, lấy kết quả về, và eval đoạn script đó.
 
 Ví dụ về script loader:
-{% gist 5378918 %}
-
+{% codeblock script loader demo - loader.js %}
+(function(){
+  var scList = new Array();
+  scList[0] = 'http://cdnjs.cloudflare.com/ajax/libs/ace/0.2.0/ace.js';
+  scList[1] = 'http://cdnjs.cloudflare.com/ajax/libs/alloy-ui/1.0.1/aui-min.js';
+  scList[2] = 'http://cdnjs.cloudflare.com/ajax/libs/barman/0.2.2/barman.min.js';
+  var len = scList.length;
+  for (var i=0; i<len; i++) {
+    var script = document.createElement('script');
+    var firstScript = document.getElementsByTagName('script')[0];
+    script.src = scList[i];
+    firstScript.parentNode.insertBefore(script, firstScript);
+ }
+})()
+{% endcodeblock %}
 Và kết quả đạt được là:
 
 1. Load script trực tiếp vào html tag
@@ -71,7 +84,15 @@ Thực tế gọi là một qui chuẩn, nhưng AMD chỉ đơn thuần qui đ�
 script khác
 
 Một ví dụ đơn giản cho AMD interface:
-{% gist 5380787 %}
+{% codeblock amd if - amd.js %}
+define(["alpha"], function (alpha) {
+  return {
+    verb: function(){
+      return alpha.verb() + 2;
+    }
+  };
+});
+{% endcodeblock %}
 
 * Property amd cho hàm define:
 Function define **nên** có property tên là amd. Việc này giúp tránh conflict khi module của bạn đã có một function tên 

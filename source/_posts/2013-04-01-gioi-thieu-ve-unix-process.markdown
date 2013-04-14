@@ -30,7 +30,7 @@ ra. Nói cách khác mỗi dòng code của bạn, sẽ được thực thi trê
 
 Unix cung cấp tool `ps` để list ra tất cả các process đang chạy trên hệ thống
 
-{% highlight bash %}
+{% codeblock proc.sh %}
 $> ps -e -opid,ppid,user,rss,command
 PID   PPID  USER     RSS      COMMAND
 1     0     root     152      init [2]
@@ -45,7 +45,7 @@ PID   PPID  USER     RSS      COMMAND
 24479 24477 vagrant  1996     sshd: vagrant@pts/0
 24480 24479 vagrant  2328     -bash
 24591 24480 vagrant  1060     ps -e -opid,ppid,user,rss,command
-{% endhighlight %}
+{% endcodeblock %}
 
 
 Ở đây, mình chạy lênh `ps` và show ra các thuộc tính `pid,ppid,user,rss,command`
@@ -77,14 +77,14 @@ tuỳ vào từng hệ thống.
 Trên Linux bạn có thể xem và thay đổi giá trị mặc định của Process ID maximum
 bằng cách thay đổi file `/proc/sys/kernel/pid_max`
 
-{% highlight bash %}
+{% codeblock main.sh %}
 # read current maximum value of process id
 $> cat /proc/sys/kernel/pid_max
 32768
 
 # set maximum value for process id
 $> echo 40000 > /proc/sys/kernel/pid_max
-{% endhighlight %}
+{% endcodeblock %}
 
 Khi process ID tăng đến giá trị maximum value, hệ điều hành (OS) sẽ quay trở lại
 đánh số từ một giá trị cụ thế (một số tài liệu nói giá trị này với Linux là 300,
@@ -97,23 +97,22 @@ bài viết này của tôi sẽ tập trung vào ngôn ngữ Ruby
 
 Trong Ruby, muốn lấy Process ID của process hiện tai, bạn sử dụng `Process.pid`.
 
-{% highlight ruby %}
-# file test_pid.rb
+{% codeblock pid.rb %}
 puts "Process pid: #{Process.pid}"
-{% endhighlight %}
+{% endcodeblock %}
 
 Dòng code trên gọi tới hàm `puts` - hàm này có tác dụng in một String ra màn hình.
 Chúng ta có thể manipulate các String trong Ruby thông qua các syntax #{}. Code
 ruby trong #{ } sẽ được thực hiện trước khi truyền cho String
 
-{% highlight ruby %}
+{% codeblock irb.rb %}
 $> irb
 
 irb(main):001:0> puts "Example for String manipulate: 1 + 2 = #{1 + 2}"
 Example for String manipulate: 1 + 2 = 3
 => nil
 
-{% endhighlight %}
+{% endcodeblock %}
 
 (Các file Ruby có extension là .rb. Để chạy một file ruby, bạn dùng lệnh
  `ruby <file_name>`. Không cần phải compile, rất đơn giản phải không)
@@ -136,10 +135,10 @@ của một node chính là các process con của process ứng với node đó
 
 Trong Ruby, để lấy ra parent process id của một process, chúng ta sử dung `Process.ppid`
 
-{% highlight ruby %}
+{% codeblock ppid.rb %}
 # file test_ppid.rb
 puts "Process id #{Process.pid}, parent process id #{Process.ppid}"
-{% endhighlight %}
+{% endcodeblock %}
 
 Cũng rõ ràng đấy chứ. Liệu tôi có quên gì nữa không nhỉ?
 

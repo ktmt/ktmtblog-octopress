@@ -11,7 +11,7 @@ categories:
 
 Khi học C cơ bản, chắc hẳn bạn sẽ gặp cách dùng từ khoá static như ví dụ dưới đây:
 
-{% highlight c %}
+{% codeblock file1.c %}
 #include <stdio.h>
 
 void count(int i)
@@ -27,14 +27,14 @@ int main()
     count(3);
     return 0;
 }
-{% endhighlight %}
+{% endcodeblock %}
 
 Kết quả khi chạy chương trình sẽ là:
 
-{% highlight bash %}
+{% codeblock file2.sh %}
 current value of num: 1
 current value of num: 4
-{% endhighlight %}
+{% endcodeblock %}
 
 Biến num khai báo static như trên có 2 đặc điểm:
 
@@ -43,7 +43,7 @@ Biến num khai báo static như trên có 2 đặc điểm:
 
 Tuy vậy bạn sẽ bất ngờ khi bắt gặp những cách sử dung static trong như ví dụ dưới đây:
 
-{% highlight c %}
+{% codeblock main.c %}
 #include <stdio.h>
 
 static int a = 0;
@@ -63,7 +63,7 @@ int main()
     count(3);
     return 0;
 }
-{% endhighlight %}
+{% endcodeblock %}
 
 ta bắt gặp static ở 2 nơi nữa:
 
@@ -78,7 +78,7 @@ Mỗi project thường được viết trên nhiều file (vì mục đích ph�
 
 Mỗi đơn vị sẽ có các thủ tục (procedure) hoặc function riêng. Code ở 1 đơn vị biên dịch có thể sử dụng thủ tục hoặc hàm, hay cả biến toàn cục ở đơn vị biên dịch khác. Ví dụ:
 
-{% highlight c %}
+{% codeblock main.c %}
 //-----------------------
 //A.c
 
@@ -96,7 +96,7 @@ extern int avar;
 void c() {};
 
 void d() {};
-{% endhighlight %}
+{% endcodeblock %}
 
 thì trong a() của A.c ta có thể gọi c() một cách thoải mái. Biến avar sẽ được sử dụng cả ở A.c và C.c (biến toàn cục thực thụ!)
 
@@ -109,7 +109,7 @@ Ngữ nghĩa:
 
 Do đó
 
-{% highlight c %}
+{% codeblock main.c %}
 //-----------------
 //A.c
 
@@ -127,7 +127,7 @@ extern int avar;
 void c() {};
 
 void d() {};
-{% endhighlight %}
+{% endcodeblock %}
 
 Nếu ta khai báo static như trên, các hàm c, d trong C.c sẽ không thể nào truy cập được hàm a cũng như biến avar (dù rằng avar được khai báo extern trong C.c).
 
