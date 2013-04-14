@@ -57,7 +57,8 @@ AMD là viết tắt của Asynchronous Module Definition, là một qui chuẩn
 các script/module và các dependency của chúng từ ngoài vào một cách không đồng bộ (asynchronously).
 
 Thực tế gọi là một qui chuẩn, nhưng AMD chỉ đơn thuần qui định 2 rule cơ bản:
-1. Interface cho hàm define()
+
+* Interface cho hàm define()
 {% highlight javascript %}
  define(id?, dependencies?, factory);
 {% endhighlight %} 
@@ -70,7 +71,7 @@ script khác
 Một ví dụ đơn giản cho AMD interface:
 {% gist 5380787 %}
 
-2. Property amd cho hàm define:
+* Property amd cho hàm define:
 Function define **nên** có property tên là amd. Việc này giúp tránh conflict khi module của bạn đã có một function tên 
 là define, và trong property này sẽ định nghĩa là module của bạn có cho phép nhiều version trên cùng một document không
  ( khi module của bạn đã conform theo AMD, thì chắc chắn trong hàm require phải có đoạn check là đã có property
@@ -112,10 +113,11 @@ Và khi script loader nhìn vào cái define của bạn, nó sẽ biêt nên l�
 
 ##III Các scriptloader nổi tiếng và việc áp dụng AMD đang ở đâu##
 Hiện nay, có một số script loader nổi tiếng như:
-* YepNope: http://yepnopejs.com/
-* RequireJs: http://requirejs.org/docs/
-* Headjs: https://github.com/headjs/headjs
-* CurlJs: https://github.com/cujojs/curl
+
++ YepNope: http://yepnopejs.com/
++ RequireJs: http://requirejs.org/docs/
++ Headjs: https://github.com/headjs/headjs
++ CurlJs: https://github.com/cujojs/curl
 Ngoài ra trong bộ toolkit nổi tiếng Dojo cũng có sử dụng script loader
 
 Trong những script ở trên thì có requirejs và curljs là sử dụng AMD, còn lại 2 script còn lại là yepnope
