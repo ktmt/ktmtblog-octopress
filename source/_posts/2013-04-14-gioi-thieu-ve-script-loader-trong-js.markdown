@@ -4,6 +4,8 @@ title: "giới thiệu về script loader trong js"
 date: 2013-04-14 00:23
 comments: true
 categories: 
+- programming
+- javascript
 ---
 
 ##I.Script loader là gì và tại sao lại cần nó ##
