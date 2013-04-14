@@ -388,6 +388,5 @@ task :push_octopress do
   puts "pushing to octopress repo"
   system "git add ."
   system "git commit -m \"Octopress push new post\""
-  puts "current branch is not master" and return unless branch == 'master'
   system "git push octopress master"
 end
