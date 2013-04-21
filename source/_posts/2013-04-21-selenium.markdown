@@ -1,0 +1,95 @@
+---
+layout: post
+title: "Selenium và Jenkins"
+date: 2013-04-21 23:56
+comments: true
+categories: 
+- programming
+- test
+- ut 
+---
+
+
+## Mở đầu ##
+
+Trong quy trình phát triển một phần mềm, Test nói chung và UT nói riêng luôn là những process rất quan trọng. Tuy nhiên khi Application càng ngày càng lớn thì khối lượng Test càng phình to và cost sẽ vượt quá cost bỏ ra cho coding. Để giảm thiểu số công sức bỏ ra, developer thường hay dùng các test framework có sẵn và tìm cách automation quy trình test. 
+
+PHP có PHPUnit, Java có JUnit, Python có nose v.v... Tuy nhiên bên ngoài UT vẫn còn những quy trình bắt buộc phải làm bằng tay. Bạn viết ra 1 website, bạn muốn test trên website bạn có đúng những link hiện ra như bạn muốn hay ko, màu sắc có thay đổi hay không, khi user click vào link có nhảy đến page target và mang theo hàm callback đã định nghĩa hay ko v.v...
+
+Trong bài viết này sẽ giới thiệu 2 công cụ automation UT và test khá nổi tiếng. Sủ dụng và tận dụng, đôi khi sẽ thành những tool mang lại hiệu quả bất ngờ trong cả những công việc khác :D
+
+## Selenium ##
+
+Selenium - nói 1 cách đơn giản, là công cụ automator tất cả các thao tác của con người trên browser. Bạn có thể giả lập 1 set các action, VD như: < User bật browser lên, User vào trang web của bạn, User đi theo link route linh1-link2-link3-link4, User click vào download button trong link 4 >
+
+Selenium có 2 cách dùng, Selenium Server và Selenium WebDriver. Hiện nay trên firefox đã có plugin Selenium IDE. Bạn có thể dùng nó để record lại hành động của mình và export ra test code in Python, Ruby, C#, hoặc Java. Selenium test code chạy ở chế độ bình thường sẽ tự động bật browser của bạn lên và tự hành động y như bạn đã làm trước dó :D
+
+Tuy nhiên để quy trình test không tốn quá nhiều tài nguyên, người ta thường hay config để selenium chạy headless trên Linux. VD như Python sẽ có package Xvfb, cho phép tạo display chạy ngầm và bật web driver trên đó.
+
+## Bypass the working attendance system ##
+Ví dụ đơn giản nhất: giả sử, công ty bạn có hệ thống check time làm việc của nhân viên. Nhân viên khi đến công ty phải login vào page, ấn vào button "Đã đến". Tương tự khi về lại phải login vào và ấn thêm button "Đã về"
+
+Có selenium trong tay, bạn có thể giải quyết vấn đề khá đơn giản, viết 1 test script mô phỏng toàn bộ quá trình nói trên, đặt cron cho nó chạy vào giờ đến và giờ về chỉ định
+
+```
+from selenium import webdriver
+...
+class SeleniumHeadlessTest(unittest.TestCase):
+    def setUp(self):
+        mock= ""
+        self.driver = webdriver.Firefox()
+        self.base_url = mock
+        self.verificationErrors = []
+ 
+    def test_in(self):
+        name=""
+        pwd=""
+        driver = self.driver
+        driver.get(self.base_url)
+        driver.find_element_by_xpath("..._name_field_").send_keys(name)
+        driver.find_element_by_xpath("..._password_field_").send_keys(pwd)
+        driver.find_element_by_xpath("..._login_button_").click()
+...
+```
+
+Thêm 1 ít sleep time random(VD random trong khoảng 10 phút) và đặt cron 30 10 * * 1-5. Bạn đã có 1 con bot luôn check time in cho bạn trong khoảng 10h30-10h40 mỗi ngày trong tuần
+:D Với package Xvfb như đã nói ở trên, con bot sẽ chạy silent bên trong máy (hay máy ảo) và ko tạo ra 1 notice nào. Redirect log ra 1 file ẩn sẽ giúp manage quá trình chạy tốt hơn.
+
+Khi xuất hiện 1 số ngày nghỉ ko phải thứ 7, CN mà muốn đặt lịch để con bot ko chạy, vấn đề sẽ hơi phức tạp hơn 1 chút. bạn cần phải viết 1 con bot observer khác check ngày và update lại cron job
+
+## Jenkins ##
+Tiếp tục về quy trình test automation, Jenkins là 1 tool xuất sắc khác. Jenkins đại diện cho khái niệm CI (continuous integration). 
+
+Bạn muốn cả bộ UT/test chạy mỗi ngày vào 10 h sáng. Mội ngày system leader đến check log để biết có bao nhiêu test đang fail, bao nhiêu error, quản lý health theo từng ngày, bạn hoàn toàn có thể dùng test framework + cronjob
+
+Tuy nhiên Jenkins cung cấp 1 giao diện trực quan hơn, percentage, graph, coverage report, code convention checking ,v.v..... hoàn toàn tự động, có thể wake up theo svn hoặc git. Jenkins cũng có rất nhiều plugin và support hầu hết các test framework.
+
+VD về Jenkins jobs
+
+Source Code Management
+{% img /images/SeleniumAndJenkins/JenkinsJobs.png 'image' 'images' %}
+
+Wake up by SVN or Git
+{% img /images/SeleniumAndJenkins/WakeupGit.png 'image' 'images' %}
+
+Execute Shell
+{% img /images/SeleniumAndJenkins/ExecuteShell.png 'image' 'images' %}
+
+Optional shell execute bên cạnh các jobs định nghĩa sẵn chạy các test framework. Ở đây là ví dụ của run Selenium trên Nose. Bạn có thể config trực tiếp trên plugin Selenium của Jenkins
+ 
+Build Trigger
+{% img /images/SeleniumAndJenkins/BuildTriggers.png 'image' 'images' %}
+
+Đặt lịch, tương tự cron jobs
+
+1 recommended config là tạo 1 jenkins job observer check svn và git, nếu có update tại subsystem nào thì run jenkins jobs tương ứng với subsystem đấy. 1 sub system lại có thể chứa nhiều test framework cần wakeup (VD với PHP + Oracle, bạn có PHPUnit và utPLSQL)
+
+## Kết luận ##
+
+* Cron jobs: package lập lịch của Linux
+
+* Xvfb: package tạo display ảo của Python
+
+* Selenium: là công cụ giả lập action trên browser, bắt chước y hệt thao tác của user và ko loại trừ bất cứ hạn chế nào
+
+* Jenkins: CI Test Tool, dùng để lập lịch, theo dõi và quản lý health của system
