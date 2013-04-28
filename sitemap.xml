@@ -2,19 +2,43 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://ktmt.github.com/blog/2013/04/01/gioi-thieu-ve-unix-process/</loc>
-        <lastmod>2013-04-01T00:45:00+07:00</lastmod>
+        <lastmod>2013-04-29T00:40:08+07:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/04/06/tu-khoa-static-trong-c/</loc>
-        <lastmod>2013-04-07T20:52:40+07:00</lastmod>
+        <lastmod>2013-04-29T00:40:08+07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://ktmt.github.com/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js/</loc>
+        <lastmod>2013-04-29T00:40:08+07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://ktmt.github.com/blog/2013/04/21/selenium/</loc>
+        <lastmod>2013-04-29T00:40:08+07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://ktmt.github.com/blog/2013/04/24/happy-programmer/</loc>
+        <lastmod>2013-04-29T00:40:08+07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://ktmt.github.com/blog/2013/04/25/dem-bit/</loc>
+        <lastmod>2013-04-29T00:40:08+07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://ktmt.github.com/blog/2013/04/28/make-fun-with-unix-command-prompt/</loc>
+        <lastmod>2013-04-29T00:40:08+07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://ktmt.github.com/blog/2013/04/29/python-object-model/</loc>
+        <lastmod>2013-04-29T01:14:24+07:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/archives/</loc>
-        <lastmod>2013-04-07T20:52:40+07:00</lastmod>
+        <lastmod>2013-04-29T01:14:24+07:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/</loc>
-        <lastmod>2013-04-07T20:52:40+07:00</lastmod>
+        <lastmod>2013-04-29T01:14:24+07:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/robots.txt</loc>

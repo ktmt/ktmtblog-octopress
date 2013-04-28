@@ -1,82 +1,805 @@
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>Blog kỹ thuật máy tính</title>
-  <meta name="author" content="kỹ thuật máy tính">
+	<meta charset="utf-8">
+	<title>Blog kỹ thuật máy tính</title>
+	<meta name="author" content="kỹ thuật máy tính">
 
-  
-  <meta name="description" content="Mở đầu Khi học C cơ bản, chắc hẳn bạn sẽ gặp cách dùng từ khoá static như ví dụ dưới đây: #include &lt;stdio.h&gt; void count(int i)
-{ static int num &hellip;">
-  
+	
+	<meta name="description" content="1. old-style và new-style class trong Python Bạn đã nghe ở đâu đó &#8220;In python everything is object&#8221;. Điều đó có nghĩa là gì? Liệu nó có &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://ktmt.github.com">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Blog kỹ thuật máy tính" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
-  
-
+	<link href="/atom.xml" rel="alternate" title="Blog kỹ thuật máy tính" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">Blog kỹ thuật máy tính</a></h1>
-  
-    <h2>kỹ thuật máy tính</h2>
-  
-</hgroup>
+<body>
+	<header id="header" class="inner"><h1><a href="/">Blog kỹ thuật máy tính</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:ktmt.github.com">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		
+    
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+	<form class="search" action="http://google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:ktmt.github.com">
+	</form>
+</nav>
 
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+	
+		
+	
+	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/04/29/python-object-model/">
+		
+			Python Object Model</a>
+	</h2>
+	<div class="entry-content">
+		<h3>1. old-style và new-style class trong Python</h3>
+
+<p>Bạn đã nghe ở đâu đó &#8220;In python everything is object&#8221;.</p>
+
+<p>Điều đó có nghĩa là gì? Liệu nó có giống các ngôn ngữ lập trình khác,
+mọi thứ trong Python đều là instance của BaseClass? Tôi đã nghe về <strong>object</strong>
+class trong Python, liệu đó có phải là Base Class của Python</p>
+
+<p>Python có hai mô hình <strong>old-style</strong> và <strong>new-style</strong>. Thực tế trong các phiên bản cũ của Python, không có một class cụ thể nào cho mọi object cả. Nhưng từ Python 2.2, với sự giới thiệu của <strong>new-style</strong> class, chúng ta có thể biến mọi object là instance của <strong>object</strong></p>
+
+<p>Từ Python 2.1 trở về trước, <strong>old-style</strong> class là lựa chọn duy nhất cho các lập trình viên. Khái niệm <strong>old-style</strong> class là không liên quan tới khái niệm kiểu. Nếu x là một instance của old-style class, x.<strong>class</strong> sẽ trỏ tới class của x, nhưng type(x) thì không.</p>
+
+<figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># old-style class was define by statement:
+</span><span class='line'>    #   class &lt;class-name>: &lt;class definition body>
+</span><span class='line'>    >>> class A:
+</span><span class='line'>            pass
+</span><span class='line'>    # type of class A is 'type' because 'type' is base-class in Python
+</span><span class='line'>    >>> type(A)
+</span><span class='line'>    &lt;type 'type'>
+</span><span class='line'>
+</span><span class='line'>    # make an instance of A
+</span><span class='line'>    >>> a = A()
+</span><span class='line'>    # a.__class__ reference to class A
+</span><span class='line'>    >>> a.__class__
+</span><span class='line'>    &lt;class __main__.A at 0x10aea6ce8>
+</span><span class='line'>    # bute type of a is not A but 'instance'
+</span><span class='line'>    >>> type(a)
+</span><span class='line'>    &lt;type 'instance'>
+</span><span class='line'>    # 'instance' still is 'type' class
+</span><span class='line'>    >>> type(type(a))
+</span><span class='line'>    &lt;type 'type'></span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>new-style</strong> class được giới thiệu với động lực tạo ra một mô hình object thống nhất cho Python. Mọi đối tượng sẽ được kế thừa từ <strong>object</strong></p>
+
+<figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>>>> object.__class__
+</span><span class='line'>    &lt;type 'type'>
+</span><span class='line'>    >>> type(object)
+</span><span class='line'>    &lt;type 'type'></span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>new-style</strong> class được định nghĩa bằng cách kế thừa từ <strong>object</strong> class.
+Khác với <strong>old-style</strong> class, nếu x là một instance của <strong>new-style</strong> class, cả x.<strong>class</strong> và type(x) đều trỏ về class của x</p>
+
+<figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>>>> class A(object): pass
+</span><span class='line'>    >>> A.__class__
+</span><span class='line'>    &lt;type 'type'>
+</span><span class='line'>    >>> x = A()
+</span><span class='line'>    >>> x.__class__
+</span><span class='line'>    >>> type(x)
+</span><span class='line'>    &lt;type 'A'></span></code></pre></td></tr></table></div></figure>
+
+
+<p>Để tương thích với các phiên bản của của Python, class mặc định vẫn được để ở <strong>old-style</strong>.
+Nếu chúng ta muốn sử dụng <strong>new-style</strong>, chúng ta bắt buộc phải định nghĩa class là subclass của <strong>object</strong></p>
+
+<h3>2. Điểm khác biệt giữa <strong>old-style</strong> và <strong>new-style</strong> class</h3>
+
+<p>Điểm khác biệt rõ nhất được nhìn thấy trong hệ thống kiểu.
+Hãy xem làm thế nào <strong>old-style</strong> class và <strong>new-style</strong> class thực hiện việc đa kế thừa. &#8220;Đa kế thừa&#8221; là khả năng một class có thể kế thừa từ nhiều class khác nhau. Nếu A kế thừa từ B, A là subclass(child class, derived class) của B, còn B là superclass (base class, parent class của A)</p>
+
+<p>Đa kế thừa cho phép một class A có thể có nhiều cha (theo tôi, đa kế thừa không thực sự tốt. có nhiều cách để giải quyết vấn đề đa kế thừa, hãy xem Ruby với mixins hay Java với interface thực hiện điều đó. tôi thực sự rất thích mô hình mixins của Ruby)</p>
+
+<p>Trong mô hình object của Python, mọi class đều có thuộc tình <strong><strong>bases</strong></strong> để lưu lại tất cả các class cha của nó, theo thứ tự xuất hiện của việc thừa kế.</p>
+
+<figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>>>> class A: pass
+</span><span class='line'>    >>> class B: pass
+</span><span class='line'>    >>> class C(A, B): pass
+</span><span class='line'>    >>> C.__bases__
+</span><span class='line'>    (&lt;class __main__.A at 0x10aea6ce8>, &lt;class __main__.B at 0x10af8de20>)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Vấn đề của đa kế thừa đó là thự tự của các superclass.</p>
+
+<p>Khi một instance của một subclass truy cập vào một thuộc tính (hoặc một method),</p>
+
+<pre><code>đầu tiên, nó sẽ tìm kiếm các thuộc tính được định nghĩa trong không gian của nó.
+Nếu thuộc tình (hoặc method) không được tìm thấy, nó sẽ tìm đến không gian
+của class (thuộc tính của class, hàm của class). Nếu vẫn không tìm thấy, nó
+sẽ tìm kiếm tiếp trong không gian của các super class. Khi một class có nhiều
+super class, thứ tự của các super class chính là thứ tự khi tìm kiếm
+</code></pre>
+
+<p>Trong <strong>old-style</strong> class, thứ tự của các superclass là depth-first, left-to-right
+theo thứ tự xuất hiện trong bases list</p>
+
+<figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>>>> class A:
+</span><span class='line'>          def test(self): print "A"
+</span><span class='line'>    >>> class B(A):
+</span><span class='line'>          def test(self): print "B"
+</span><span class='line'>    >>> class C(A)
+</span><span class='line'>          def test(self): print "C"
+</span><span class='line'>    >>> class D(B, C): pass
+</span><span class='line'>    # order of D.__bases__ is (B, C) so D.test => B.test
+</span><span class='line'>    >>> D().test()
+</span><span class='line'>    "B"
+</span><span class='line'>    >>> class E(C, B): pass
+</span><span class='line'>    # order of E.__bases__ is (C, B) so E.test => C.test
+</span><span class='line'>    >>> E().test()
+</span><span class='line'>    "C"
+</span><span class='line'>
+</span><span class='line'>    # so what if we make an class is inherited from D, E
+</span><span class='line'>    # note that, D and E are inherited from 2 class B, C with reverse order
+</span><span class='line'>    >>> class F(D, E): pass
+</span><span class='line'>    # in old-style class, it does not matter, the searching method
+</span><span class='line'>    # only care about order of superclass in __bases__
+</span><span class='line'>    # so now F.test => D.test => B.test
+</span><span class='line'>    >>> F().test()
+</span><span class='line'>    "B"
+</span><span class='line'>
+</span><span class='line'>    # even if we make an class is inherited from A, D, E
+</span><span class='line'>    # it still works and test() method will be test() method of A
+</span><span class='line'>    >>> class G(A, D, E): pass
+</span><span class='line'>    >>> G().test()
+</span><span class='line'>    "A"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cách phân giải method của <strong>old-style</strong> khá đơn giản và dễ hiểu. Nhưng nếu chúng
+ta áp dụng quy luật này, đôi khi chúng ta sẽ phạm phải sai lầm khi kế thừa.
+Giả sử, một class G được kế thừa từ A, D và E, trong khi A là parent class của D và E.
+Rõ ràng, một lỗi nên được Python ném ra trong trường hợp này để bảo về việc kế thừa vòng tròn như vậy</p>
+
+<p><strong>new-stlye</strong> giải quyết vấn đề này. <strong>new-style</strong> sử dụng MRO (Method Resolution Order) được giới thiệu từ Python 2.3</p>
+
+<figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def mro(cls):
+</span><span class='line'>    """
+</span><span class='line'>    Return ordering of superclass of cls
+</span><span class='line'>    This ordering was used when we want to access class instance atrribute
+</span><span class='line'>
+</span><span class='line'>    `cls`: class type we want to resolve
+</span><span class='line'>
+</span><span class='line'>    @raise `TypeError` if cannot resolution superclass order
+</span><span class='line'>    @return `list` of class
+</span><span class='line'>    """
+</span><span class='line'>    bases_cls = cls.__bases__
+</span><span class='line'>    mro_base_lists = [mro(base_cls) for base_cls in bases_cls]
+</span><span class='line'>    mro_list = [cls]
+</span><span class='line'>    while mro_base_lists:
+</span><span class='line'>        # find the good head
+</span><span class='line'>        # good head is head of a list which is not is tail of any list in mro_base_lists
+</span><span class='line'>        list_head = (x[0] for x in mro_base_lists)
+</span><span class='line'>        set_tails = set()
+</span><span class='line'>        for x in mro_base_lists:
+</span><span class='line'>            set_tails.update(x[1:])
+</span><span class='line'>
+</span><span class='line'>        good_head = None
+</span><span class='line'>        for head in list_head:
+</span><span class='line'>            if head not in set_tails:
+</span><span class='line'>                good_head = head
+</span><span class='line'>                break
+</span><span class='line'>
+</span><span class='line'>        # if cannot find good_head, raise TypeError
+</span><span class='line'>        if not good_head:
+</span><span class='line'>            raise TypeError
+</span><span class='line'>        else:
+</span><span class='line'>            # add to mro_list
+</span><span class='line'>            mro_list.append(good_head)
+</span><span class='line'>
+</span><span class='line'>            # remove good_head in all list and add to mro_list
+</span><span class='line'>            for alist in mro_base_lists:
+</span><span class='line'>                try:
+</span><span class='line'>                    alist.remove(good_head)
+</span><span class='line'>                except Exception:
+</span><span class='line'>                    pass
+</span><span class='line'>            mro_base_lists = [x for x in mro_base_lists if x]
+</span><span class='line'>    return mro_list
+</span><span class='line'>
+</span><span class='line'>class A: pass
+</span><span class='line'>class B(A): pass
+</span><span class='line'>class C(A): pass
+</span><span class='line'>class D(B, C): pass
+</span><span class='line'>class E(C, B): pass
+</span><span class='line'>class F(D, E): pass
+</span><span class='line'>
+</span><span class='line'>def test_mro():
+</span><span class='line'>    assert mro(A) == [A]
+</span><span class='line'>    print "Test1 passed"
+</span><span class='line'>
+</span><span class='line'>    assert mro(B) == [B, A]
+</span><span class='line'>    print "Test2 passed"
+</span><span class='line'>
+</span><span class='line'>    assert mro(C) == [C, A]
+</span><span class='line'>    print "Test 3 passed"
+</span><span class='line'>
+</span><span class='line'>    assert mro(D) == [D, B, C, A]
+</span><span class='line'>    print "Test 4 passed"
+</span><span class='line'>
+</span><span class='line'>    assert mro(E) == [E, C, B, A]
+</span><span class='line'>    print "Test 5 passed"
+</span><span class='line'>
+</span><span class='line'>    try:
+</span><span class='line'>        mro(F)
+</span><span class='line'>    except Exception as e:
+</span><span class='line'>        assert isinstance(e, TypeError)
+</span><span class='line'>        print "Test 6 passed"
+</span><span class='line'>
+</span><span class='line'>test_mro()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Y tướng của MRO algorith là sắp xếp các super class với điều kiện:
+Nếu B là cha của C, B luôn luôn đứng trước C trong list.</p>
+
+<p>Với điều kiện đó, Python sẽ ném ra một lỗi nếu chúng ta cố gắng định nghĩa class
+D kế thừa từ (B, C), E kế thừa từ (C, B) và F kế thừa từ (D, E)</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
   
+
+
+<time datetime="2013-04-29T00:00:00+07:00" pubdate data-updated="true">Apr 29<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming/'>programming</a>, <a class='category' href='/blog/categories/python/'>python</a>
+
+
+</div>
+	
+		<div class="comments"><a href="/blog/2013/04/29/python-object-model//index.html#disqus_thread">Comments</a></div>
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/04/28/make-fun-with-unix-command-prompt/">
+		
+			Fun With Unix Command Prompt</a>
+	</h2>
+	<div class="entry-content">
+		<p><img src="/images/UnixCommandPrompt/unix.png"></p>
+
+<p>Chắc hẳn là một unix user (có thể mac os hay linux), lại là một programmer, bạn sẽ phải hàng ngày sử dụng terminal cho việc lập trình, quản lý source, monitoring hệ thống&#8230;. Và đã là người sử dụng terminal hàng ngày thì cái bạn phải nhìn thấy nhiều nhất chính là cái gọi là &#8220;Command prompt&#8221;</p>
+
+<p><img src="/images/UnixCommandPrompt/unix-terminal.png"></p>
+
+<p>Cái command prompt này thì tùy thuộc vào shell bạn đang dùng (bash hay zsh..) mà sẽ có những cách tùy chỉnh khác nhau. Mình thì đang dùng bash (chắc một ngày gần đây sẽ chuyển qua zsh), nên bài viết này sẽ áp dụng chủ yếu ở trên bash. Command prompt ở trên bash thì gồm có 4 biến môi trường (environment variable) chính: PS1, PS2, PS3, PS4 (Ngoài ra còn có COMMAND_PROMPT nữa nhưng thằng này na ná PS1 nên mình không đề cập đến). Để sử dụng các biến môi trường này thì bạn chỉ cần:</p>
+
+<figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span> <span class="o">=</span> <span class="s2">&quot;abcxyz&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>hoặc đặt đoạn code đó vào ~/.bash_profile hoặc ~/.bashrc rồi</p>
+
+<figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.bash_profile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>để shell load lại các setting trong file tương ứng là biến môi trường đã được set.</p>
+
+<p>Dưới đây mình sẽ nói về việc sử dụng các biến môi trường này để biến cái command prompt của bạn trở nên <strong>màu mè</strong> và <strong>thân thiện</strong> hơn. Về thứ tự thì mình sẽ nói về cái có độ tùy biến thấp đến cao</p>
+
+<h2>PS2</h2>
+
+<p>Trong 5 biến mình nói ở trên thì biến PS2 là thằng nhàm chán nhất. PS2 gọi là Continuation interactive prompt. Tại sao lại gọi như vậy thì: khi một câu lệnh unix quá dài thì bạn thường dùng kí hiệu &#8220;&#92;&#8221; ở cuối dòng để làm cho câu lệnh đấy thành multiple-line (gõ được ở nhiều dòng). Và PS2 là biến quyết định <strong>cái gì được in ở đầu mỗi dòng đó</strong></p>
+
+<p><img src="/images/UnixCommandPrompt/PS2-1.png"></p>
+
+<p>Cách sử dụng thì vô cùng đơn giản:</p>
+
+<figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS2</span><span class="o">=</span><span class="s2">&quot;continue here -&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Và kết quả là:</p>
+
+<p><img src="/images/UnixCommandPrompt/PS2-2.png"></p>
+
+<p>Chắc bạn cũng đã hình dung ra cách dùng PS2 thế nào rồi nhỉ, và hẳn bạn đang nghĩ, biến này chả có gì thú vị lắm nhỉ, mình cũng nghĩ thế :D. Thế nên chúng ta qua thằng tiếp theo nhé: PS3</p>
+
+<h2>PS3</h2>
+
+<p>PS3 gọi là biến dùng cho việc &#8220;select inside shell script&#8221;
+Giả sử bạn phải viết một đoạn script cho lựa chọn (ví dụ như bạn làm infra, phải viết script kiểu như: hãy chọn giữa install rvm hay rbenv chẳng hạn).Thì chắc đoạn script đó sẽ trông như sau:</p>
+
+<figure class='code'><figcaption><span>select select.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Select your option:&quot;</span>
+</span><span class='line'><span class="k">select </span>i in 1<span class="o">)</span> 2<span class="o">)</span> 3<span class="o">)</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'><span class="k">  case</span> <span class="nv">$i</span> in
+</span><span class='line'>    x<span class="o">)</span>....
+</span><span class='line'>    y<span class="o">)</span>....
+</span><span class='line'>    z<span class="o">)</span>....
+</span><span class='line'>  <span class="k">esac</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'><span class="c"># /.select.sh</span>
+</span><span class='line'>x<span class="o">)</span>....
+</span><span class='line'>y<span class="o">)</span>....
+</span><span class='line'>z<span class="o">)</span>....
+</span><span class='line'>
+</span><span class='line'><span class="c">#? 1</span>
+</span><span class='line'>x<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như các bạn thấy, prompt để lựa chọn khi không có setting gì sẽ là <strong>không hiện gì</strong>, quite boring
+Giờ nếu chúng ta chỉ cần setting PS3 cho đoạn code đó như sau</p>
+
+<figure class='code'><figcaption><span>select select.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code
+</span><span class='line'><span class="nv">PS3</span><span class="o">=</span><span class="s2">&quot;Select an option of installer (1-3): &quot;</span>
+</span><span class='line'><span class="k">select </span>i in 1<span class="o">)</span> 2<span class="o">)</span> 3<span class="o">)</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'><span class="k">  case</span> <span class="nv">$i</span> in
+</span><span class='line'>    x<span class="o">)</span>....
+</span><span class='line'>    y<span class="o">)</span>....
+</span><span class='line'>    z<span class="o">)</span>....
+</span><span class='line'>  <span class="k">esac</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'><span class="c"># /.select.sh</span>
+</span><span class='line'>x<span class="o">)</span>....
+</span><span class='line'>y<span class="o">)</span>....
+</span><span class='line'>z<span class="o">)</span>....
+</span><span class='line'>
+</span><span class='line'><span class="c">#? Select an option of installer (1-3): 1</span>
+</span><span class='line'>x<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như vậy là chúng ta sẽ có một cái prompt <strong>có hiện gì</strong>, use case để dùng thì chắc trong phần lớn các trường hợp sẽ là để cung cấp thông tin cho user về các option lựa chọn phía dưới. PS3 có vẻ khá useful trong một số case nhất định đúng không :D, tiếp theo chúng ta sẽ đến với PS4</p>
+
+<h2>PS4</h2>
+
+<p>Khi execute một đoạn script mà bạn muốn tracking output (để debug chẳng hạn), bạn sẽ dùng {set -x} để làm việc đó. ví dụ như đoạn code ở dưới đây:</p>
+
+<figure class='code'><figcaption><span>tracking tracking.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code tracking.sh
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>ls -all -lrt | grep xyz
+</span><span class='line'><span class="nb">pwd</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'>++ ls -all -lrt
+</span><span class='line'>++ grep xyz
+</span><span class='line'>drwxr-xr-x   2 doxuanhuy  staff   68 Apr 28 11:45 xyz
+</span><span class='line'>++ <span class="nb">pwd</span>
+</span><span class='line'>/Users/doxuanhuy/cur-project/android-globalit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như các bạn thấy, {set -x} sẽ output ra các câu lệnh được execute và prefix bằng cái &#8220;++&#8221;. 2 kí tự này có vè không thể hiện được gì nhỉ, và với PS4, bạn có thể thêm thông tin hữu ích cho việc debug như line number thông qua biến $LINENO, hay function name thông qua biến $FUNCNAME, hay script name thông qua biến $0</p>
+
+<figure class='code'><figcaption><span>tracking tracking.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code tracking.sh
+</span><span class='line'><span class="nb">export </span><span class="nv">PS4</span><span class="o">=</span><span class="s1">&#39;$0.$FUNCNAME $LINENO &#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>somefunction<span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    ls -all -lrt | grep xyz
+</span><span class='line'>      <span class="nb">pwd</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="nv">somefunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'>../test.sh. 8 somefunction
+</span><span class='line'>../test.sh.somefunction 5 ls -all -lrt
+</span><span class='line'>../test.sh.somefunction 5 grep xyz
+</span><span class='line'>drwxr-xr-x   2 doxuanhuy  staff   68 Apr 28 11:45 xyz
+</span><span class='line'>../test.sh.somefunction 6 <span class="nb">pwd</span>
+</span><span class='line'>/Users/doxuanhuy/cur-project/android-globalit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như vậy chúng ta đã có những thông tin khá hữu ích để debug đúng không.
+Và tiếp theo chúng ta sẽ đi đến bộ đôi thú vị nhất trong ngày: PS1 và COMMAND_PROMPT</p>
+
+<h2>PS1</h2>
+
+<p>Đây chính là biến quyết định cái gì sẽ hiện lên ở command prompt, và là biến có nhiều cái để hack nhất trong các loại PSx</p>
+
+<p><img src="/images/UnixCommandPrompt/PS1-1.png"></p>
+
+<p>Đầu tiên chúng ta sẽ nói về PS1
+Giả sử chúng ta muốn command prompt hiện lên Username, Hostname và full-path đến directory hiện tại, đơn giản chúng ta chỉ cần</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\u@\h \w&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đây \u là Username, \h là Hostname và \w là full path của current dir.
+Như vậy chúng ta sẽ có 1 cái prompt như dưới đây</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>doxuanhuy@xxx ~/cur-project/android-globalit&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Quite easy phải không :D
+Hay hơn chút nữa, bạn muốn hiện thêm current time, lên prompt, rất đơn giản:</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\$(date +%k:%M:%S) \w&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đây (date +%k:%M:%S) là để format date và biến nó thành variable thông qua $</p>
+
+<p>Và kết quả là</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>12:23:59 ~/cur-project/android-globalit&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ngoài ra còn rất nhiều cái bạn có thể cho vào command prompt để biến nó thêm phần phong phú như:</p>
+
+<ul>
+<li>!: The history number of the command</li>
+<li>$kernel_version: The output of the uname -r command from $kernel_version variable</li>
+<li>\$?: Status of the last command</li>
 </ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:ktmt.github.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
+
+
+<p>Hacking thêm chút nữa, bạn có thể thay đổi màu của từng phần trên command prompt thông qua 3 metacharacter sau:</p>
+
+<ul>
+<li>\e[ - Indicates the beginning of color prompt ( giống như cái &#8221;<sup>&#8221;</sup> của regex vậy)</li>
+<li>x;ym - Indicates color code. Use the color code values mentioned below ( bạn đặt x;ym ở trước node nào thì node đó sẽ được colorize theo màu đó)</li>
+<li>\e[m - indicates the end of color prompt (giống như cái &#8220;$&#8221; của regex)</li>
 </ul>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/06/tu-khoa-static-trong-c/">Ý Nghĩa Của Từ Khóa Static Trong C</a></h1>
-    
-    
-      <p class="meta">
-        
+
+<p>Một ví dụ đơn giản:</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\e[0;34m\u@\h \w&gt; \e[m&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoạn code trên có nghĩa là gì:</p>
+
+<p><img src="/images/UnixCommandPrompt/PS1-2.png"></p>
+
+<p>Hacking thêm một chút nữa, bạn hiện là một developer đang sử dụng git với rất nhiều repo, rất nhiều branch. Mỗi lần vào một repo nào đấy bạn lại phải {git branch} để xem bạn đang ở branch nào, bất tiện vô cùng. Bạn muốn prompt của bạn sẽ hiện branch name mỗi khi bạn vào folder của một repo nào đấy? Thật đơn giản, với backquote để execute bash command và sự trợ giúp của sed, bạn làm điều đó thật đơn giản:</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s1">&#39;\e[0;36m\u⌘ \e[0;35m\W \e[0;33m`git branch 2&gt; /dev/null | grep -e ^* | sed -E  s/^\*\ \(.+\)$/\(\1\)\ /`\e[m\]&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Trông có vẻ đáng sợ, nhưng thực ra lại rất đơn giản :D, Chúng ta sẽ đi từng phần nhé:</p>
+
+<ul>
+<li>\e[ : start của command prompt</li>
+<li>[0;36m\u⌘ : bạn tô màu phần user (\u) bởi 0;36m (màu xanh dương) và thêm vào đằng sau cái kí tự ⌘ (cho cool thôi :D)</li>
+<li>\e[0;35m\W : bạn tô màu phần directory hiện tại (\W) bởi 0;35m (màu hồng)</li>
+<li>\e[0;33m : tô màu <strong>toàn bộ phần đằng sau</strong> bởi màu 0;33m (màu vàng)</li>
+<li>git branch 2> /dev/null | grep -e ^* | sed -E  s/<sup>&#92;*\</sup> (.+)$/(&#92;\1)\ /: nguyên văn đoạn này sẽ như sau: đầu tiên bạn dùng &#8220;git branch&#8221; để lấy branch hiện tại. Trong trường hợp không ở trong git repo nào thì sẽ có lỗi ra stderr, bạn redirect cái lỗi này vào dev/null thông qua &#8220;2> /dev/null&#8221; để nó không hiện ra prompt (2 là stderr). Sau đấy bạn tìm line nào có * ở đầu (current git branch) thông qua việc pipe vào grep. Tìm được line đó rồi thì bạn sẽ tách phần đằng sau dấu * ra thông qua sed , và output phần đó ra ngoài với format (branch) thông qua $/(\1). Tất cả đoạn code này được để vào backquote để được execute trực tiếp mỗi khi PS1 được gọi. Và kết quả thật bất ngờ:</li>
+</ul>
+
+
+<p><img src="/images/UnixCommandPrompt/PS1-3.png"></p>
+
+<p>Looks so cool!!
+Ngoài ra bạn còn có rất nhiều thứ có thể hacking với PS1 như:</p>
+
+<ul>
+<li>\j the number of jobs currently managed by the shell</li>
+<li># the command number of this command</li>
+<li>\l the basename of the shell&#8217;s terminal device name
+&#8230;..
+mà bạn có thể tham khảo ở đây: http://www.thegeekstuff.com/2008/09/bash-shell-ps1-10-examples-to-make-your-linux-prompt-like-angelina-jolie/</li>
+</ul>
+
+
+<h2>Ending</h2>
+
+<p>Như vậy với PS[1-4], bạn đã có thể customize command prompt của bạn trở nên đẹp đẽ hơn, cool hơn và useful hơn. Trong các bài viết sắp tới mình sẽ nói về việc sử dụng các công cụ rất mạnh của unix family os như grep, sed, wc để giúp cho công việc development của bạn trở nên thú vị hơn :D. Happy hacking!</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
 
 
 
@@ -88,44 +811,799 @@
   
 
 
-<time datetime="2013-04-06T00:00:00+07:00" pubdate data-updated="true">Apr 6<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/04/06/tu-khoa-static-trong-c/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
+<time datetime="2013-04-28T00:06:00+07:00" pubdate data-updated="true">Apr 28<span>th</span>, 2013</time></div>
+	<div class="tags">
 
 
-  <div class="entry-content"><h2>Mở đầu</h2>
+	<a class='category' href='/blog/categories/linux-tips-tutorial/'>linux, tips, tutorial</a>
+
+
+</div>
+	
+		<div class="comments"><a href="/blog/2013/04/28/make-fun-with-unix-command-prompt//index.html#disqus_thread">Comments</a></div>
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/04/25/dem-bit/">
+		
+			Đếm Bit</a>
+	</h2>
+	<div class="entry-content">
+		<h2>Mở đầu</h2>
+
+<p>Bạn đang say sưa hacking code và bắt gặp một hàm với những con số bí ẩn như ở dưới đây:</p>
+
+<figure class='code'><figcaption><span>fbc.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">fbc</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">data</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Chắc hẳn bạn sẽ không khỏi hét lên: &#8220;what the fuck! Không hiểu gì hết&#8221; khi nhìn đoạn code này. Bạn hoàn toàn không hiểu mục đích của nó. Tên hàm không cho bạn một thông tin nào hữu ích. Những con số bí ẩn cùng phép toán >>, &amp;, + làm bạn rối.</p>
+
+<p>Nếu tôi nói với bạn fcb có nghĩa là &#8220;fast bit count&#8221; và hàm trên trả về số bit 1 của 1 số 32 bit (unsigned int trong C), tôi cá chắc chắn bạn sẽ không khỏi hoài nghi. Vậy chúng ta hãy thử  biên dịch chương trình và test thử hàm này. Tôi viết chương trình như dưới đây để test hàm fbc.</p>
+
+<figure class='code'><figcaption><span>test.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;assert.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">fbc</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">data</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">ans</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">ans</span> <span class="o">=</span> <span class="n">fbc</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">assert</span><span class="p">(</span><span class="n">ans</span> <span class="o">==</span> <span class="mi">2</span><span class="p">);</span>  <span class="c1">// 5 = 101b</span>
+</span><span class='line'>        <span class="n">ans</span> <span class="o">=</span> <span class="n">fbc</span><span class="p">(</span><span class="mi">198123</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">assert</span><span class="p">(</span><span class="n">ans</span> <span class="o">==</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// 198123 = 110000010111101011b</span>
+</span><span class='line'>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Kết quả chạy:</p>
+
+<div>
+  <pre><code class='bash'>$ gcc -o test test.c
+$ ./test
+$ echo $?
+0</code></pre>
+</div>
+
+
+<p>Chương trình chạy bình thường, cho kết quả bằng 0 chứng tỏ hàm fbc trả về giá trị như ta mong muốn.</p>
+
+<p><strong>Bạn sẽ thắc mắc</strong>: Tại sao hàm này lại có thể đếm được số bit 1? Chúng ta hãy cùng tìm hiểu cơ chế đếm của hàm này.</p>
+
+<h2>Cơ chế</h2>
+
+<p>Để có thể hiểu tại sao hàm này trả về số bit 1, ta hãy thử xem các con số 0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF và 0x0000FFFF có ý nghĩa gì.</p>
+
+<p>Bằng cách ấn máy tính, đổi từ hệ 16 sang hệ 2, ta có giá trị nhị phân của các số trên như bảng dưới đây:</p>
+
+<p>| 0x55555555   |   01010101010101010101010101010101   |
+| 0x33333333   |   00110011001100110011001100110011   |<br/>
+| 0x0F0F0F0F   |   00001111000011110000111100001111   |
+| 0x00FF00FF   |   00000000111111110000000011111111   |
+| 0x0000FFFF   |   00000000000000001111111111111111   |</p>
+
+<p>Ta nhận thấy các con số trên không hoàn toàn bí ẩn mà nó hoàn toàn có quy luật. Từ trên xuống dưới, các bit 1 xen kẽ nhau theo chu kỳ 1, 2, 4, 8, 16.</p>
+
+<p>Ta thử quay lại hàm <strong>fbc</strong> và xem cách con số này được sử dụng. Vì số 0x55555555 lên đến 32 bit nên rất khó theo dõi (nhiều 0 với 1 quá @.@), ta sẽ thử xét trường hợp số 8 bit với bit pattern không đổi (tức là số  0xFF). Dòng 1 của hàm fbc sẽ như dưới đây:</p>
+
+<p>data = (data &amp; 0x55) + ((data >> 1) &amp; 0x55);</p>
+
+<p>Giả sử data = 10110011b, ta sẽ có:
+data = 10110011 &amp; 01010101 + ((10110011 >> 1 &amp; 01010101)</p>
+
+<p><strong>&#8220;Dễ dàng&#8221;</strong> nhận thấy chuỗi bit của 0xFF có các bit 1 ở vị trí chẵn (0, 2, 4&#8230;) do vậy bằng cách &amp; data với 0xFF, ta đã loại trừ các bit 1 ở vị trí lẻ (1,3,5&#8230;). Do vậy kết quả của data &amp; 0x55 sẽ cho ra các bit 1 ở vị trí chẵn. Bằng cách dịch 1 bit của data, ta chuyển các bit từ vị trí lẻ sang vị trí chẵn, và lại &amp; với 0xFF, do đó đại lượng sau dấu cộng sẽ có các bit 1 ở vị trí chẵn. Kết quả của phép cộng sẽ cho ra số lượng bit ở vị trí lẻ và vị trí chẵn</p>
+
+<p>Lần tính 1
+|       data &amp; 01010101  | 00 01 00 01  |
+| (data >> 1)&amp; 01010101  | 01 01 00 01  |
+|                        | 01 10 00 10  |</p>
+
+<p>Do kết quả tối đa của phép + này là 2, khả năng kết quả phép cộng &#8220;tràn sang&#8221; vùng bit bên cạnh là không có. Sau lần tính thứ nhất, ta có kết quả của số bit 1 của cặp đôi bit cạnh nhau.</p>
+
+<p>Tất nhiên ở đây ta vẫn chua có kết quả số bit. Tuy nhiên ta sẽ áp dụng phương pháp tương tự cho cụm 4 bit.</p>
+
+<p>Nhìn dòng thứ 2 đoạn code bạn sẽ thấy: &#8230;1100110011b: 2 bit đan xen! Phép dịch bit bây giờ là >> 2.</p>
+
+<p>Lần tính 2
+|       data &amp; 00110011  | 00 10 00 10  |
+| (data >> 1)&amp; 00110011  | 00 01 00 00  |
+|                        | 00 11 00 10  |</p>
+
+<p>Như vậy ta có 4 bit đằng sau có tổng số bit là 2, 4 bit đâu có tổng số bit là 11 (3 trong hệ thập phân)!!!</p>
+
+<p>Áp dụng cách tính tương tự, ta có kết quả như ở dưới.
+Lần tính 3
+|       data &amp; 00001111  | 00 00 00 10  |
+| (data >> 1)&amp; 00001111  | 00 00 00 11  |
+|                        | 00 00 01 01  |</p>
+
+<p>Kết quả là 5, chính là số bit của data ban đầu!!</p>
+
+<p>Để tính số bit của 1 số 32 bit, ta chỉ việc tăng số bit của các &#8220;magic number&#8221; lên. Đấy là lý do ta có các số 0x55555555, 0x33333333, &#8230;</p>
+
+<p>Đến đây chắc hẳn bạn đã hiểu tại sao hàm <strong>fbc</strong> trả về số bit 1.</p>
+
+<h2>Tổng kết</h2>
+
+<p>Hy vọng với giải thích trên, bạn đã hiểu ý nghĩa sâu sắc đằng sau hàm fbc. Bạn sẽ vẫn hét &#8220;What the fuck!!!&#8221; nhưng lần này cho sự tuyệt vời không những cho sự ngắn gọn, tinh tế của đoạn code.</p>
+
+<h2>Tham khảo</h2>
+
+<ol>
+<li>http://graphics.stanford.edu/~seander/bithacks.html</li>
+<li>http://www.drpaulcarter.com/pcasm/</li>
+<li>http://download.savannah.gnu.org/releases/pgubook/ProgrammingGroundUp-1-0-booksize.pdf</li>
+</ol>
+
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-25T00:00:00+07:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming-bit-twiddling/'>programming, bit twiddling</a>
+
+
+</div>
+	
+		<div class="comments"><a href="/blog/2013/04/25/dem-bit//index.html#disqus_thread">Comments</a></div>
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/04/24/happy-programmer/">
+		
+			Happy Programmer</a>
+	</h2>
+	<div class="entry-content">
+		<p>Happy programmer là gì nhỉ, chắc ai đọc xong title của bài post này cũng không hiểu ý mình định nói đến là gì :D. Đầu tiên với cá nhân mình thì happy programmer là những programmer(lập trình viên), có khả năng kiếm được tiền và sống tốt bằng việc lập trình, họ training liên tục để trở thành better programmer, và họ hạnh phúc với cuộc sống như vậy. Nếu bạn đã và đang là một programmer, có nhiều lý do để bạn nên happy với việc đấy. Lý do là:</p>
+
+<ul>
+<li><p>Lý do đầu tiên là không happy thì bạn sẽ không làm được gì cả, đơn giản là vậy thôi. Bạn làm công việc gì cũng vậy, nếu bạn cảm thấy không thoải mái với nó thì tốt nhất là không nên làm, mỗi người chỉ có một cuộc sống, đừng phí thời gian làm những gì bạn không thích.</p></li>
+<li><p>Lý do thứ hai, bạn có biết là programmer là một trong số hiếm các ngành bạn được <strong>làm đúng cái bạn được học ra</strong>, và có thể <strong>kiếm tiền đủ sống</strong> với nó (Định nghĩa đủ sống của mình là đủ ăn no, tiêu không phải dè sẻn, đủ để thi thoảng đi du lịch, để thi thoàng mua sắm, tính theo tiền Việt với mình cứ lương tầm 1k2 trở lên mình gọi là đủ sống). Tất nhiên để có cái đủ sống đó thì bạn không thể là một average programmer, ít ra bạn phải là một người có kĩ năng tương xứng.</p></li>
+<li><p>Lý do thứ ba, với mình là một người không thích cuộc sống nhàm chán, thì cái nghề lập trình là cái nghề mà mỗi ngày đều có cái để mình suy nghĩ, để giải quyết. Niềm vui lớn nhất của mình là có vấn đề, giải quyết, và đem solution đi khoe với thằng đồng nghiệp, rồi nó tròn mắt ra thán phục, kể cũng sướng.</p></li>
+</ul>
+
+
+<p>Với từng đấy lý do thì chắc các bạn có thể thấy là, trở thành một happy programmer là một điều nên làm, đúng không :D. Chắc nhiều bạn thắc mắc mình có chỗ đứng thế nào mà lại khuyên bảo các bạn. Mình không kiếm nhiều tiền, và cũng không nổi tiếng, do đấy mình không thể khuyên bảo bất kì ai.Mình chỉ muốn chia sẻ là mình đang cực kì happy với việc mỗi ngày được code cái gì đó useful, tìm hiểu thêm được về công nghệ mới, bàn luận về thuật toán với mấy thằng bạn :D</p>
+
+<p> Hơi lạc đề một chút, thực trạng IT ở Việt Nam đang làm chúng ta không có nhiều happy programmer, hay đúng hơn là chỉ có một số ít programmer cảm thấy happy với công việc, mức lương và luôn cố gắng để hoàn thiện kĩ năng bản thân. IT Việt Nam hiện nay theo mình đang chia làm 2 mảng chính Start-up và Outsource. Ở bên Start-up với lực lượng chính là các venture (và một số các ông lớn như VNG) có vẻ xuất hiện nhiều happy programmer hơn,  mình chỉ biết sơ sơ về mảng này thông qua một vài người bạn, nên không dám nhận xét nhiều. Còn ở bên mảng Outsource, cái mảng mà đang chiếm phần lớn tỉ trọng trong mảng IT VN, thì thực trạng tỉ lệ công việc nhàm chán cao, không yêu cầu kĩ năng, cộng với tầm nhìn công nghệ hạn hẹp của các ông chủ thì đang có thực trạng là  các lập trình viên thường chăm chăm nhảy lên project manager. Việc đấy không có gì là sai cả, hoàn toàn đúng là khác, chỗ nào lương cao hơn, ta nhảy lên chỗ đó, là mình mình cũng làm thế. Cái sai ở đây là cái sai của những người lãnh đạo, mình nghĩ họ là những người không có tầm nhìn (đặc biệt là tầm nhìn về mặt công nghệ), họ có thể kiếm được tiền, rất nhiều tiền (có thể hàng chục tỉ, hàng trăm tỉ) nhưng cái đó chắc không còn lâu nữa, khi mà cái thị trường lao động rẻ màu mỡ VN không còn là duy nhất, và không còn chỗ để khai thác. Chính vì vậy nếu bạn là một người làm outsource, mà không cố để trở thành một happy programmer ngay khi còn có thể, thì không lâu nữa chắc mình sẽ gặp lại bạn ở đầu dốc Bưởi :D. Mình sẽ nói về outsource Việt Nam trong một bài khác.</p>
+
+<p>Quay lại vấn đề chính, hiện tại cá nhân mình thấy mình đang là một happy programmer :D. Tuy nhiên việc duy trì cái sự happy đấy đòi hỏi mình phải làm theo một số rule và duy trì một nhịp sống để luôn keep high motivation. Dưới đây là những cái mình đã và đang thực hiện hàng ngày,đó cũng là những rule chung mà nếu ai có điều kiện cũng nên thử làm, mình nghĩ nó sẽ ít nhiều có ích cho các bạn :</p>
+
+<ul>
+<li><p>Stay healthy: Một trong những đặc điểm chung của nerdy là sinh hoạt cực kì thiếu điều độ. Có một thời gian dài mình toàn ngủ lúc 4h, dậy lúc 12h, cho đến gần đây mình mới nhận thấy là sinh hoạt điều độ (ngủ lúc 12h, dậy 8h30, ngồi đọc sách, code một tí, ăn cơm, lên trường, tối về đúng giờ, ăn cơm đúng giờ, code một tí, đi ngủ) đem lại cho mình khả năng tập trung tốt hơn hẳn, và cũng đớ hẳn một số cảm giác khó chịu trước hay gặp như đầy bụng, buồn ngủ&#8230;</p></li>
+<li><p>Embrace the uncomfortable: sẵn sàng làm những việc không thoải mái cũng là những việc nên tập. Một ví dụ đơn giản nhất là làm unit-test. Đợt mới làm việc mình cực ghét unit-test (cũng một phần tại chỗ mình làm unit-test thiếu chuyên nghiệp quá). Kết quả thì là code bug , và khi code có thay đổi lớn về kiến trúc, không có unit-test thì chắc bạn chỉ có khóc, bạn sẽ không biết đoạn nào chạy đoạn nào không. Do đấy việc cố làm những gì mình cảm thấy không thoải mái vừa là một cách rèn luyện mình, mình tin là khi làm rồi bạn sẽ không còn cảm thấy việc gì là uncomfortable nữa.</p></li>
+<li><p>Learn a new programming language: Nhiều bạn chắc sẽ tự nghĩ, ngôn ngữ lập trình thì mình biết cả thùng, từ c, cpp, java, perl, python&#8230; Bạn nào nghĩ thế chắc nên đọc lại http://norvig.com/21-days.html của peter norvig. Học một ngôn ngữ mới, mình định nghĩa hiểu về ngôn ngũ đấy khi bạn có thể viết được một cái gì đấy useful bằng ngôn ngữ đó, một cái web crawler, một con chat-bot, một cái web,&#8230;, bạn hiểu ngôn ngữ đấy về mặt bản chất (vd như js thì ít ra phải hiểu prototype programming, module pattern, hay ruby thì hiểu metaprogramming, ruby vm,&#8230; python thì chí ít cũng nắm được cái decorator nó là cái gì, hay là new-style class với old-style class khác nhau thế nào). Học ngôn ngữ mới giúp bạn có cái nhìn rộng hơn, làm đầu óc bạn flexible hơn. Cá nhân mình thì thấy khi đã hiểu kĩ imperative programming thì bạn nên đọc thêm về declarative programming( ví dụ như haskell hay scala(functional programming) hay prolog(logic programming))</p></li>
+<li><p>Automate: automate là kĩ năng không thể thiếu của bất kì programmer nào. Bản chất của programmer là phải lazy and dumb. Lý do tại sao thì bạn tham khảo tại http://www.codinghorror.com/blog/2005/08/how-to-be-lazy-dumb-and-successful.html. Automate là bước đầu hiện thực hóa của lazy. Bạn phải gõ đi gõ lại một thứ, phải click đi click lại một thứ mà bạn vẫn miệt mài ngồi làm thì chắc bạn nên bỏ nghề đi thôi :D. Hãy viết tool automate bất cứ cái gì có thể.</p></li>
+<li><p>Learn more mathematic: Cái này thì không áp dụng với tất cả mọi người. Có 2 type of computer programmer: computer scientist và computer engineer. Computer scientist sẽ làm những công việc có hàm lượng &#8220;science&#8221; cao hơn một chút, như physic engine, compiler optimizer hay data mining, hoặc pattern recognition.. Còn computer engineer sẽ làm thiên về technical, họ sẽ có rất nhiều trick để làm chương trình chạy nhanh hơn, có rất nhiều kĩ năng để làm một hệ thống robust. Đi theo hướng nào là tùy career path của từng người. Cá nhân mình thì mình thích có tí gì đó thiên về khoa học, do đấy những kĩ năng về probabilistic, matrix algebra, linear algebra là phải có. Và toán là một trong những kĩ năng không thể nhồi ngay được, nên bắt buộc bạn phải học mỗi ngày, hay mỗi tuần một chút một. Nếu bạn không có chút interest nào với toán thì bạn có thể thay toán bằng algorithm, thi thoảng lên topcoder hay project euler ngồi làm cũng giúp bạn có kĩ năng tốt hơn để giải quyết công việc hàng ngày :).</p></li>
+<li><p>Focus on security: Rất nhiều app developer thiếu những kĩ năng về security cơ bản, đặc biệt là web app với những xss hay sql injection, cho đến khi bị tấn công thì mới ngớ người ra. Ngay cả developer ở những tập đoàn lớn như facebook hay twitter cũng đã từng mắc những lỗi cơ bản liên quan đến oauth (đặc biệt là twitter).Do đó việc tìm hiểu về những lỗ hổng cơ bản là cần thiết với tất cả các programmer.</p></li>
+<li><p>Complete a personal project: side project là một trong những yếu tố rất quan trọng giúp bạn keep high motivation cho việc phát triển career path để thành một programmer đúng nghĩa. Với side project, bạn có thể làm gì bạn thích, design những gì bạn muốn, up lên github, khoe hàng trên ycombinator, và tự hào nhìn số starred của repo trên github (cá nhân mình thì chưa làm được cái đoạn từ khoe hàng trên ycombinator), nhưng mình vẫn cố gằng nghĩ ra, và hoàn thành các side project, chỉ vì đơn giản là nó giúp mình happy và highly motivated với việc là một programmer đúng nghĩa</p></li>
+<li><p>Get your community: Ở VN hiện tại có một điều mình rất bức xúc là thiếu cộng đồng làm công nghệ. Thiếu cộng đồng thì bạn làm gì đi nữa, có side project khủng bố thế nào đi nữa thì cũng chả khác gì bạn đang masturbate cả :D. Mô hình meetup hay conference giúp bạn có thể giao lưu với những người cùng sở thích, biết bạn đang đứng ở đâu, và làm thể nào để phát triển bản thân. Bạn sẽ có những lời khuyên tốt nhất và chân thành nhất. Chính vì vậy đừng ngần ngại, hãy tìm những người bạn cùng sở thích lập trình, lập thành các group, cùng giải quyết vấn đề, bạn sẽ học được nhiều điều hơn bạn nghĩ :D</p></li>
+</ul>
+
+
+<h2>The end</h2>
+
+<p>Trên đây là những điều mình vẫn đang làm hàng ngày, và những điều đấy giúp mình luôn tin là mình đang đi đúng con đường mình đã chọn. Bạn hãy thử làm xem bạn có trở nên happy hơn với việc là một programmer không, nếu không thì mình nghĩ là bạn nên đổi nghề&#8230; :D. Chúc các bạn thành công.</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T23:33:00+07:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/motivation/'>motivation</a>
+
+
+</div>
+	
+		<div class="comments"><a href="/blog/2013/04/24/happy-programmer//index.html#disqus_thread">Comments</a></div>
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/04/21/selenium/">
+		
+			Selenium và Jenkins</a>
+	</h2>
+	<div class="entry-content">
+		<h2>Mở đầu</h2>
+
+<p>Trong quy trình phát triển một phần mềm, Test nói chung và UT nói riêng luôn là những process rất quan trọng. Tuy nhiên khi Application càng ngày càng lớn thì khối lượng Test càng phình to và cost sẽ vượt quá cost bỏ ra cho coding. Để giảm thiểu số công sức bỏ ra, developer thường hay dùng các test framework có sẵn và tìm cách automation quy trình test.</p>
+
+<p>PHP có PHPUnit, Java có JUnit, Python có nose v.v&#8230; Tuy nhiên bên ngoài UT vẫn còn những quy trình bắt buộc phải làm bằng tay. Bạn viết ra 1 website, bạn muốn test trên website bạn có đúng những link hiện ra như bạn muốn hay ko, màu sắc có thay đổi hay không, khi user click vào link có nhảy đến page target và mang theo hàm callback đã định nghĩa hay ko v.v&#8230;</p>
+
+<p>Trong bài viết này sẽ giới thiệu 2 công cụ automation UT và test khá nổi tiếng. Sủ dụng và tận dụng, đôi khi sẽ thành những tool mang lại hiệu quả bất ngờ trong cả những công việc khác :D</p>
+
+<h2>Selenium</h2>
+
+<p>Selenium - nói 1 cách đơn giản, là công cụ automator tất cả các thao tác của con người trên browser. Bạn có thể giả lập 1 set các action, VD như: &lt; User bật browser lên, User vào trang web của bạn, User đi theo link route linh1-link2-link3-link4, User click vào download button trong link 4 ></p>
+
+<p>Selenium có 2 cách dùng, Selenium Server và Selenium WebDriver. Hiện nay trên firefox đã có plugin Selenium IDE. Bạn có thể dùng nó để record lại hành động của mình và export ra test code in Python, Ruby, C#, hoặc Java. Selenium test code chạy ở chế độ bình thường sẽ tự động bật browser của bạn lên và tự hành động y như bạn đã làm trước dó :D</p>
+
+<p>Tuy nhiên để quy trình test không tốn quá nhiều tài nguyên, người ta thường hay config để selenium chạy headless trên Linux. VD như Python sẽ có package Xvfb, cho phép tạo display chạy ngầm và bật web driver trên đó.</p>
+
+<h2>Bypass the working attendance system</h2>
+
+<p>Ví dụ đơn giản nhất: giả sử, công ty bạn có hệ thống check time làm việc của nhân viên. Nhân viên khi đến công ty phải login vào page, ấn vào button &#8220;Đã đến&#8221;. Tương tự khi về lại phải login vào và ấn thêm button &#8220;Đã về&#8221;</p>
+
+<p>Có selenium trong tay, bạn có thể giải quyết vấn đề khá đơn giản, viết 1 test script mô phỏng toàn bộ quá trình nói trên, đặt cron cho nó chạy vào giờ đến và giờ về chỉ định</p>
+
+<figure class='code'><figcaption><span>selenium - selenium.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">SeleniumHeadlessTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">mock</span><span class="o">=</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">()</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">mock</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">verificationErrors</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">test_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">name</span><span class="o">=</span><span class="s">&quot;&quot;</span>
+</span><span class='line'>        <span class="n">pwd</span><span class="o">=</span><span class="s">&quot;&quot;</span>
+</span><span class='line'>        <span class="n">driver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span>
+</span><span class='line'>        <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;..._name_field_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;..._password_field_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;..._login_button_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Thêm 1 ít sleep time random(VD random trong khoảng 10 phút) và đặt cron 30 10 * * 1-5. Bạn đã có 1 con bot luôn check time in cho bạn trong khoảng 10h30-10h40 mỗi ngày trong tuần
+:D Với package Xvfb như đã nói ở trên, con bot sẽ chạy silent bên trong máy (hay máy ảo) và ko tạo ra 1 notice nào. Redirect log ra 1 file ẩn sẽ giúp manage quá trình chạy tốt hơn.</p>
+
+<p>Khi xuất hiện 1 số ngày nghỉ ko phải thứ 7, CN mà muốn đặt lịch để con bot ko chạy, vấn đề sẽ hơi phức tạp hơn 1 chút. bạn cần phải viết 1 con bot observer khác check ngày và update lại cron job</p>
+
+<h2>Jenkins</h2>
+
+<p>Tiếp tục về quy trình test automation, Jenkins là 1 tool xuất sắc khác. Jenkins đại diện cho khái niệm CI (continuous integration).</p>
+
+<p>Bạn muốn cả bộ UT/test chạy mỗi ngày vào 10 h sáng. Mội ngày system leader đến check log để biết có bao nhiêu test đang fail, bao nhiêu error, quản lý health theo từng ngày, bạn hoàn toàn có thể dùng test framework + cronjob</p>
+
+<p>Tuy nhiên Jenkins cung cấp 1 giao diện trực quan hơn, percentage, graph, coverage report, code convention checking ,v.v&#8230;.. hoàn toàn tự động, có thể wake up theo svn hoặc git. Jenkins cũng có rất nhiều plugin và support hầu hết các test framework.</p>
+
+<p>VD về Jenkins jobs</p>
+
+<p><img src="/images/SeleniumAndJenkins/JenkinsJobs.png" title="image" alt="images">
+Source Code Management</p>
+
+<p><img src="/images/SeleniumAndJenkins/WakeupGit.png" title="image" alt="images">
+Wake up by SVN or Git</p>
+
+<p><img src="/images/SeleniumAndJenkins/ExecuteShell.png" title="image" alt="images">
+Execute Shell</p>
+
+<p>Optional shell execute bên cạnh các jobs định nghĩa sẵn chạy các test framework. Ở đây là ví dụ của run Selenium trên Nose. Bạn có thể config trực tiếp trên plugin Selenium của Jenkins</p>
+
+<p><img src="/images/SeleniumAndJenkins/BuildTriggers.png" title="image" alt="images">
+Build Trigger</p>
+
+<p>Đặt lịch, tương tự cron jobs</p>
+
+<p>1 recommended config là tạo 1 jenkins job observer check svn và git, nếu có update tại subsystem nào thì run jenkins jobs tương ứng với subsystem đấy. 1 sub system lại có thể chứa nhiều test framework cần wakeup (VD với PHP + Oracle, bạn có PHPUnit và utPLSQL)</p>
+
+<h2>Kết luận</h2>
+
+<ul>
+<li><p>Cron jobs: package lập lịch của Linux</p></li>
+<li><p>Xvfb: package tạo display ảo của Python</p></li>
+<li><p>Selenium: là công cụ giả lập action trên browser, bắt chước y hệt thao tác của user và ko loại trừ bất cứ hạn chế nào</p></li>
+<li><p>Jenkins: CI Test Tool, dùng để lập lịch, theo dõi và quản lý health của system</p></li>
+</ul>
+
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-21T23:56:00+07:00" pubdate data-updated="true">Apr 21<span>st</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming/'>programming</a>, <a class='category' href='/blog/categories/test/'>test</a>, <a class='category' href='/blog/categories/ut/'>ut</a>
+
+
+</div>
+	
+		<div class="comments"><a href="/blog/2013/04/21/selenium//index.html#disqus_thread">Comments</a></div>
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js/">
+		
+			Giới Thiệu về Script Loader Trong Js</a>
+	</h2>
+	<div class="entry-content">
+		<h2>I.Script loader là gì và tại sao lại cần nó</h2>
+
+<p>Trong javascript, khi cần include một thư viện, hay một module từ ngoài vào, chắc hản mọi
+web developer đều nghĩ ngay đến việc include vào html:</p>
+
+<figure class='code'><figcaption><span>include direct - include.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'> <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://yourhost/script.js&quot;</span> <span class="nt">&gt;&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Vậy include trực tiếp script tag vào html có gì không tốt?</p>
+
+<ul>
+<li><p>Block việc render GUI của web browser:
+Cơ chế render của web browser là render tuần tự, đi từ trên xuống dưới.Chính vì thế mà khi
+gặp script tag thì đầu tiên là web browser phải download về, sau đó parse và execute script đó
+, sau đó mới render những thứ tiếp theo. Việc này làm cho việc render nội dung web sẽ bị block lại
+. Thử hình dung bạn sử dụng thư viện ember.js, thư viện này sau khi minified lại có dung lượng khoảng
+200kb, bạn download từ cdn về mất 1.5s, bạn render mất 0.5s nữa, tổng cộng đã mất 2s, là một con số
+không nhỏ.</p></li>
+<li><p>Khi qui mô của web lớn lên, đặc biệt tại thời điểm mà các framework mvc cho js nở rộ như hiện
+nay với ember, backbone hay angular và việc phát triển bùng phát của single-page web app(những
+application viết chủ yếu bằng javascript) thì việc quản lý chặt chẽ thư viện, module nào có dependency
+ra sao, nên được load vào thời điểm nào là hết sức quan trọng</p></li>
+</ul>
+
+
+<p>Để giải quyết vấn đề đó, thì chúng ta sẽ sử dụng một khái niệm gọi là script loader. Script loader chỉ
+đơn giản là chuyển việc load script từ html vào một cái script js chỉ chuyên làm nhiệm vụ &#8220;load&#8221; các
+dependent scripts. &#8220;load&#8221; bằng cách nào thì rất đơn giản, chỉ là tạo ra một script tag, gán source
+và insert vào dom. Việc này khác việc include script bằng html là nó không block UI, nó chỉ đơn thuần
+là request đến server chứa script cần load thông qua XHR, lấy kết quả về, và eval đoạn script đó.</p>
+
+<p>Ví dụ về script loader:</p>
+
+<figure class='code'><figcaption><span>script loader demo - loader.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">scList</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">();</span>
+</span><span class='line'>  <span class="nx">scList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://cdnjs.cloudflare.com/ajax/libs/ace/0.2.0/ace.js&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">scList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://cdnjs.cloudflare.com/ajax/libs/alloy-ui/1.0.1/aui-min.js&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">scList</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://cdnjs.cloudflare.com/ajax/libs/barman/0.2.2/barman.min.js&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">scList</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">script</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;script&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">firstScript</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;script&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>    <span class="nx">script</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">scList</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+</span><span class='line'>    <span class="nx">firstScript</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">insertBefore</span><span class="p">(</span><span class="nx">script</span><span class="p">,</span> <span class="nx">firstScript</span><span class="p">);</span>
+</span><span class='line'> <span class="p">}</span>
+</span><span class='line'><span class="p">})()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Và kết quả đạt được là:</p>
+
+<ol>
+<li><p>Load script trực tiếp vào html tag
+<img src="/images/script-loader-images/withoutloader.png" title="image" alt="images"></p></li>
+<li><p>Load script thông qua loader
+<img src="/images/script-loader-images/withloader.png" title="image" alt="images"></p></li>
+</ol>
+
+
+<p>Có được kết quả trên là vì đưa việc loading js vào trong script giúp cho ta có thể load các module
+đó asynchronousi thông qua XHR(ajax), và nhờ đó rút ngắn được thời gian load + render
+Như vậy là ta đã giải quyết được bài toán thứ nhất, tuy nhiên có một vấn đề là để load được một module
+thông qua script loader thì module đó bắt buộc phải tuân theo một qui chuẩn nào đó để giúp qui định
+về thứ tự load, và dependency. Để giải quyết vấn đề đó, đồng thời cũng để giải quyết vấn đề thứ hai đã
+nêu ở trên chúng ta sẽ đưa ra khái niệm AMD</p>
+
+<h2>II AMD</h2>
+
+<p>AMD là viết tắt của Asynchronous Module Definition, là một qui chuẩn của javascript dành cho việc load
+các script/module và các dependency của chúng từ ngoài vào một cách không đồng bộ (asynchronously).</p>
+
+<p>Thực tế gọi là một qui chuẩn, nhưng AMD chỉ đơn thuần qui định 2 rule cơ bản:</p>
+
+<ul>
+<li>Interface cho hàm define()</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>define define.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'> <span class="nx">define</span><span class="p">(</span><span class="nx">id</span><span class="o">?</span><span class="p">,</span> <span class="nx">dependencies</span><span class="o">?</span><span class="p">,</span> <span class="nx">factory</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>param id: qui định id của module được load vào, [?] là do param này là optional, có thể bỏ qua</li>
+<li>param dependencies: là 1 <strong>array</strong> các module dependency của module được load vào, param này cũng là optional</li>
+<li>param factory: là đoạn script dùng để initialze cho module sẽ được load vào. factory() sẽ chỉ được execute một lần
+, và nếu factory() có return value thì return value này nên được export ra ngoài để có thể sử dụng lại ở trong các
+script khác</li>
+</ul>
+
+
+<p>Một ví dụ đơn giản cho AMD interface:</p>
+
+<figure class='code'><figcaption><span>amd if - amd.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">define</span><span class="p">([</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">alpha</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">verb</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">alpha</span><span class="p">.</span><span class="nx">verb</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Property amd cho hàm define:
+Function define <strong>nên</strong> có property tên là amd. Việc này giúp tránh conflict khi module của bạn đã có một function tên
+là define, và trong property này sẽ định nghĩa là module của bạn có cho phép nhiều version trên cùng một document không
+( khi module của bạn đã conform theo AMD, thì chắc chắn trong hàm require phải có đoạn check là đã có property
+này hay chưa  và check giá trị của nó).</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>amd - amd.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">define</span><span class="p">.</span><span class="nx">amd</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">multiversion</span><span class="o">:</span> <span class="kc">true</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Nói đến đây thì chấc sẽ có bạn thắc mắc, hoặc chưa hiểu rõ use case của cái AMD này như thế nào, nó được dùng ở đâu, ở script
+loader, ở module, hay ở dom. Câu trả lời là AMD sẽ được dùng ở script loader và ở module. Cụ thể hơn là trong module của bạn,
+nếu bạn muốn module đó được load async thông qua script loader, mà script loader đó lại load theo chuẩn AMD, thì đương nhiên
+module của bạn cũng sẽ phải conform theo AMD, bằng cách là có hàm define() trong module, và có property amd của hàm define.
+Còn script loader bản thân cũng là một module, thì tất nhiên cũng phải tuân theo AMD.</p>
+
+<p>Một cách ngắn gọn, giả sử bạn có một module X</p>
+
+<figure class='code'><figcaption><span>module - module.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">X</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">prop</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">prop</span><span class="p">;</span>
+</span><span class='line'><span class="p">})()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bạn muốn module đó nói với bên ngoài là: tao lã X, tao có các dependency là Y, Z, khi init tao thì mày làm thế này, thế này nhé
+thì bạn sẽ làm theo AMD api theo cách như sau:</p>
+
+<figure class='code'><figcaption><span>module with amd module.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">X</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">prop</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>  <span class="nx">prop</span><span class="p">.</span><span class="nx">define</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">deps</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">callback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="c1">//do something to init here}</span>
+</span><span class='line'>  <span class="nx">prop</span><span class="p">.</span><span class="nx">define</span><span class="p">.</span><span class="nx">amd</span> <span class="o">=</span> <span class="p">{</span><span class="nx">multiversion</span><span class="o">:</span> <span class="kc">true</span><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">prop</span><span class="p">;</span>
+</span><span class='line'><span class="p">})()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Và khi script loader nhìn vào cái define của bạn, nó sẽ biêt nên làm thê nào. Rất đơn giản phải không.</p>
+
+<h2>III Các scriptloader nổi tiếng và việc áp dụng AMD đang ở đâu</h2>
+
+<p>Hiện nay, có một số script loader nổi tiếng như:</p>
+
+<ul>
+<li>YepNope: http://yepnopejs.com/</li>
+<li>RequireJs: http://requirejs.org/docs/</li>
+<li>Headjs: https://github.com/headjs/headjs</li>
+<li>CurlJs: https://github.com/cujojs/curl
+Ngoài ra trong bộ toolkit nổi tiếng Dojo cũng có sử dụng script loader</li>
+</ul>
+
+
+<p>Trong những script ở trên thì có requirejs và curljs là sử dụng AMD, còn lại 2 script còn lại là yepnope
+và headjs thì không. Về số lượng được sử dụng nhiều nhất thì có lẽ là requirejs.</p>
+
+<p>Hiện tại các module nổi tiếng thì không phải module nào cũng conform theo AMD. Theo mình biết thì hiện
+tại có jQuery là support AMD internally, còn lại thì phần nhiều các module nổi tiếng khác như backbone, ember,
+angular đểu không support AMD internally. Để sử dụng các module này với một script loader theo chuẩn AMD
+như require.js thì bạn đơn giản chỉ cần viết lại hàm define tại app của bạn, ví dụ như trong trường hợp của
+backbone:</p>
+
+<figure class='code'><figcaption><span>backbone with amd - bbamd.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">require</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">paths</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">jquery</span><span class="o">:</span> <span class="s1">&#39;libs/jquery/jquery&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">underscore</span><span class="o">:</span> <span class="s1">&#39;libs/underscore/underscore&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">backbone</span><span class="o">:</span> <span class="s1">&#39;libs/backbone/backbone&#39;</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">require</span><span class="p">([</span>
+</span><span class='line'>    <span class="c1">// Load our app module and pass it to our definition function</span>
+</span><span class='line'>    <span class="s1">&#39;app&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">App</span><span class="p">){</span>
+</span><span class='line'>      <span class="c1">// The &quot;app&quot; dependency is passed in as &quot;App&quot;</span>
+</span><span class='line'>      <span class="nx">App</span><span class="p">.</span><span class="nx">initialize</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Vậy tại sao AMD có rất nhiều merit như thê mà một số module nổi tiêng lại bỏ qua việc conform theo AMD, ví dụ
+tiêu biểu nhất là emberjs. Theo như Tom Dale, một trong những creator của emberjs thì AMD yêu cầu quá nhiều
+HTTP request, bởi vì để conform theo AMD thì script phải chia ra thành nhiều module, nhiều file. Ngoài ra
+thì AMD cũng yêu cầu toàn bộ module phải wrap trong một function (factory()), việc này có thể ok với một số
+người nhưng cũng sẽ gây khó chịu với một số người khác. Và cuối cùng là một số build tool hiện tại (ví dụ như
+Grunt https://github.com/cowboy/grunt) hỗ trợ rất tốt cho việc quản lý dependency và version rồi, thế nên
+việc conform cấu trúc code của mình theo một cái có sẵn như AMD là không cần thiết.</p>
+
+<h2>IV Kết luận</h2>
+
+<p>Script loader đã và đang trở thành một kĩ thuật không thể thiếu trong việc tạo ra một responsive web app, giúp
+rút ngắn thời gian load và render js. Cộng với việc AMD ra đời chúng ta đang thấy ecmascript, cụ thể hơn là
+javascript đang có những nỗ lực trở nên mature hơn, để có thể trở thành ngôn ngữ mà developer có thể cảm thấy
+thoải mái khi phát triển và khi scope của application bị phình to ra. Tại version ecma hiện tại (ECMA-262) thì
+vẫn chưa có một qui chuẩn nào cho việc load script theo module và dependency, tuy nhiên chúng ta có thể hy vọng
+về điều này trong một thời gian gần.</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-14T00:23:00+07:00" pubdate data-updated="true">Apr 14<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
+
+
+</div>
+	
+		<div class="comments"><a href="/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js//index.html#disqus_thread">Comments</a></div>
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/04/06/tu-khoa-static-trong-c/">
+		
+			Ý Nghĩa Của Từ Khóa Static Trong C</a>
+	</h2>
+	<div class="entry-content">
+		<h2>Mở đầu</h2>
 
 <p>Khi học C cơ bản, chắc hẳn bạn sẽ gặp cách dùng từ khoá static như ví dụ dưới đây:</p>
 
-<div>
-  <pre><code class='c'>#include &lt;stdio.h&gt;
-
-void count(int i)
-{
-    static int num = 0;
-    num += i;
-    printf(&quot;current value of num: %d\n&quot;, num);
-}
-
-int main()
-{
-    count(1);
-    count(3);
-    return 0;
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span>file1.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">count</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">num</span> <span class="o">+=</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;current value of num: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">num</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">count</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Kết quả khi chạy chương trình sẽ là:</p>
 
-<div>
-  <pre><code class='bash'>current value of num: 1
-current value of num: 4</code></pre>
-</div>
+<figure class='code'><figcaption><span>file2.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>current value of num: 1
+</span><span class='line'>current value of num: 4
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Biến num khai báo static như trên có 2 đặc điểm:</p>
@@ -138,27 +1616,46 @@ current value of num: 4</code></pre>
 
 <p>Tuy vậy bạn sẽ bất ngờ khi bắt gặp những cách sử dung static trong như ví dụ dưới đây:</p>
 
-<div>
-  <pre><code class='c'>#include &lt;stdio.h&gt;
-
-static int a = 0;
-
-static void count(int i)
-{
-    static int num = 0;
-    num += i;
-    printf(&quot;current value of num: %d\n&quot;, num);
-}
-
-int main()
-{
-    a += 1;
-    printf(&quot;value of a: %d\n&quot;, a);
-    count(1);
-    count(3);
-    return 0;
-}</code></pre>
-</div>
+<figure class='code'><figcaption><span>main.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">static</span> <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">static</span> <span class="kt">void</span> <span class="nf">count</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">num</span> <span class="o">+=</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;current value of num: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">num</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">a</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;value of a: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">count</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>ta bắt gặp static ở 2 nơi nữa:</p>
@@ -177,25 +1674,42 @@ int main()
 
 <p>Mỗi đơn vị sẽ có các thủ tục (procedure) hoặc function riêng. Code ở 1 đơn vị biên dịch có thể sử dụng thủ tục hoặc hàm, hay cả biến toàn cục ở đơn vị biên dịch khác. Ví dụ:</p>
 
-<div>
-  <pre><code class='c'>//-----------------------
-//A.c
-
-int avar;
-
-void a() {};
-
-void b() {};
-
-// -----------------------
-//C.c
-
-extern int avar;
-
-void c() {};
-
-void d() {};</code></pre>
-</div>
+<figure class='code'><figcaption><span>main.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">//-----------------------</span>
+</span><span class='line'><span class="c1">//A.c</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="n">avar</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">a</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">b</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// -----------------------</span>
+</span><span class='line'><span class="c1">//C.c</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extern</span> <span class="kt">int</span> <span class="n">avar</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">c</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">d</span><span class="p">()</span> <span class="p">{};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>thì trong a() của A.c ta có thể gọi c() một cách thoải mái. Biến avar sẽ được sử dụng cả ở A.c và C.c (biến toàn cục thực thụ!)</p>
@@ -212,25 +1726,42 @@ void d() {};</code></pre>
 
 <p>Do đó</p>
 
-<div>
-  <pre><code class='c'>//-----------------
-//A.c
-
-static int avar;
-
-static void a() {};
-
-void b() {};
-
-//------------------
-//C.c
-
-extern int avar;
-
-void c() {};
-
-void d() {};</code></pre>
-</div>
+<figure class='code'><figcaption><span>main.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">//-----------------</span>
+</span><span class='line'><span class="c1">//A.c</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">static</span> <span class="kt">int</span> <span class="n">avar</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">static</span> <span class="kt">void</span> <span class="nf">a</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">b</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//------------------</span>
+</span><span class='line'><span class="c1">//C.c</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extern</span> <span class="kt">int</span> <span class="n">avar</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">c</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">d</span><span class="p">()</span> <span class="p">{};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Nếu ta khai báo static như trên, các hàm c, d trong C.c sẽ không thể nào truy cập được hàm a cũng như biến avar (dù rằng avar được khai báo extern trong C.c).</p>
@@ -244,44 +1775,48 @@ void d() {};</code></pre>
 <li>Khi được sự dụng trong phạm vi cục bộ của 1 thủ tục hay hàm, static có nghĩa là biến được khai báo tồn tại trong suốt thời gian chạy của chương trình và chỉ được khởi tạo 1 lần duy nhất.</li>
 </ul>
 
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-06T00:00:00+07:00" pubdate data-updated="true">Apr 6<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming/'>programming</a>
+
+
 </div>
-  
-  
+	
+		<div class="comments"><a href="/blog/2013/04/06/tu-khoa-static-trong-c//index.html#disqus_thread">Comments</a></div>
+	
+</div></article>
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/01/gioi-thieu-ve-unix-process/">Giới Thiệu về Unix Process</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-01T00:39:00+07:00" pubdate data-updated="true">Apr 1<span>st</span>, 2013</time>
-        
-         | <a href="/blog/2013/04/01/gioi-thieu-ve-unix-process/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Là một kỹ sư lập trình hệ thống, một server guy, hay là một sys admin, sys dev,
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/04/01/gioi-thieu-ve-unix-process/">
+		
+			Giới Thiệu về Unix Process</a>
+	</h2>
+	<div class="entry-content">
+		<p>Là một kỹ sư lập trình hệ thống, một server guy, hay là một sys admin, sys dev,
 sys ops,&#8230; phần lớn thời gian bạn sẽ phải làm việc trên hệ thống Unix.
 Để làm việc trên Unix, chúng ta tương tác với hệ điều hành thông qua các
 lệnh (command). Mỗi lệnh trên Unix khi thực thi sẽ run một process hoặc một
@@ -305,22 +1840,36 @@ ra. Nói cách khác mỗi dòng code của bạn, sẽ được thực thi trê
 
 <p>Unix cung cấp tool <code>ps</code> để list ra tất cả các process đang chạy trên hệ thống</p>
 
-<div>
-  <pre><code class='bash'>$&gt; ps -e -opid,ppid,user,rss,command
-PID   PPID  USER     RSS      COMMAND
-1     0     root     152      init [2]
-1695  1     root     428      /usr/sbin/sshd
-1863  1     root     48       /sbin/getty 38400 tty1
-1864  1     root     48       /sbin/getty 38400 tty2
-1865  1     root     48       /sbin/getty 38400 tty3
-1866  1     root     48       /sbin/getty 38400 tty4
-1867  1     root     48       /sbin/getty 38400 tty5
-1868  1     root     48       /sbin/getty 38400 tty6
-24477 1695  root     2888     sshd: vagrant [priv]
-24479 24477 vagrant  1996     sshd: vagrant@pts/0
-24480 24479 vagrant  2328     -bash
-24591 24480 vagrant  1060     ps -e -opid,ppid,user,rss,command</code></pre>
-</div>
+<figure class='code'><figcaption><span>proc.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$&gt;</span> ps -e -opid,ppid,user,rss,command
+</span><span class='line'>PID   PPID  USER     RSS      COMMAND
+</span><span class='line'>1     0     root     152      init <span class="o">[</span>2<span class="o">]</span>
+</span><span class='line'>1695  1     root     428      /usr/sbin/sshd
+</span><span class='line'>1863  1     root     48       /sbin/getty 38400 tty1
+</span><span class='line'>1864  1     root     48       /sbin/getty 38400 tty2
+</span><span class='line'>1865  1     root     48       /sbin/getty 38400 tty3
+</span><span class='line'>1866  1     root     48       /sbin/getty 38400 tty4
+</span><span class='line'>1867  1     root     48       /sbin/getty 38400 tty5
+</span><span class='line'>1868  1     root     48       /sbin/getty 38400 tty6
+</span><span class='line'>24477 1695  root     2888     sshd: vagrant <span class="o">[</span>priv<span class="o">]</span>
+</span><span class='line'>24479 24477 vagrant  1996     sshd: vagrant@pts/0
+</span><span class='line'>24480 24479 vagrant  2328     -bash
+</span><span class='line'>24591 24480 vagrant  1060     ps -e -opid,ppid,user,rss,command
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Ở đây, mình chạy lênh <code>ps</code> và show ra các thuộc tính <code>pid,ppid,user,rss,command</code>
@@ -355,14 +1904,20 @@ tuỳ vào từng hệ thống.</p>
 <p>Trên Linux bạn có thể xem và thay đổi giá trị mặc định của Process ID maximum
 bằng cách thay đổi file <code>/proc/sys/kernel/pid_max</code></p>
 
-<div>
-  <pre><code class='bash'># read current maximum value of process id
-$&gt; cat /proc/sys/kernel/pid_max
-32768
-
-# set maximum value for process id
-$&gt; echo 40000 &gt; /proc/sys/kernel/pid_max</code></pre>
-</div>
+<figure class='code'><figcaption><span>main.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># read current maximum value of process id</span>
+</span><span class='line'><span class="nv">$&gt;</span> cat /proc/sys/kernel/pid_max
+</span><span class='line'>32768
+</span><span class='line'>
+</span><span class='line'><span class="c"># set maximum value for process id</span>
+</span><span class='line'><span class="nv">$&gt;</span> <span class="nb">echo </span>40000 &gt; /proc/sys/kernel/pid_max
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Khi process ID tăng đến giá trị maximum value, hệ điều hành (OS) sẽ quay trở lại
@@ -376,23 +1931,28 @@ bài viết này của tôi sẽ tập trung vào ngôn ngữ Ruby</p>
 
 <p>Trong Ruby, muốn lấy Process ID của process hiện tai, bạn sử dụng <code>Process.pid</code>.</p>
 
-<div>
-  <pre><code class='ruby'># file test_pid.rb
-puts &quot;Process pid: #{Process.pid}&quot;</code></pre>
-</div>
+<figure class='code'><figcaption><span>pid.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="nb">puts</span> <span class="s2">&quot;Process pid: </span><span class="si">#{</span><span class="no">Process</span><span class="o">.</span><span class="n">pid</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Dòng code trên gọi tới hàm <code>puts</code> - hàm này có tác dụng in một String ra màn hình.
 Chúng ta có thể manipulate các String trong Ruby thông qua các syntax #{}. Code
 ruby trong #{ } sẽ được thực hiện trước khi truyền cho String</p>
 
-<div>
-  <pre><code class='ruby'>$&gt; irb
-
-irb(main):001:0&gt; puts &quot;Example for String manipulate: 1 + 2 = #{1 + 2}&quot;
-Example for String manipulate: 1 + 2 = 3
-=&gt; nil</code></pre>
-</div>
+<figure class='code'><figcaption><span>irb.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vg">$&gt;</span> <span class="n">irb</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">puts</span> <span class="s2">&quot;Example for String manipulate: 1 + 2 = </span><span class="si">#{</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="no">Example</span> <span class="k">for</span> <span class="nb">String</span> <span class="ss">manipulate</span><span class="p">:</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="kp">nil</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>(Các file Ruby có extension là .rb. Để chạy một file ruby, bạn dùng lệnh
@@ -416,10 +1976,12 @@ của một node chính là các process con của process ứng với node đó
 
 <p>Trong Ruby, để lấy ra parent process id của một process, chúng ta sử dung <code>Process.ppid</code></p>
 
-<div>
-  <pre><code class='ruby'># file test_ppid.rb
-puts &quot;Process id #{Process.pid}, parent process id #{Process.ppid}&quot;</code></pre>
-</div>
+<figure class='code'><figcaption><span>ppid.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="c1"># file test_ppid.rb</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s2">&quot;Process id </span><span class="si">#{</span><span class="no">Process</span><span class="o">.</span><span class="n">pid</span><span class="si">}</span><span class="s2">, parent process id </span><span class="si">#{</span><span class="no">Process</span><span class="o">.</span><span class="n">ppid</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Cũng rõ ràng đấy chứ. Liệu tôi có quên gì nữa không nhỉ?</p>
@@ -528,52 +2090,56 @@ thuật ban đầu với Process. Còn rất nhiều vấn đề chưa đề c�
 
 
 <p>Bài viết được lấy từ blog <a href="http://kiennt.com/blog/2013/01/20/introduction-to-unix-process.html">http://kiennt.com</a></p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-01T00:39:00+07:00" pubdate data-updated="true">Apr 1<span>st</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/unix/'>unix</a>
+
+
 </div>
-  
-  
+	
+		<div class="comments"><a href="/blog/2013/04/01/gioi-thieu-ve-unix-process//index.html#disqus_thread">Comments</a></div>
+	
+</div></article>
 
-
-    </article>
-  
-  <div class="pagination">
+<nav id="pagenavi">
     
-    <a href="/blog/archives">Blog Archives</a>
     
-  </div>
-</div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/04/06/tu-khoa-static-trong-c/">Ý nghĩa của từ khóa static trong C</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/01/gioi-thieu-ve-unix-process/">Giới thiệu về Unix process</a>
-      </li>
-    
-  </ul>
-</section>
+    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
+</nav></div>
+	<footer id="footer" class="inner">Copyright &copy; 2013
 
-
-
-
-
-  
-</aside>
-
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - kỹ thuật máy tính -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
+    kỹ thuật máy tính
 
 </footer>
-  
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
 
 <script type="text/javascript">
       var disqus_shortname = 'ktmt';
@@ -587,22 +2153,6 @@ thuật ban đầu với Process. Còn rất nhiều vấn đề chưa đề c�
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     }());
 </script>
-
-
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
 
 
 

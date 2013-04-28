@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: python | Blog kỹ thuật máy tính]]></title>
+  <link href="http://ktmt.github.com/blog/categories/python/atom.xml" rel="self"/>
+  <link href="http://ktmt.github.com/"/>
+  <updated>2013-04-29T01:14:55+07:00</updated>
+  <id>http://ktmt.github.com/</id>
+  <author>
+    <name><![CDATA[kỹ thuật máy tính]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Python object model]]></title>
+    <link href="http://ktmt.github.com/blog/2013/04/29/python-object-model/"/>
+    <updated>2013-04-29T00:00:00+07:00</updated>
+    <id>http://ktmt.github.com/blog/2013/04/29/python-object-model</id>
+    <content type="html"><![CDATA[<h3>1. old-style và new-style class trong Python</h3>
+
+<p>Bạn đã nghe ở đâu đó "In python everything is object".</p>
+
+<p>Điều đó có nghĩa là gì? Liệu nó có giống các ngôn ngữ lập trình khác,
+mọi thứ trong Python đều là instance của BaseClass? Tôi đã nghe về <strong>object</strong>
+class trong Python, liệu đó có phải là Base Class của Python</p>
+
+<p>Python có hai mô hình <strong>old-style</strong> và <strong>new-style</strong>. Thực tế trong các phiên bản cũ của Python, không có một class cụ thể nào cho mọi object cả. Nhưng từ Python 2.2, với sự giới thiệu của <strong>new-style</strong> class, chúng ta có thể biến mọi object là instance của <strong>object</strong></p>
+
+<p>Từ Python 2.1 trở về trước, <strong>old-style</strong> class là lựa chọn duy nhất cho các lập trình viên. Khái niệm <strong>old-style</strong> class là không liên quan tới khái niệm kiểu. Nếu x là một instance của old-style class, x.<strong>class</strong> sẽ trỏ tới class của x, nhưng type(x) thì không.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code># old-style class was define by statement:
+</span><span class='line'>#   class &lt;class-name&gt;: &lt;class definition body&gt;
+</span><span class='line'>&gt;&gt;&gt; class A:
+</span><span class='line'>        pass
+</span><span class='line'># type of class A is 'type' because 'type' is base-class in Python
+</span><span class='line'>&gt;&gt;&gt; type(A)
+</span><span class='line'>&lt;type 'type'&gt;
+</span><span class='line'>
+</span><span class='line'># make an instance of A
+</span><span class='line'>&gt;&gt;&gt; a = A()
+</span><span class='line'># a.__class__ reference to class A
+</span><span class='line'>&gt;&gt;&gt; a.__class__
+</span><span class='line'>&lt;class __main__.A at 0x10aea6ce8&gt;
+</span><span class='line'># bute type of a is not A but 'instance'
+</span><span class='line'>&gt;&gt;&gt; type(a)
+</span><span class='line'>&lt;type 'instance'&gt;
+</span><span class='line'># 'instance' still is 'type' class
+</span><span class='line'>&gt;&gt;&gt; type(type(a))
+</span><span class='line'>&lt;type 'type'&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>new-style</strong> class được giới thiệu với động lực tạo ra một mô hình object thống nhất cho Python. Mọi đối tượng sẽ được kế thừa từ <strong>object</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>&gt;&gt;&gt; object.__class__
+</span><span class='line'>&lt;type 'type'&gt;
+</span><span class='line'>&gt;&gt;&gt; type(object)
+</span><span class='line'>&lt;type 'type'&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>new-style</strong> class được định nghĩa bằng cách kế thừa từ <strong>object</strong> class.
+Khác với <strong>old-style</strong> class, nếu x là một instance của <strong>new-style</strong> class, cả x.<strong>class</strong> và type(x) đều trỏ về class của x</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>&gt;&gt;&gt; class A(object): pass
+</span><span class='line'>&gt;&gt;&gt; A.__class__
+</span><span class='line'>&lt;type 'type'&gt;
+</span><span class='line'>&gt;&gt;&gt; x = A()
+</span><span class='line'>&gt;&gt;&gt; x.__class__
+</span><span class='line'>&gt;&gt;&gt; type(x)
+</span><span class='line'>&lt;type 'A'&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Để tương thích với các phiên bản của của Python, class mặc định vẫn được để ở <strong>old-style</strong>.
+Nếu chúng ta muốn sử dụng <strong>new-style</strong>, chúng ta bắt buộc phải định nghĩa class là subclass của <strong>object</strong></p>
+
+<h3>2. Điểm khác biệt giữa <strong>old-style</strong> và <strong>new-style</strong> class</h3>
+
+<p>Điểm khác biệt rõ nhất được nhìn thấy trong hệ thống kiểu.
+Hãy xem làm thế nào <strong>old-style</strong> class và <strong>new-style</strong> class thực hiện việc đa kế thừa. "Đa kế thừa" là khả năng một class có thể kế thừa từ nhiều class khác nhau. Nếu A kế thừa từ B, A là subclass(child class, derived class) của B, còn B là superclass (base class, parent class của A)</p>
+
+<p>Đa kế thừa cho phép một class A có thể có nhiều cha (theo tôi, đa kế thừa không thực sự tốt. có nhiều cách để giải quyết vấn đề đa kế thừa, hãy xem Ruby với mixins hay Java với interface thực hiện điều đó. tôi thực sự rất thích mô hình mixins của Ruby)</p>
+
+<p>Trong mô hình object của Python, mọi class đều có thuộc tình <strong><strong>bases</strong></strong> để lưu lại tất cả các class cha của nó, theo thứ tự xuất hiện của việc thừa kế.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>&gt;&gt;&gt; class A: pass
+</span><span class='line'>&gt;&gt;&gt; class B: pass
+</span><span class='line'>&gt;&gt;&gt; class C(A, B): pass
+</span><span class='line'>&gt;&gt;&gt; C.__bases__
+</span><span class='line'>(&lt;class __main__.A at 0x10aea6ce8&gt;, &lt;class __main__.B at 0x10af8de20&gt;)
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Vấn đề của đa kế thừa đó là thự tự của các superclass.</p>
+
+<p>Khi một instance của một subclass truy cập vào một thuộc tính (hoặc một method),</p>
+
+<pre><code>đầu tiên, nó sẽ tìm kiếm các thuộc tính được định nghĩa trong không gian của nó.
+Nếu thuộc tình (hoặc method) không được tìm thấy, nó sẽ tìm đến không gian
+của class (thuộc tính của class, hàm của class). Nếu vẫn không tìm thấy, nó
+sẽ tìm kiếm tiếp trong không gian của các super class. Khi một class có nhiều
+super class, thứ tự của các super class chính là thứ tự khi tìm kiếm
+</code></pre>
+
+<p>Trong <strong>old-style</strong> class, thứ tự của các superclass là depth-first, left-to-right
+theo thứ tự xuất hiện trong bases list</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>&gt;&gt;&gt; class A:
+</span><span class='line'>      def test(self): print "A"
+</span><span class='line'>&gt;&gt;&gt; class B(A):
+</span><span class='line'>      def test(self): print "B"
+</span><span class='line'>&gt;&gt;&gt; class C(A)
+</span><span class='line'>      def test(self): print "C"
+</span><span class='line'>&gt;&gt;&gt; class D(B, C): pass
+</span><span class='line'># order of D.__bases__ is (B, C) so D.test =&gt; B.test
+</span><span class='line'>&gt;&gt;&gt; D().test()
+</span><span class='line'>"B"
+</span><span class='line'>&gt;&gt;&gt; class E(C, B): pass
+</span><span class='line'># order of E.__bases__ is (C, B) so E.test =&gt; C.test
+</span><span class='line'>&gt;&gt;&gt; E().test()
+</span><span class='line'>"C"
+</span><span class='line'>
+</span><span class='line'># so what if we make an class is inherited from D, E
+</span><span class='line'># note that, D and E are inherited from 2 class B, C with reverse order
+</span><span class='line'>&gt;&gt;&gt; class F(D, E): pass
+</span><span class='line'># in old-style class, it does not matter, the searching method
+</span><span class='line'># only care about order of superclass in __bases__
+</span><span class='line'># so now F.test =&gt; D.test =&gt; B.test
+</span><span class='line'>&gt;&gt;&gt; F().test()
+</span><span class='line'>"B"
+</span><span class='line'>
+</span><span class='line'># even if we make an class is inherited from A, D, E
+</span><span class='line'># it still works and test() method will be test() method of A
+</span><span class='line'>&gt;&gt;&gt; class G(A, D, E): pass
+</span><span class='line'>&gt;&gt;&gt; G().test()
+</span><span class='line'>"A"
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Cách phân giải method của <strong>old-style</strong> khá đơn giản và dễ hiểu. Nhưng nếu chúng
+ta áp dụng quy luật này, đôi khi chúng ta sẽ phạm phải sai lầm khi kế thừa.
+Giả sử, một class G được kế thừa từ A, D và E, trong khi A là parent class của D và E.
+Rõ ràng, một lỗi nên được Python ném ra trong trường hợp này để bảo về việc kế thừa vòng tròn như vậy</p>
+
+<p><strong>new-stlye</strong> giải quyết vấn đề này. <strong>new-style</strong> sử dụng MRO (Method Resolution Order) được giới thiệu từ Python 2.3</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>def mro(cls):&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>"""
+</span><span class='line'>Return ordering of superclass of cls
+</span><span class='line'>This ordering was used when we want to access class instance atrribute
+</span><span class='line'>
+</span><span class='line'>`cls`: class type we want to resolve
+</span><span class='line'>
+</span><span class='line'>@raise `TypeError` if cannot resolution superclass order
+</span><span class='line'>@return `list` of class
+</span><span class='line'>"""
+</span><span class='line'>bases_cls = cls.__bases__
+</span><span class='line'>mro_base_lists = [mro(base_cls) for base_cls in bases_cls]
+</span><span class='line'>mro_list = [cls]
+</span><span class='line'>while mro_base_lists:
+</span><span class='line'>    # find the good head
+</span><span class='line'>    # good head is head of a list which is not is tail of any list in mro_base_lists
+</span><span class='line'>    list_head = (x[0] for x in mro_base_lists)
+</span><span class='line'>    set_tails = set()
+</span><span class='line'>    for x in mro_base_lists:
+</span><span class='line'>        set_tails.update(x[1:])
+</span><span class='line'>
+</span><span class='line'>    good_head = None
+</span><span class='line'>    for head in list_head:
+</span><span class='line'>        if head not in set_tails:
+</span><span class='line'>            good_head = head
+</span><span class='line'>            break
+</span><span class='line'>
+</span><span class='line'>    # if cannot find good_head, raise TypeError
+</span><span class='line'>    if not good_head:
+</span><span class='line'>        raise TypeError
+</span><span class='line'>    else:
+</span><span class='line'>        # add to mro_list
+</span><span class='line'>        mro_list.append(good_head)
+</span><span class='line'>
+</span><span class='line'>        # remove good_head in all list and add to mro_list
+</span><span class='line'>        for alist in mro_base_lists:
+</span><span class='line'>            try:
+</span><span class='line'>                alist.remove(good_head)
+</span><span class='line'>            except Exception:
+</span><span class='line'>                pass
+</span><span class='line'>        mro_base_lists = [x for x in mro_base_lists if x]
+</span><span class='line'>return mro_list
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>class A: pass
+</span><span class='line'>class B(A): pass
+</span><span class='line'>class C(A): pass
+</span><span class='line'>class D(B, C): pass
+</span><span class='line'>class E(C, B): pass
+</span><span class='line'>class F(D, E): pass&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>def test_mro():&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>assert mro(A) == [A]
+</span><span class='line'>print "Test1 passed"
+</span><span class='line'>
+</span><span class='line'>assert mro(B) == [B, A]
+</span><span class='line'>print "Test2 passed"
+</span><span class='line'>
+</span><span class='line'>assert mro(C) == [C, A]
+</span><span class='line'>print "Test 3 passed"
+</span><span class='line'>
+</span><span class='line'>assert mro(D) == [D, B, C, A]
+</span><span class='line'>print "Test 4 passed"
+</span><span class='line'>
+</span><span class='line'>assert mro(E) == [E, C, B, A]
+</span><span class='line'>print "Test 5 passed"
+</span><span class='line'>
+</span><span class='line'>try:
+</span><span class='line'>    mro(F)
+</span><span class='line'>except Exception as e:
+</span><span class='line'>    assert isinstance(e, TypeError)
+</span><span class='line'>    print "Test 6 passed"
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>test_mro()&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Y tướng của MRO algorith là sắp xếp các super class với điều kiện:
+Nếu B là cha của C, B luôn luôn đứng trước C trong list.</p>
+
+<p>Với điều kiện đó, Python sẽ ném ra một lỗi nếu chúng ta cố gắng định nghĩa class
+D kế thừa từ (B, C), E kế thừa từ (C, B) và F kế thừa từ (D, E)</p>
+]]></content>
+  </entry>
+  
+</feed>
