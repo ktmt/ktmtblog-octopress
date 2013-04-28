@@ -131,7 +131,7 @@ Như vậy chúng ta đã có những thông tin khá hữu ích để debug đ�
 Và tiếp theo chúng ta sẽ đi đến bộ đôi thú vị nhất trong ngày: PS1 và COMMAND_PROMPT
 
 ##PS1##
-Đây chính là 2 biến quyết định cái gì sẽ hiện lên ở command prompt
+Đây chính là biến quyết định cái gì sẽ hiện lên ở command prompt, và là biến có nhiều cái để hack nhất trong các loại PSx
 
 {% img /images/UnixCommandPrompt/PS1-1.png %}
 
