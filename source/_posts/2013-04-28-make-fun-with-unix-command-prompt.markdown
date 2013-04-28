@@ -26,7 +26,7 @@ source ~/.bash_profile
 Dưới đây mình sẽ nói về việc sử dụng các biến môi trường này để biến cái command prompt của bạn trở nên **màu mè** và **thân thiện** hơn. Về thứ tự thì mình sẽ nói về cái có độ tùy biến thấp đến cao
 
 ##PS2##
-Trong 5 biến mình nói ở trên thì biến PS2 là thằng nhàm chán nhất. PS2 gọi là Continuation interactive prompt. Tại sao lại gọi như vậy thì: khi một câu lệnh unix quá dài thì bạn thường dùng kí hiệu "\" ở cuối dòng để làm cho câu lệnh đấy thành multiple-line (gõ được ở nhiều dòng). Và PS2 là biến quyết định **cái gì được in ở đầu mỗi dòng đó**
+Trong 5 biến mình nói ở trên thì biến PS2 là thằng nhàm chán nhất. PS2 gọi là Continuation interactive prompt. Tại sao lại gọi như vậy thì: khi một câu lệnh unix quá dài thì bạn thường dùng kí hiệu "&#92;" ở cuối dòng để làm cho câu lệnh đấy thành multiple-line (gõ được ở nhiều dòng). Và PS2 là biến quyết định **cái gì được in ở đầu mỗi dòng đó**
 
 {% img /images/UnixCommandPrompt/PS2-1.png %}
 
