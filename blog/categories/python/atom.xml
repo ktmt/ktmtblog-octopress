@@ -4,7 +4,7 @@
   <title><![CDATA[Category: python | Blog kỹ thuật máy tính]]></title>
   <link href="http://ktmt.github.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://ktmt.github.com/"/>
-  <updated>2013-04-29T01:14:55+07:00</updated>
+  <updated>2013-04-29T01:19:38+07:00</updated>
   <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
@@ -30,157 +30,8 @@ class trong Python, liệu đó có phải là Base Class của Python</p>
 
 <p>Từ Python 2.1 trở về trước, <strong>old-style</strong> class là lựa chọn duy nhất cho các lập trình viên. Khái niệm <strong>old-style</strong> class là không liên quan tới khái niệm kiểu. Nếu x là một instance của old-style class, x.<strong>class</strong> sẽ trỏ tới class của x, nhưng type(x) thì không.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code># old-style class was define by statement:
-</span><span class='line'>#   class &lt;class-name&gt;: &lt;class definition body&gt;
-</span><span class='line'>&gt;&gt;&gt; class A:
-</span><span class='line'>        pass
-</span><span class='line'># type of class A is 'type' because 'type' is base-class in Python
-</span><span class='line'>&gt;&gt;&gt; type(A)
-</span><span class='line'>&lt;type 'type'&gt;
-</span><span class='line'>
-</span><span class='line'># make an instance of A
-</span><span class='line'>&gt;&gt;&gt; a = A()
-</span><span class='line'># a.__class__ reference to class A
-</span><span class='line'>&gt;&gt;&gt; a.__class__
-</span><span class='line'>&lt;class __main__.A at 0x10aea6ce8&gt;
-</span><span class='line'># bute type of a is not A but 'instance'
-</span><span class='line'>&gt;&gt;&gt; type(a)
-</span><span class='line'>&lt;type 'instance'&gt;
-</span><span class='line'># 'instance' still is 'type' class
-</span><span class='line'>&gt;&gt;&gt; type(type(a))
-</span><span class='line'>&lt;type 'type'&gt;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p><strong>new-style</strong> class được giới thiệu với động lực tạo ra một mô hình object thống nhất cho Python. Mọi đối tượng sẽ được kế thừa từ <strong>object</strong></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>&gt;&gt;&gt; object.__class__
-</span><span class='line'>&lt;type 'type'&gt;
-</span><span class='line'>&gt;&gt;&gt; type(object)
-</span><span class='line'>&lt;type 'type'&gt;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p><strong>new-style</strong> class được định nghĩa bằng cách kế thừa từ <strong>object</strong> class.
-Khác với <strong>old-style</strong> class, nếu x là một instance của <strong>new-style</strong> class, cả x.<strong>class</strong> và type(x) đều trỏ về class của x</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>&gt;&gt;&gt; class A(object): pass
-</span><span class='line'>&gt;&gt;&gt; A.__class__
-</span><span class='line'>&lt;type 'type'&gt;
-</span><span class='line'>&gt;&gt;&gt; x = A()
-</span><span class='line'>&gt;&gt;&gt; x.__class__
-</span><span class='line'>&gt;&gt;&gt; type(x)
-</span><span class='line'>&lt;type 'A'&gt;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Để tương thích với các phiên bản của của Python, class mặc định vẫn được để ở <strong>old-style</strong>.
-Nếu chúng ta muốn sử dụng <strong>new-style</strong>, chúng ta bắt buộc phải định nghĩa class là subclass của <strong>object</strong></p>
-
-<h3>2. Điểm khác biệt giữa <strong>old-style</strong> và <strong>new-style</strong> class</h3>
-
-<p>Điểm khác biệt rõ nhất được nhìn thấy trong hệ thống kiểu.
-Hãy xem làm thế nào <strong>old-style</strong> class và <strong>new-style</strong> class thực hiện việc đa kế thừa. "Đa kế thừa" là khả năng một class có thể kế thừa từ nhiều class khác nhau. Nếu A kế thừa từ B, A là subclass(child class, derived class) của B, còn B là superclass (base class, parent class của A)</p>
-
-<p>Đa kế thừa cho phép một class A có thể có nhiều cha (theo tôi, đa kế thừa không thực sự tốt. có nhiều cách để giải quyết vấn đề đa kế thừa, hãy xem Ruby với mixins hay Java với interface thực hiện điều đó. tôi thực sự rất thích mô hình mixins của Ruby)</p>
-
-<p>Trong mô hình object của Python, mọi class đều có thuộc tình <strong><strong>bases</strong></strong> để lưu lại tất cả các class cha của nó, theo thứ tự xuất hiện của việc thừa kế.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>&gt;&gt;&gt; class A: pass
-</span><span class='line'>&gt;&gt;&gt; class B: pass
-</span><span class='line'>&gt;&gt;&gt; class C(A, B): pass
-</span><span class='line'>&gt;&gt;&gt; C.__bases__
-</span><span class='line'>(&lt;class __main__.A at 0x10aea6ce8&gt;, &lt;class __main__.B at 0x10af8de20&gt;)
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Vấn đề của đa kế thừa đó là thự tự của các superclass.</p>
-
-<p>Khi một instance của một subclass truy cập vào một thuộc tính (hoặc một method),</p>
-
-<pre><code>đầu tiên, nó sẽ tìm kiếm các thuộc tính được định nghĩa trong không gian của nó.
-Nếu thuộc tình (hoặc method) không được tìm thấy, nó sẽ tìm đến không gian
-của class (thuộc tính của class, hàm của class). Nếu vẫn không tìm thấy, nó
-sẽ tìm kiếm tiếp trong không gian của các super class. Khi một class có nhiều
-super class, thứ tự của các super class chính là thứ tự khi tìm kiếm
-</code></pre>
-
-<p>Trong <strong>old-style</strong> class, thứ tự của các superclass là depth-first, left-to-right
-theo thứ tự xuất hiện trong bases list</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -214,40 +65,232 @@ theo thứ tự xuất hiện trong bases list</p>
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
 <span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>&gt;&gt;&gt; class A:
-</span><span class='line'>      def test(self): print "A"
-</span><span class='line'>&gt;&gt;&gt; class B(A):
-</span><span class='line'>      def test(self): print "B"
-</span><span class='line'>&gt;&gt;&gt; class C(A)
-</span><span class='line'>      def test(self): print "C"
-</span><span class='line'>&gt;&gt;&gt; class D(B, C): pass
-</span><span class='line'># order of D.__bases__ is (B, C) so D.test =&gt; B.test
-</span><span class='line'>&gt;&gt;&gt; D().test()
-</span><span class='line'>"B"
-</span><span class='line'>&gt;&gt;&gt; class E(C, B): pass
-</span><span class='line'># order of E.__bases__ is (C, B) so E.test =&gt; C.test
-</span><span class='line'>&gt;&gt;&gt; E().test()
-</span><span class='line'>"C"
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">old</span><span class="o">-</span><span class="n">style</span> <span class="k">class</span> <span class="nc">was</span> <span class="n">define</span> <span class="n">by</span> <span class="n">statement</span><span class="p">:</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'># so what if we make an class is inherited from D, E
-</span><span class='line'># note that, D and E are inherited from 2 class B, C with reverse order
-</span><span class='line'>&gt;&gt;&gt; class F(D, E): pass
-</span><span class='line'># in old-style class, it does not matter, the searching method
-</span><span class='line'># only care about order of superclass in __bases__
-</span><span class='line'># so now F.test =&gt; D.test =&gt; B.test
-</span><span class='line'>&gt;&gt;&gt; F().test()
-</span><span class='line'>"B"
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">class</span> <span class="err">&lt;</span><span class="nc">class</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">:</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">definition</span> <span class="n">body</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'># even if we make an class is inherited from A, D, E
-</span><span class='line'># it still works and test() method will be test() method of A
-</span><span class='line'>&gt;&gt;&gt; class G(A, D, E): pass
-</span><span class='line'>&gt;&gt;&gt; G().test()
-</span><span class='line'>"A"
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'><span class="o">&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">A</span><span class="p">:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="k">pass</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="nb">type</span> <span class="n">of</span> <span class="k">class</span> <span class="nc">A</span> <span class="ow">is</span> <span class="s">&#39;type&#39;</span> <span class="n">because</span> <span class="s">&#39;type&#39;</span> <span class="ow">is</span> <span class="n">base</span><span class="o">-</span><span class="k">class</span> <span class="nc">in</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nb">type</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">blockquote</span><span class="o">&gt;&lt;/</span><span class="n">blockquote</span><span class="o">&gt;&lt;/</span><span class="n">blockquote</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">make</span> <span class="n">an</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">A</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">a</span><span class="o">.&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">class</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="n">reference</span> <span class="n">to</span> <span class="k">class</span> <span class="nc">A</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">a</span><span class="o">.&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">class</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">A</span> <span class="n">at</span> <span class="mh">0x10aea6ce8</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">bute</span> <span class="nb">type</span> <span class="n">of</span> <span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">A</span> <span class="n">but</span> <span class="s">&#39;instance&#39;</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;instance&#39;</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="s">&#39;instance&#39;</span> <span class="n">still</span> <span class="ow">is</span> <span class="s">&#39;type&#39;</span> <span class="n">class</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nb">type</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p></blockquote></blockquote></blockquote>
+
+<p><strong>new-style</strong> class được giới thiệu với động lực tạo ra một mô hình object thống nhất cho Python. Mọi đối tượng sẽ được kế thừa từ <strong>object</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nb">object</span><span class="o">.&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">class</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p></blockquote></blockquote></blockquote>
+
+<p><strong>new-style</strong> class được định nghĩa bằng cách kế thừa từ <strong>object</strong> class.
+Khác với <strong>old-style</strong> class, nếu x là một instance của <strong>new-style</strong> class, cả x.<strong>class</strong> và type(x) đều trỏ về class của x</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="n">A</span><span class="o">.&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">class</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+</span><span class='line'><span class="n">x</span><span class="o">.&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">class</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span>
+</span><span class='line'><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;A&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p></blockquote></blockquote></blockquote>
+
+<p>Để tương thích với các phiên bản của của Python, class mặc định vẫn được để ở <strong>old-style</strong>.
+Nếu chúng ta muốn sử dụng <strong>new-style</strong>, chúng ta bắt buộc phải định nghĩa class là subclass của <strong>object</strong></p>
+
+<h3>2. Điểm khác biệt giữa <strong>old-style</strong> và <strong>new-style</strong> class</h3>
+
+<p>Điểm khác biệt rõ nhất được nhìn thấy trong hệ thống kiểu.
+Hãy xem làm thế nào <strong>old-style</strong> class và <strong>new-style</strong> class thực hiện việc đa kế thừa. "Đa kế thừa" là khả năng một class có thể kế thừa từ nhiều class khác nhau. Nếu A kế thừa từ B, A là subclass(child class, derived class) của B, còn B là superclass (base class, parent class của A)</p>
+
+<p>Đa kế thừa cho phép một class A có thể có nhiều cha (theo tôi, đa kế thừa không thực sự tốt. có nhiều cách để giải quyết vấn đề đa kế thừa, hãy xem Ruby với mixins hay Java với interface thực hiện điều đó. tôi thực sự rất thích mô hình mixins của Ruby)</p>
+
+<p>Trong mô hình object của Python, mọi class đều có thuộc tình <strong><strong>bases</strong></strong> để lưu lại tất cả các class cha của nó, theo thứ tự xuất hiện của việc thừa kế.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">B</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="n">C</span><span class="o">.&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">bases</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span>
+</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">A</span> <span class="n">at</span> <span class="mh">0x10aea6ce8</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">B</span> <span class="n">at</span> <span class="mh">0x10af8de20</span><span class="o">&gt;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p></blockquote></blockquote></blockquote>
+
+<p>Vấn đề của đa kế thừa đó là thự tự của các superclass.</p>
+
+<p>Khi một instance của một subclass truy cập vào một thuộc tính (hoặc một method),</p>
+
+<pre><code>đầu tiên, nó sẽ tìm kiếm các thuộc tính được định nghĩa trong không gian của nó.
+Nếu thuộc tình (hoặc method) không được tìm thấy, nó sẽ tìm đến không gian
+của class (thuộc tính của class, hàm của class). Nếu vẫn không tìm thấy, nó
+sẽ tìm kiếm tiếp trong không gian của các super class. Khi một class có nhiều
+super class, thứ tự của các super class chính là thứ tự khi tìm kiếm
+</code></pre>
+
+<p>Trong <strong>old-style</strong> class, thứ tự của các superclass là depth-first, left-to-right
+theo thứ tự xuất hiện trong bases list</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">A</span><span class="p">:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;A&quot;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;B&quot;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;C&quot;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span> <span class="k">pass</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">order</span> <span class="n">of</span> <span class="n">D</span><span class="o">.&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">bases</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="ow">is</span> <span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span> <span class="n">so</span> <span class="n">D</span><span class="o">.</span><span class="n">test</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">.</span><span class="n">test</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">D</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;B&quot;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">E</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">order</span> <span class="n">of</span> <span class="n">E</span><span class="o">.&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">bases</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="ow">is</span> <span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span> <span class="n">so</span> <span class="n">E</span><span class="o">.</span><span class="n">test</span> <span class="o">=&gt;</span> <span class="n">C</span><span class="o">.</span><span class="n">test</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">E</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;C&quot;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">blockquote</span><span class="o">&gt;&lt;/</span><span class="n">blockquote</span><span class="o">&gt;&lt;/</span><span class="n">blockquote</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">so</span> <span class="n">what</span> <span class="k">if</span> <span class="n">we</span> <span class="n">make</span> <span class="n">an</span> <span class="k">class</span> <span class="nc">is</span> <span class="n">inherited</span> <span class="kn">from</span> <span class="nn">D</span><span class="p">,</span> <span class="n">E</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">note</span> <span class="n">that</span><span class="p">,</span> <span class="n">D</span> <span class="ow">and</span> <span class="n">E</span> <span class="n">are</span> <span class="n">inherited</span> <span class="kn">from</span> <span class="mi">2</span> <span class="k">class</span> <span class="nc">B</span><span class="p">,</span> <span class="n">C</span> <span class="k">with</span> <span class="n">reverse</span> <span class="n">order</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="ow">in</span> <span class="n">old</span><span class="o">-</span><span class="n">style</span> <span class="n">class</span><span class="p">,</span> <span class="n">it</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">matter</span><span class="p">,</span> <span class="n">the</span> <span class="n">searching</span> <span class="n">method</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">only</span> <span class="n">care</span> <span class="n">about</span> <span class="n">order</span> <span class="n">of</span> <span class="n">superclass</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">bases</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">so</span> <span class="n">now</span> <span class="n">F</span><span class="o">.</span><span class="n">test</span> <span class="o">=&gt;</span> <span class="n">D</span><span class="o">.</span><span class="n">test</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">.</span><span class="n">test</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">F</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;B&quot;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">blockquote</span><span class="o">&gt;&lt;/</span><span class="n">blockquote</span><span class="o">&gt;&lt;/</span><span class="n">blockquote</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">even</span> <span class="k">if</span> <span class="n">we</span> <span class="n">make</span> <span class="n">an</span> <span class="k">class</span> <span class="nc">is</span> <span class="n">inherited</span> <span class="kn">from</span> <span class="nn">A</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">it</span> <span class="n">still</span> <span class="n">works</span> <span class="ow">and</span> <span class="n">test</span><span class="p">()</span> <span class="n">method</span> <span class="n">will</span> <span class="n">be</span> <span class="n">test</span><span class="p">()</span> <span class="n">method</span> <span class="n">of</span> <span class="n">A</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">blockquote</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">G</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="n">G</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;A&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p></blockquote></blockquote></blockquote>
 
 <p>Cách phân giải method của <strong>old-style</strong> khá đơn giản và dễ hiểu. Nhưng nếu chúng
 ta áp dụng quy luật này, đôi khi chúng ta sẽ phạm phải sai lầm khi kế thừa.
@@ -256,8 +299,8 @@ Rõ ràng, một lỗi nên được Python ném ra trong trường hợp này �
 
 <p><strong>new-stlye</strong> giải quyết vấn đề này. <strong>new-style</strong> sử dụng MRO (Method Resolution Order) được giới thiệu từ Python 2.3</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -338,93 +381,99 @@ Rõ ràng, một lỗi nên được Python ném ra trong trường hợp này �
 <span class='line-number'>79</span>
 <span class='line-number'>80</span>
 <span class='line-number'>81</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>def mro(cls):&lt;/p>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">mro</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>"""
-</span><span class='line'>Return ordering of superclass of cls
-</span><span class='line'>This ordering was used when we want to access class instance atrribute
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s">Return ordering of superclass of cls</span>
+</span><span class='line'><span class="s">This ordering was used when we want to access class instance atrribute</span>
 </span><span class='line'>
-</span><span class='line'>`cls`: class type we want to resolve
+</span><span class='line'><span class="s">`cls`: class type we want to resolve</span>
 </span><span class='line'>
-</span><span class='line'>@raise `TypeError` if cannot resolution superclass order
-</span><span class='line'>@return `list` of class
-</span><span class='line'>"""
-</span><span class='line'>bases_cls = cls.__bases__
-</span><span class='line'>mro_base_lists = [mro(base_cls) for base_cls in bases_cls]
-</span><span class='line'>mro_list = [cls]
-</span><span class='line'>while mro_base_lists:
-</span><span class='line'>    # find the good head
-</span><span class='line'>    # good head is head of a list which is not is tail of any list in mro_base_lists
-</span><span class='line'>    list_head = (x[0] for x in mro_base_lists)
-</span><span class='line'>    set_tails = set()
-</span><span class='line'>    for x in mro_base_lists:
-</span><span class='line'>        set_tails.update(x[1:])
+</span><span class='line'><span class="s">@raise `TypeError` if cannot resolution superclass order</span>
+</span><span class='line'><span class="s">@return `list` of class</span>
+</span><span class='line'><span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="n">bases_cls</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__bases__</span>
+</span><span class='line'><span class="n">mro_base_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">mro</span><span class="p">(</span><span class="n">base_cls</span><span class="p">)</span> <span class="k">for</span> <span class="n">base_cls</span> <span class="ow">in</span> <span class="n">bases_cls</span><span class="p">]</span>
+</span><span class='line'><span class="n">mro_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">cls</span><span class="p">]</span>
+</span><span class='line'><span class="k">while</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>    <span class="c"># find the good head</span>
+</span><span class='line'>    <span class="c"># good head is head of a list which is not is tail of any list in mro_base_lists</span>
+</span><span class='line'>    <span class="n">list_head</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">set_tails</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">set_tails</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 </span><span class='line'>
-</span><span class='line'>    good_head = None
-</span><span class='line'>    for head in list_head:
-</span><span class='line'>        if head not in set_tails:
-</span><span class='line'>            good_head = head
-</span><span class='line'>            break
+</span><span class='line'>    <span class="n">good_head</span> <span class="o">=</span> <span class="bp">None</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">head</span> <span class="ow">in</span> <span class="n">list_head</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">head</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">set_tails</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">good_head</span> <span class="o">=</span> <span class="n">head</span>
+</span><span class='line'>            <span class="k">break</span>
 </span><span class='line'>
-</span><span class='line'>    # if cannot find good_head, raise TypeError
-</span><span class='line'>    if not good_head:
-</span><span class='line'>        raise TypeError
-</span><span class='line'>    else:
-</span><span class='line'>        # add to mro_list
-</span><span class='line'>        mro_list.append(good_head)
+</span><span class='line'>    <span class="c"># if cannot find good_head, raise TypeError</span>
+</span><span class='line'>    <span class="k">if</span> <span class="ow">not</span> <span class="n">good_head</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">raise</span> <span class="ne">TypeError</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="c"># add to mro_list</span>
+</span><span class='line'>        <span class="n">mro_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">good_head</span><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'>        # remove good_head in all list and add to mro_list
-</span><span class='line'>        for alist in mro_base_lists:
-</span><span class='line'>            try:
-</span><span class='line'>                alist.remove(good_head)
-</span><span class='line'>            except Exception:
-</span><span class='line'>                pass
-</span><span class='line'>        mro_base_lists = [x for x in mro_base_lists if x]
-</span><span class='line'>return mro_list
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>        <span class="c"># remove good_head in all list and add to mro_list</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">alist</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">alist</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">good_head</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span class='line'>                <span class="k">pass</span>
+</span><span class='line'>        <span class="n">mro_base_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
+</span><span class='line'><span class="k">return</span> <span class="n">mro_list</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>class A: pass
-</span><span class='line'>class B(A): pass
-</span><span class='line'>class C(A): pass
-</span><span class='line'>class D(B, C): pass
-</span><span class='line'>class E(C, B): pass
-</span><span class='line'>class F(D, E): pass&lt;/p>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">E</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>def test_mro():&lt;/p>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">test_mro</span><span class="p">():</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>assert mro(A) == [A]
-</span><span class='line'>print "Test1 passed"
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">A</span><span class="p">]</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;Test1 passed&quot;</span>
 </span><span class='line'>
-</span><span class='line'>assert mro(B) == [B, A]
-</span><span class='line'>print "Test2 passed"
+</span><span class='line'><span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">B</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;Test2 passed&quot;</span>
 </span><span class='line'>
-</span><span class='line'>assert mro(C) == [C, A]
-</span><span class='line'>print "Test 3 passed"
+</span><span class='line'><span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;Test 3 passed&quot;</span>
 </span><span class='line'>
-</span><span class='line'>assert mro(D) == [D, B, C, A]
-</span><span class='line'>print "Test 4 passed"
+</span><span class='line'><span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">D</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;Test 4 passed&quot;</span>
 </span><span class='line'>
-</span><span class='line'>assert mro(E) == [E, C, B, A]
-</span><span class='line'>print "Test 5 passed"
+</span><span class='line'><span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">E</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;Test 5 passed&quot;</span>
 </span><span class='line'>
-</span><span class='line'>try:
-</span><span class='line'>    mro(F)
-</span><span class='line'>except Exception as e:
-</span><span class='line'>    assert isinstance(e, TypeError)
-</span><span class='line'>    print "Test 6 passed"
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'><span class="k">try</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">mro</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+</span><span class='line'><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span class='line'>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test 6 passed&quot;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>test_mro()&lt;/p>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">test_mro</span><span class="p">()</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>Y tướng của MRO algorith là sắp xếp các super class với điều kiện:
-Nếu B là cha của C, B luôn luôn đứng trước C trong list.</p>
+<p>Ý tướng của MRO là sắp xếp các super class với điều kiện:</p>
+
+<pre><code>+ Nếu B là cha của C, B luôn luôn đứng trước C trong list.
+</code></pre>
 
 <p>Với điều kiện đó, Python sẽ ném ra một lỗi nếu chúng ta cố gắng định nghĩa class
 D kế thừa từ (B, C), E kế thừa từ (C, B) và F kế thừa từ (D, E)</p>
+
+<p>Tham khảo
+<a href="http://www.python.org/download/releases/2.3/mro/">explaination in python docs</a></p>
 ]]></content>
   </entry>
   
