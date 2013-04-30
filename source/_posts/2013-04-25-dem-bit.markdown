@@ -80,10 +80,10 @@ Ta nhận thấy các con số trên không hoàn toàn bí ẩn mà nó hoàn t
 
 Ta thử quay lại hàm **fbc** và xem cách con số này được sử dụng. Vì số 0x55555555 lên đến 32 bit nên rất khó theo dõi (nhiều 0 với 1 quá @.@), ta sẽ thử xét trường hợp số 8 bit với bit pattern không đổi (tức là số  0xFF). Dòng 1 của hàm fbc sẽ như dưới đây:
 
-data = (data & 0x55) + ((data >> 1) & 0x55);
+        data = (data & 0x55) + ((data >> 1) & 0x55);
 
 Giả sử data = 10110011b, ta sẽ có:
-data = 10110011 & 01010101 + ((10110011 >> 1 & 01010101)
+        data = 10110011 & 01010101 + ((10110011 >> 1 & 01010101)
 
 **"Dễ dàng"** nhận thấy chuỗi bit của 0xFF có các bit 1 ở vị trí chẵn (0, 2, 4...) do vậy bằng cách & data với 0xFF, ta đã loại trừ các bit 1 ở vị trí lẻ (1,3,5...). Do vậy kết quả của data & 0x55 sẽ cho ra các bit 1 ở vị trí chẵn. Bằng cách dịch 1 bit của data, ta chuyển các bit từ vị trí lẻ sang vị trí chẵn, và lại & với 0xFF, do đó đại lượng sau dấu cộng sẽ có các bit 1 ở vị trí chẵn. Kết quả của phép cộng sẽ cho ra số lượng bit ở vị trí lẻ và vị trí chẵn
 
