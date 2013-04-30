@@ -142,6 +142,6 @@ Là đã synchronize thành công.
 ### Kết luận:
 Như vậy sau lần đầu setting có vẻ loằng ngoằng, từ bây giờ khi muốn viet blog bạn chỉ cần:
 
-{% img /images/OctopressGuide/octopress6.png %}
+{% img /images/OctopressGuide/octopress7.png %}
 
 Rất đơn giản đúng không :D. Happy blogging.
