@@ -96,7 +96,7 @@ Yêu cầu: Trang web www.mysite.com của bạn có 100 sublink: www.mysite.com
 
 Bạn phải test xem trong từ sublink đó có 1 file image tên là "myimage.png" với div=myimage hay không.
 
-Như vậy có 100 test case ở đây, tuy nhiên content khá giống nhau, bạn có thể nghĩ đến chuyện tạo 1 template
+Như vậy có 100 test case ở đây, tuy nhiên content khá giống nhau, bạn có thể nghĩ đến chuyện tạo template
 
 {% codeblock template.py%}
 from selenium import webdriver
