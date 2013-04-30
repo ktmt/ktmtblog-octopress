@@ -1,0 +1,340 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Đếm bit - Blog kỹ thuật máy tính</title>
+	<meta name="author" content="kỹ thuật máy tính">
+
+	
+	<meta name="description" content="Mở đầu Bạn đang say sưa hacking code và bắt gặp một hàm với những con số bí ẩn như ở dưới đây: fbc.c 1
+2
+3
+4
+5
+6
+7
+8
+9
+int fbc(unsigned int data)
+{ &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/ktmtblog-octopress/atom.xml" rel="alternate" title="Blog kỹ thuật máy tính" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/ktmtblog-octopress/favicon.png" rel="shortcut icon">
+	<link href="/ktmtblog-octopress/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+</head>
+
+<body>
+	<header id="header" class="inner"><h1><a href="/ktmtblog-octopress/">Blog kỹ thuật máy tính</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/ktmtblog-octopress/">Blog</a></li>
+	<li><a href="/ktmtblog-octopress/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/ktmtblog-octopress/">Blog</a></li>
+	<li><a href="/ktmtblog-octopress/blog/archives">Archives</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:ktmt.github.com/ktmtblog-octopress">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		
+    
+		
+		
+		
+		
+		
+		<a class="rss" href="/ktmtblog-octopress/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+	<form class="search" action="http://google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:ktmt.github.com/ktmtblog-octopress">
+	</form>
+</nav>
+
+</header>
+	
+		
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Đếm Bit</h2>
+	<div class="entry-content"><h2>Mở đầu</h2>
+
+<p>Bạn đang say sưa hacking code và bắt gặp một hàm với những con số bí ẩn như ở dưới đây:</p>
+
+<figure class='code'><figcaption><span>fbc.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">fbc</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">data</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Chắc hẳn bạn sẽ không khỏi hét lên: &#8220;what the fuck! Không hiểu gì hết&#8221; khi nhìn đoạn code này. Bạn hoàn toàn không hiểu mục đích của nó. Tên hàm không cho bạn một thông tin nào hữu ích. Những con số bí ẩn cùng phép toán >>, &amp;, + làm bạn rối.</p>
+
+<p>Nếu tôi nói với bạn fcb có nghĩa là &#8220;fast bit count&#8221; và hàm trên trả về số bit 1 của 1 số 32 bit (unsigned int trong C), tôi cá chắc chắn bạn sẽ không khỏi hoài nghi. Vậy chúng ta hãy thử  biên dịch chương trình và test thử hàm này. Tôi viết chương trình như dưới đây để test hàm fbc.</p>
+
+<figure class='code'><figcaption><span>test.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;assert.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">fbc</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">data</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">ans</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">ans</span> <span class="o">=</span> <span class="n">fbc</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">assert</span><span class="p">(</span><span class="n">ans</span> <span class="o">==</span> <span class="mi">2</span><span class="p">);</span>  <span class="c1">// 5 = 101b</span>
+</span><span class='line'>        <span class="n">ans</span> <span class="o">=</span> <span class="n">fbc</span><span class="p">(</span><span class="mi">198123</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">assert</span><span class="p">(</span><span class="n">ans</span> <span class="o">==</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// 198123 = 110000010111101011b</span>
+</span><span class='line'>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Kết quả chạy:</p>
+
+<div>
+  <pre><code class='bash'>$ gcc -o test test.c
+$ ./test
+$ echo $?
+0</code></pre>
+</div>
+
+
+<p>Chương trình chạy bình thường, cho kết quả bằng 0 chứng tỏ hàm fbc trả về giá trị như ta mong muốn.</p>
+
+<p><strong>Bạn sẽ thắc mắc</strong>: Tại sao hàm này lại có thể đếm được số bit 1? Chúng ta hãy cùng tìm hiểu cơ chế đếm của hàm này.</p>
+
+<h2>Cơ chế</h2>
+
+<p>Để có thể hiểu tại sao hàm này trả về số bit 1, ta hãy thử xem các con số 0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF và 0x0000FFFF có ý nghĩa gì.</p>
+
+<p>Bằng cách ấn máy tính, đổi từ hệ 16 sang hệ 2, ta có giá trị nhị phân của các số trên như bảng dưới đây:</p>
+
+<pre><code>0x55555555      01010101010101010101010101010101   
+0x33333333      00110011001100110011001100110011     
+0x0F0F0F0F      00001111000011110000111100001111    
+0x00FF00FF      00000000111111110000000011111111   
+0x0000FFFF      00000000000000001111111111111111   
+</code></pre>
+
+<p>Ta nhận thấy các con số trên không hoàn toàn bí ẩn mà nó hoàn toàn có quy luật. Từ trên xuống dưới, các bit 1 xen kẽ nhau theo chu kỳ 1, 2, 4, 8, 16.</p>
+
+<p>Ta thử quay lại hàm <strong>fbc</strong> và xem cách con số này được sử dụng. Vì số 0x55555555 lên đến 32 bit nên rất khó theo dõi (nhiều 0 với 1 quá @.@), ta sẽ thử xét trường hợp số 8 bit với bit pattern không đổi (tức là số  0xFF). Dòng 1 của hàm fbc sẽ như dưới đây:</p>
+
+<pre><code>    data = (data &amp; 0x55) + ((data &gt;&gt; 1) &amp; 0x55);
+</code></pre>
+
+<p>Giả sử data = 10110011b, ta sẽ có:</p>
+
+<pre><code>    data = 10110011 &amp; 01010101 + ((10110011 &gt;&gt; 1 &amp; 01010101)
+</code></pre>
+
+<p><strong>&#8220;Dễ dàng&#8221;</strong> nhận thấy chuỗi bit của 0xFF có các bit 1 ở vị trí chẵn (0, 2, 4&#8230;) do vậy bằng cách &amp; data với 0xFF, ta đã loại trừ các bit 1 ở vị trí lẻ (1,3,5&#8230;). Do vậy kết quả của data &amp; 0x55 sẽ cho ra các bit 1 ở vị trí chẵn. Bằng cách dịch 1 bit của data, ta chuyển các bit từ vị trí lẻ sang vị trí chẵn, và lại &amp; với 0xFF, do đó đại lượng sau dấu cộng sẽ có các bit 1 ở vị trí chẵn. Kết quả của phép cộng sẽ cho ra số lượng bit ở vị trí lẻ và vị trí chẵn</p>
+
+<p>Lần tính 1</p>
+
+<pre><code>       data &amp; 01010101   00 01 00 01  
+ (data &gt;&gt; 1)&amp; 01010101   01 01 00 01  
+                         01 10 00 10  
+</code></pre>
+
+<p>Do kết quả tối đa của phép + này là 2, khả năng kết quả phép cộng &#8220;tràn sang&#8221; vùng bit bên cạnh là không có. Sau lần tính thứ nhất, ta có kết quả của số bit 1 của cặp đôi bit cạnh nhau.</p>
+
+<p>Tất nhiên ở đây ta vẫn chua có kết quả số bit. Tuy nhiên ta sẽ áp dụng phương pháp tương tự cho cụm 4 bit.</p>
+
+<p>Nhìn dòng thứ 2 đoạn code bạn sẽ thấy: &#8230;1100110011b: 2 bit đan xen! Phép dịch bit bây giờ là >> 2.</p>
+
+<p>Lần tính 2</p>
+
+<pre><code>           data &amp; 00110011   00 10 00 10  
+     (data &gt;&gt; 2)&amp; 00110011   00 01 00 00  
+                             00 11 00 10  
+</code></pre>
+
+<p>Như vậy ta có 4 bit đằng sau có tổng số bit là 2, 4 bit đâu có tổng số bit là 11 (3 trong hệ thập phân)!!!</p>
+
+<p>Áp dụng cách tính tương tự, ta có kết quả như ở dưới.</p>
+
+<p>Lần tính 3</p>
+
+<pre><code>           data &amp; 00001111   00 00 00 10  
+     (data &gt;&gt; 4)&amp; 00001111   00 00 00 11  
+                             00 00 01 01  
+</code></pre>
+
+<p>Kết quả là 5, chính là số bit của data ban đầu!!</p>
+
+<p>Để tính số bit của 1 số 32 bit, ta chỉ việc tăng số bit của các &#8220;magic number&#8221; lên. Đấy là lý do ta có các số 0x55555555, 0x33333333, &#8230;</p>
+
+<p>Đến đây chắc hẳn bạn đã hiểu tại sao hàm <strong>fbc</strong> trả về số bit 1.</p>
+
+<h2>Tổng kết</h2>
+
+<p>Hy vọng với giải thích trên, bạn đã hiểu ý nghĩa sâu sắc đằng sau hàm fbc. Bạn sẽ vẫn hét &#8220;What the fuck!!!&#8221; nhưng lần này cho sự tuyệt vời không những cho sự ngắn gọn, tinh tế của đoạn code.</p>
+
+<h2>Tham khảo</h2>
+
+<ol>
+<li><a href="http://graphics.stanford.edu/~seander/bithacks.html">bithacks</a></li>
+<li><a href="http://www.drpaulcarter.com/pcasm/">assembly book</a></li>
+<li><a href="http://download.savannah.gnu.org/releases/pgubook/ProgrammingGroundUp-1-0-booksize.pdf">Programming groundup</a></li>
+</ol>
+
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-25T00:00:00+09:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/ktmtblog-octopress/blog/categories/programming-bit-twiddling/'>programming, bit twiddling</a>
+
+
+</div>
+	
+		<div class="comments"><a href="/ktmtblog-octopress/blog/2013/04/25/dem-bit/#disqus_thread">Comments</a></div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2013
+
+    kỹ thuật máy tính
+
+</footer>
+	<script src="/ktmtblog-octopress/javascripts/slash.js"></script>
+<script src="/ktmtblog-octopress/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'ktmt';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/25/dem-bit/';
+        var disqus_url = 'http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/25/dem-bit/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: linux, tips, tutorial | Blog kỹ thuật máy tính]]></title>
+  <link href="http://ktmt.github.com/ktmtblog-octopress/blog/categories/linux-tips-tutorial/atom.xml" rel="self"/>
+  <link href="http://ktmt.github.com/ktmtblog-octopress/"/>
+  <updated>2013-04-30T18:38:36+09:00</updated>
+  <id>http://ktmt.github.com/ktmtblog-octopress/</id>
+  <author>
+    <name><![CDATA[kỹ thuật máy tính]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[fun with unix command prompt]]></title>
+    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/28/make-fun-with-unix-command-prompt/"/>
+    <updated>2013-04-28T00:06:00+09:00</updated>
+    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/28/make-fun-with-unix-command-prompt</id>
+    <content type="html"><![CDATA[<p><img src="/images/UnixCommandPrompt/unix.png"></p>
+
+<p>Chắc hẳn là một unix user (có thể mac os hay linux), lại là một programmer, bạn sẽ phải hàng ngày sử dụng terminal cho việc lập trình, quản lý source, monitoring hệ thống.... Và đã là người sử dụng terminal hàng ngày thì cái bạn phải nhìn thấy nhiều nhất chính là cái gọi là "Command prompt"</p>
+
+<p><img src="/images/UnixCommandPrompt/unix-terminal.png"></p>
+
+<p>Cái command prompt này thì tùy thuộc vào shell bạn đang dùng (bash hay zsh..) mà sẽ có những cách tùy chỉnh khác nhau. Mình thì đang dùng bash (chắc một ngày gần đây sẽ chuyển qua zsh), nên bài viết này sẽ áp dụng chủ yếu ở trên bash. Command prompt ở trên bash thì gồm có 4 biến môi trường (environment variable) chính: PS1, PS2, PS3, PS4 (Ngoài ra còn có COMMAND_PROMPT nữa nhưng thằng này na ná PS1 nên mình không đề cập đến). Để sử dụng các biến môi trường này thì bạn chỉ cần:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span> <span class="o">=</span> <span class="s2">&quot;abcxyz&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+hoặc đặt đoạn code đó vào ~/.bash_profile hoặc ~/.bashrc rồi
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.bash_profile
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+để shell load lại các setting trong file tương ứng là biến môi trường đã được set.</p>
+
+<p>Dưới đây mình sẽ nói về việc sử dụng các biến môi trường này để biến cái command prompt của bạn trở nên <strong>màu mè</strong> và <strong>thân thiện</strong> hơn. Về thứ tự thì mình sẽ nói về cái có độ tùy biến thấp đến cao</p>
+
+<h2>PS2</h2>
+
+<p>Trong 5 biến mình nói ở trên thì biến PS2 là thằng nhàm chán nhất. PS2 gọi là Continuation interactive prompt. Tại sao lại gọi như vậy thì: khi một câu lệnh unix quá dài thì bạn thường dùng kí hiệu "&#92;" ở cuối dòng để làm cho câu lệnh đấy thành multiple-line (gõ được ở nhiều dòng). Và PS2 là biến quyết định <strong>cái gì được in ở đầu mỗi dòng đó</strong></p>
+
+<p><img src="/images/UnixCommandPrompt/PS2-1.png"></p>
+
+<p>Cách sử dụng thì vô cùng đơn giản:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS2</span><span class="o">=</span><span class="s2">&quot;continue here -&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+Và kết quả là:</p>
+
+<p><img src="/images/UnixCommandPrompt/PS2-2.png"></p>
+
+<p>Chắc bạn cũng đã hình dung ra cách dùng PS2 thế nào rồi nhỉ, và hẳn bạn đang nghĩ, biến này chả có gì thú vị lắm nhỉ, mình cũng nghĩ thế :D. Thế nên chúng ta qua thằng tiếp theo nhé: PS3</p>
+
+<h2>PS3</h2>
+
+<p>PS3 gọi là biến dùng cho việc "select inside shell script"
+Giả sử bạn phải viết một đoạn script cho lựa chọn (ví dụ như bạn làm infra, phải viết script kiểu như: hãy chọn giữa install rvm hay rbenv chẳng hạn).Thì chắc đoạn script đó sẽ trông như sau:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>select select.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Select your option:&quot;</span>
+</span><span class='line'><span class="k">select </span>i in 1<span class="o">)</span> 2<span class="o">)</span> 3<span class="o">)</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'><span class="k">  case</span> <span class="nv">$i</span> in&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;x<span class="o">)</span>....
+</span><span class='line'>y<span class="o">)</span>....
+</span><span class='line'>z<span class="o">)</span>....
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;  <span class="k">esac</span>
+</span><span class='line'><span class="k">done</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">==</span>&gt; run&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;/.select.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;x<span class="o">)</span>....
+</span><span class='line'>y<span class="o">)</span>....
+</span><span class='line'>z<span class="o">)</span>....&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;? 1&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;x<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+Như các bạn thấy, prompt để lựa chọn khi không có setting gì sẽ là <strong>không hiện gì</strong>, quite boring
+Giờ nếu chúng ta chỉ cần setting PS3 cho đoạn code đó như sau</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>select select.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code
+</span><span class='line'><span class="nv">PS3</span><span class="o">=</span><span class="s2">&quot;Select an option of installer (1-3): &quot;</span>
+</span><span class='line'><span class="k">select </span>i in 1<span class="o">)</span> 2<span class="o">)</span> 3<span class="o">)</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'><span class="k">  case</span> <span class="nv">$i</span> in&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;x<span class="o">)</span>....
+</span><span class='line'>y<span class="o">)</span>....
+</span><span class='line'>z<span class="o">)</span>....
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;  <span class="k">esac</span>
+</span><span class='line'><span class="k">done</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">==</span>&gt; run&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;/.select.sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;x<span class="o">)</span>....
+</span><span class='line'>y<span class="o">)</span>....
+</span><span class='line'>z<span class="o">)</span>....&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;? Select an option of installer <span class="o">(</span>1-3<span class="o">)</span>: 1&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;x<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+Như vậy là chúng ta sẽ có một cái prompt <strong>có hiện gì</strong>, use case để dùng thì chắc trong phần lớn các trường hợp sẽ là để cung cấp thông tin cho user về các option lựa chọn phía dưới. PS3 có vẻ khá useful trong một số case nhất định đúng không :D, tiếp theo chúng ta sẽ đến với PS4</p>
+
+<h2>PS4</h2>
+
+<p>Khi execute một đoạn script mà bạn muốn tracking output (để debug chẳng hạn), bạn sẽ dùng {set -x} để làm việc đó. ví dụ như đoạn code ở dưới đây:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>tracking tracking.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code tracking.sh
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>ls -all -lrt | grep xyz
+</span><span class='line'><span class="nb">pwd</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">==</span>&gt; run
+</span><span class='line'>++ ls -all -lrt
+</span><span class='line'>++ grep xyz
+</span><span class='line'>drwxr-xr-x   2 doxuanhuy  staff   68 Apr 28 11:45 xyz
+</span><span class='line'>++ <span class="nb">pwd</span>
+</span><span class='line'>/Users/doxuanhuy/cur-project/android-globalit
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Như các bạn thấy, {set -x} sẽ output ra các câu lệnh được execute và prefix bằng cái "++". 2 kí tự này có vè không thể hiện được gì nhỉ, và với PS4, bạn có thể thêm thông tin hữu ích cho việc debug như line number thông qua biến $LINENO, hay function name thông qua biến $FUNCNAME, hay script name thông qua biến $0</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>tracking tracking.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code tracking.sh
+</span><span class='line'><span class="nb">export </span><span class="nv">PS4</span><span class="o">=</span><span class="s1">&#39;$0.$FUNCNAME $LINENO &#39;</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;set -x
+</span><span class='line'>somefunction<span class="o">()</span> <span class="o">{</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;ls -all -lrt | grep xyz
+</span><span class='line'>  <span class="nb">pwd</span>
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">}</span>
+</span><span class='line'>somefunction&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">==</span>&gt; run
+</span><span class='line'>../test.sh. 8 somefunction
+</span><span class='line'>../test.sh.somefunction 5 ls -all -lrt
+</span><span class='line'>../test.sh.somefunction 5 grep xyz
+</span><span class='line'>drwxr-xr-x   2 doxuanhuy  staff   68 Apr 28 11:45 xyz
+</span><span class='line'>../test.sh.somefunction 6 <span class="nb">pwd</span>
+</span><span class='line'>/Users/doxuanhuy/cur-project/android-globalit
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+Như vậy chúng ta đã có những thông tin khá hữu ích để debug đúng không.
+Và tiếp theo chúng ta sẽ đi đến bộ đôi thú vị nhất trong ngày: PS1 và COMMAND_PROMPT</p>
+
+<h2>PS1</h2>
+
+<p>Đây chính là biến quyết định cái gì sẽ hiện lên ở command prompt, và là biến có nhiều cái để hack nhất trong các loại PSx</p>
+
+<p><img src="/images/UnixCommandPrompt/PS1-1.png"></p>
+
+<p>Đầu tiên chúng ta sẽ nói về PS1
+Giả sử chúng ta muốn command prompt hiện lên Username, Hostname và full-path đến directory hiện tại, đơn giản chúng ta chỉ cần
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\u@\h \w&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Ở đây \u là Username, \h là Hostname và \w là full path của current dir.
+Như vậy chúng ta sẽ có 1 cái prompt như dưới đây
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>doxuanhuy@xxx ~/cur-project/android-globalit&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Quite easy phải không :D
+Hay hơn chút nữa, bạn muốn hiện thêm current time, lên prompt, rất đơn giản:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\$(date +%k:%M:%S) \w&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+Ở đây (date +%k:%M:%S) là để format date và biến nó thành variable thông qua $</p>
+
+<p>Và kết quả là
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>12:23:59 ~/cur-project/android-globalit&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Ngoài ra còn rất nhiều cái bạn có thể cho vào command prompt để biến nó thêm phần phong phú như:</p>
+
+<ul>
+<li>!: The history number of the command</li>
+<li>$kernel_version: The output of the uname -r command from $kernel_version variable</li>
+<li>\$?: Status of the last command</li>
+</ul>
+
+
+<p>Hacking thêm chút nữa, bạn có thể thay đổi màu của từng phần trên command prompt thông qua 3 metacharacter sau:</p>
+
+<ul>
+<li>\e[ - Indicates the beginning of color prompt ( giống như cái "<sup>"</sup> của regex vậy)</li>
+<li>x;ym - Indicates color code. Use the color code values mentioned below ( bạn đặt x;ym ở trước node nào thì node đó sẽ được colorize theo màu đó)</li>
+<li>\e[m - indicates the end of color prompt (giống như cái "$" của regex)</li>
+</ul>
+
+
+<p>Một ví dụ đơn giản:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\e[0;34m\u@\h \w&gt; \e[m&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+Đoạn code trên có nghĩa là gì:</p>
+
+<p><img src="/images/UnixCommandPrompt/PS1-2.png"></p>
+
+<p>Hacking thêm một chút nữa, bạn hiện là một developer đang sử dụng git với rất nhiều repo, rất nhiều branch. Mỗi lần vào một repo nào đấy bạn lại phải {git branch} để xem bạn đang ở branch nào, bất tiện vô cùng. Bạn muốn prompt của bạn sẽ hiện branch name mỗi khi bạn vào folder của một repo nào đấy? Thật đơn giản, với backquote để execute bash command và sự trợ giúp của sed, bạn làm điều đó thật đơn giản:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s1">&#39;\e[0;36m\u⌘ \e[0;35m\W \e[0;33m&lt;code&gt;git branch 2&amp;gt; /dev/null | grep -e ^* | sed -E  s/^\*\ \(.+\)$/\(\1\)\ /&lt;/code&gt;\e[m]&#39;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Trông có vẻ đáng sợ, nhưng thực ra lại rất đơn giản :D, Chúng ta sẽ đi từng phần nhé:</p>
+
+<ul>
+<li>\e[ : start của command prompt</li>
+<li>[0;36m\u⌘ : bạn tô màu phần user (\u) bởi 0;36m (màu xanh dương) và thêm vào đằng sau cái kí tự ⌘ (cho cool thôi :D)</li>
+<li>\e[0;35m\W : bạn tô màu phần directory hiện tại (\W) bởi 0;35m (màu hồng)</li>
+<li>\e[0;33m : tô màu <strong>toàn bộ phần đằng sau</strong> bởi màu 0;33m (màu vàng)</li>
+<li>git branch 2> /dev/null | grep -e ^* | sed -E  s/<sup>\\*\</sup> (.+)$/(\\\1)\ /: nguyên văn đoạn này sẽ như sau: đầu tiên bạn dùng "git branch" để lấy branch hiện tại. Trong trường hợp không ở trong git repo nào thì sẽ có lỗi ra stderr, bạn redirect cái lỗi này vào dev/null thông qua "2> /dev/null" để nó không hiện ra prompt (2 là stderr). Sau đấy bạn tìm line nào có * ở đầu (current git branch) thông qua việc pipe vào grep. Tìm được line đó rồi thì bạn sẽ tách phần đằng sau dấu * ra thông qua sed , và output phần đó ra ngoài với format (branch) thông qua $/(\1). Tất cả đoạn code này được để vào backquote để được execute trực tiếp mỗi khi PS1 được gọi. Và kết quả thật bất ngờ:</li>
+</ul>
+
+
+<p><img src="/images/UnixCommandPrompt/PS1-3.png"></p>
+
+<p>Looks so cool!!
+Ngoài ra bạn còn có rất nhiều thứ có thể hacking với PS1 như:</p>
+
+<ul>
+<li>\j the number of jobs currently managed by the shell</li>
+<li># the command number of this command</li>
+<li>\l the basename of the shell's terminal device name
+.....
+mà bạn có thể tham khảo ở đây: http://www.thegeekstuff.com/2008/09/bash-shell-ps1-10-examples-to-make-your-linux-prompt-like-angelina-jolie/</li>
+</ul>
+
+
+<h2>Ending</h2>
+
+<p>Như vậy với PS[1-4], bạn đã có thể customize command prompt của bạn trở nên đẹp đẽ hơn, cool hơn và useful hơn. Trong các bài viết sắp tới mình sẽ nói về việc sử dụng các công cụ rất mạnh của unix family os như grep, sed, wc để giúp cho công việc development của bạn trở nên thú vị hơn :D. Happy hacking!</p>
+]]></content>
+  </entry>
+  
+</feed>
