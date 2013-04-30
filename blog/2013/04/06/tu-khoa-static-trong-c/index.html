@@ -1,0 +1,394 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Ý nghĩa của từ khóa static trong C - Blog kỹ thuật máy tính</title>
+	<meta name="author" content="kỹ thuật máy tính">
+
+	
+	<meta name="description" content="Mở đầu Khi học C cơ bản, chắc hẳn bạn sẽ gặp cách dùng từ khoá static như ví dụ dưới đây: file1.c 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+#include &lt; &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/ktmtblog-octopress/atom.xml" rel="alternate" title="Blog kỹ thuật máy tính" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/ktmtblog-octopress/favicon.png" rel="shortcut icon">
+	<link href="/ktmtblog-octopress/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+</head>
+
+<body>
+	<header id="header" class="inner"><h1><a href="/ktmtblog-octopress/">Blog kỹ thuật máy tính</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/ktmtblog-octopress/">Blog</a></li>
+	<li><a href="/ktmtblog-octopress/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/ktmtblog-octopress/">Blog</a></li>
+	<li><a href="/ktmtblog-octopress/blog/archives">Archives</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:ktmt.github.com/ktmtblog-octopress">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		
+    
+		
+		
+		
+		
+		
+		<a class="rss" href="/ktmtblog-octopress/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+	<form class="search" action="http://google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:ktmt.github.com/ktmtblog-octopress">
+	</form>
+</nav>
+
+</header>
+	
+		
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Ý Nghĩa Của Từ Khóa Static Trong C</h2>
+	<div class="entry-content"><h2>Mở đầu</h2>
+
+<p>Khi học C cơ bản, chắc hẳn bạn sẽ gặp cách dùng từ khoá static như ví dụ dưới đây:</p>
+
+<figure class='code'><figcaption><span>file1.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">count</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">num</span> <span class="o">+=</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;current value of num: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">num</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">count</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Kết quả khi chạy chương trình sẽ là:</p>
+
+<figure class='code'><figcaption><span>file2.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>current value of num: 1
+</span><span class='line'>current value of num: 4
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Biến num khai báo static như trên có 2 đặc điểm:</p>
+
+<ol>
+<li>Do được khai báo static nên chỉ được khởi tạo 1 lần duy nhất và tồn tại suốt thời gian chạy của chương trình. Giá trị của biến count sẽ được tích luỹ mỗi khi hàm count được gọi.</li>
+<li>Do khai báo trong nội bộ hàm count nên biến chỉ có thể được nhìn thấy bởi các câu lệnh trong hàm count. Nói cách khác, biến nm là 1 biến nội bộ (local variable).</li>
+</ol>
+
+
+<p>Tuy vậy bạn sẽ bất ngờ khi bắt gặp những cách sử dung static trong như ví dụ dưới đây:</p>
+
+<figure class='code'><figcaption><span>main.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">static</span> <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">static</span> <span class="kt">void</span> <span class="nf">count</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">static</span> <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">num</span> <span class="o">+=</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;current value of num: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">num</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">a</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;value of a: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">count</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ta bắt gặp static ở 2 nơi nữa:</p>
+
+<ol>
+<li>static trong khai báo hàm</li>
+<li>static trong khai báo biến toàn cục</li>
+</ol>
+
+
+<h2>2 từ khoá static này có ngữ nghĩa như thế nào?</h2>
+
+<p>Để hiểu được ngữ nghĩa mới của static này, ta cần hiểu 1 khái niệm: đơn vị biên dịch (translation unit).</p>
+
+<p>Mỗi project thường được viết trên nhiều file (vì mục đích phân chia module, đảm bảo tính dễ bảo trì). Mỗi file.c trong dự án sẽ là 1 đơn vị biên dịch. Quá trình biên dịch 1 project C sẽ là: biên dịch các đơn vị độc lập <em>.c ra các object file </em>.o (*.obj) và liên kết (link) các đơn vị object file thành chương trình.</p>
+
+<p>Mỗi đơn vị sẽ có các thủ tục (procedure) hoặc function riêng. Code ở 1 đơn vị biên dịch có thể sử dụng thủ tục hoặc hàm, hay cả biến toàn cục ở đơn vị biên dịch khác. Ví dụ:</p>
+
+<figure class='code'><figcaption><span>main.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">//-----------------------</span>
+</span><span class='line'><span class="c1">//A.c</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="n">avar</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">a</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">b</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// -----------------------</span>
+</span><span class='line'><span class="c1">//C.c</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extern</span> <span class="kt">int</span> <span class="n">avar</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">c</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">d</span><span class="p">()</span> <span class="p">{};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>thì trong a() của A.c ta có thể gọi c() một cách thoải mái. Biến avar sẽ được sử dụng cả ở A.c và C.c (biến toàn cục thực thụ!)</p>
+
+<p>Để hạn chế việc sử dụng này (tránh va đụng tên hàm giữa các đơn vị biên dịch), người ta đưa khái niệm hàm tĩnh (static function) và biến tĩnh (static global variable).</p>
+
+<p>Ngữ nghĩa:</p>
+
+<ul>
+<li>Biến toàn cục tĩnh sẽ có phạm vi trên đơn vị biên dịch. Điều đó có nghĩa là đơn vị khác không có cách nào truy cập được biến này.</li>
+<li>Hàm tĩnh sẽ có phạm vi trên đơn vị biên dịch. Điều đó có nghĩa đơn vị khác không thể truy cập được hàm này.</li>
+</ul>
+
+
+<p>Do đó</p>
+
+<figure class='code'><figcaption><span>main.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">//-----------------</span>
+</span><span class='line'><span class="c1">//A.c</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">static</span> <span class="kt">int</span> <span class="n">avar</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">static</span> <span class="kt">void</span> <span class="nf">a</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">b</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//------------------</span>
+</span><span class='line'><span class="c1">//C.c</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extern</span> <span class="kt">int</span> <span class="n">avar</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">c</span><span class="p">()</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">d</span><span class="p">()</span> <span class="p">{};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Nếu ta khai báo static như trên, các hàm c, d trong C.c sẽ không thể nào truy cập được hàm a cũng như biến avar (dù rằng avar được khai báo extern trong C.c).</p>
+
+<h2>Tóm lược</h2>
+
+<p>static có 2 ngữ nghĩa:</p>
+
+<ul>
+<li>Khi được sử dụng trong phạm vi toàn cục của 1 đơn vị biên dịch, static hạn chế truy cập từ các đơn vị biên dịch khác (áp dụng với cả hàm và biến toàn cục).</li>
+<li>Khi được sự dụng trong phạm vi cục bộ của 1 thủ tục hay hàm, static có nghĩa là biến được khai báo tồn tại trong suốt thời gian chạy của chương trình và chỉ được khởi tạo 1 lần duy nhất.</li>
+</ul>
+
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-06T00:00:00+09:00" pubdate data-updated="true">Apr 6<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/ktmtblog-octopress/blog/categories/programming/'>programming</a>
+
+
+</div>
+	
+		<div class="comments"><a href="/ktmtblog-octopress/blog/2013/04/06/tu-khoa-static-trong-c/#disqus_thread">Comments</a></div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2013
+
+    kỹ thuật máy tính
+
+</footer>
+	<script src="/ktmtblog-octopress/javascripts/slash.js"></script>
+<script src="/ktmtblog-octopress/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'ktmt';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/06/tu-khoa-static-trong-c/';
+        var disqus_url = 'http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/06/tu-khoa-static-trong-c/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+</body>
+</html>

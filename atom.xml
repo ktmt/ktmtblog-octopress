@@ -1,92 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>Blog kỹ thuật máy tính</title>
-	<meta name="author" content="kỹ thuật máy tính">
-
-	
-	<meta name="description" content="Chắc hẳn là một unix user (có thể mac os hay linux), lại là một programmer, bạn sẽ phải hàng ngày sử dụng terminal cho việc lập trình, quản lý &hellip;">
-	
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-	<link href="/ktmtblog-octopress/atom.xml" rel="alternate" title="Blog kỹ thuật máy tính" type="application/atom+xml">
-	<link rel="canonical" href="">
-	<link href="/ktmtblog-octopress/favicon.png" rel="shortcut icon">
-	<link href="/ktmtblog-octopress/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	
-</head>
-
-<body>
-	<header id="header" class="inner"><h1><a href="/ktmtblog-octopress/">Blog kỹ thuật máy tính</a></h1>
-<nav id="main-nav"><ul class="main">
-	<li><a href="/ktmtblog-octopress/">Blog</a></li>
-	<li><a href="/ktmtblog-octopress/blog/archives">Archives</a></li>
-</ul>
-</nav>
-<nav id="mobile-nav">
-	<div class="alignleft menu">
-		<a class="button">Menu</a>
-		<div class="container"><ul class="main">
-	<li><a href="/ktmtblog-octopress/">Blog</a></li>
-	<li><a href="/ktmtblog-octopress/blog/archives">Archives</a></li>
-</ul>
-</div>
-	</div>
-	<div class="alignright search">
-		<a class="button"></a>
-		<div class="container">
-			<form action="http://google.com/search" method="get">
-				<input type="text" name="q" results="0">
-				<input type="hidden" name="q" value="site:ktmt.github.com/ktmtblog-octopress">
-			</form>
-		</div>
-	</div>
-</nav>
-<nav id="sub-nav" class="alignright">
-	<div class="social">
-		
-		
-		
-		
+  <title><![CDATA[Blog kỹ thuật máy tính]]></title>
+  <link href="http://ktmt.github.com/ktmtblog-octopress/atom.xml" rel="self"/>
+  <link href="http://ktmt.github.com/ktmtblog-octopress/"/>
+  <updated>2013-04-30T18:33:48+09:00</updated>
+  <id>http://ktmt.github.com/ktmtblog-octopress/</id>
+  <author>
+    <name><![CDATA[kỹ thuật máy tính]]></name>
     
-		
-		
-		
-		
-		
-		<a class="rss" href="/ktmtblog-octopress/atom.xml" title="RSS">RSS</a>
-		
-	</div>
-	<form class="search" action="http://google.com/search" method="get">
-		<input class="alignright" type="text" name="q" results="0">
-		<input type="hidden" name="q" value="site:ktmt.github.com/ktmtblog-octopress">
-	</form>
-</nav>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
-</header>
-	
-		
-	
-	<div id="content" class="inner">
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/ktmtblog-octopress/blog/2013/04/28/make-fun-with-unix-command-prompt/">
-		
-			Fun With Unix Command Prompt</a>
-	</h2>
-	<div class="entry-content">
-		<p><img src="/ktmtblog-octopress/images/UnixCommandPrompt/unix.png"></p>
+  
+  <entry>
+    <title type="html"><![CDATA[fun with unix command prompt]]></title>
+    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/28/make-fun-with-unix-command-prompt/"/>
+    <updated>2013-04-28T00:06:00+09:00</updated>
+    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/28/make-fun-with-unix-command-prompt</id>
+    <content type="html"><![CDATA[<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/unix.png"></p>
 
 <p>Chắc hẳn là một unix user (có thể mac os hay linux), lại là một programmer, bạn sẽ phải hàng ngày sử dụng terminal cho việc lập trình, quản lý source, monitoring hệ thống&#8230;. Và đã là người sử dụng terminal hàng ngày thì cái bạn phải nhìn thấy nhiều nhất chính là cái gọi là &#8220;Command prompt&#8221;</p>
 
-<p><img src="/ktmtblog-octopress/images/UnixCommandPrompt/unix-terminal.png"></p>
+<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/unix-terminal.png"></p>
 
 <p>Cái command prompt này thì tùy thuộc vào shell bạn đang dùng (bash hay zsh..) mà sẽ có những cách tùy chỉnh khác nhau. Mình thì đang dùng bash (chắc một ngày gần đây sẽ chuyển qua zsh), nên bài viết này sẽ áp dụng chủ yếu ở trên bash. Command prompt ở trên bash thì gồm có 4 biến môi trường (environment variable) chính: PS1, PS2, PS3, PS4 (Ngoài ra còn có COMMAND_PROMPT nữa nhưng thằng này na ná PS1 nên mình không đề cập đến). Để sử dụng các biến môi trường này thì bạn chỉ cần:</p>
 
@@ -112,7 +48,7 @@
 
 <p>Trong 5 biến mình nói ở trên thì biến PS2 là thằng nhàm chán nhất. PS2 gọi là Continuation interactive prompt. Tại sao lại gọi như vậy thì: khi một câu lệnh unix quá dài thì bạn thường dùng kí hiệu &#8220;&#92;&#8221; ở cuối dòng để làm cho câu lệnh đấy thành multiple-line (gõ được ở nhiều dòng). Và PS2 là biến quyết định <strong>cái gì được in ở đầu mỗi dòng đó</strong></p>
 
-<p><img src="/ktmtblog-octopress/images/UnixCommandPrompt/PS2-1.png"></p>
+<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/PS2-1.png"></p>
 
 <p>Cách sử dụng thì vô cùng đơn giản:</p>
 
@@ -124,7 +60,7 @@
 
 <p>Và kết quả là:</p>
 
-<p><img src="/ktmtblog-octopress/images/UnixCommandPrompt/PS2-2.png"></p>
+<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/PS2-2.png"></p>
 
 <p>Chắc bạn cũng đã hình dung ra cách dùng PS2 thế nào rồi nhỉ, và hẳn bạn đang nghĩ, biến này chả có gì thú vị lắm nhỉ, mình cũng nghĩ thế :D. Thế nên chúng ta qua thằng tiếp theo nhé: PS3</p>
 
@@ -299,7 +235,7 @@ Và tiếp theo chúng ta sẽ đi đến bộ đôi thú vị nhất trong ngà
 
 <p>Đây chính là biến quyết định cái gì sẽ hiện lên ở command prompt, và là biến có nhiều cái để hack nhất trong các loại PSx</p>
 
-<p><img src="/ktmtblog-octopress/images/UnixCommandPrompt/PS1-1.png"></p>
+<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/PS1-1.png"></p>
 
 <p>Đầu tiên chúng ta sẽ nói về PS1
 Giả sử chúng ta muốn command prompt hiện lên Username, Hostname và full-path đến directory hiện tại, đơn giản chúng ta chỉ cần</p>
@@ -366,7 +302,7 @@ Hay hơn chút nữa, bạn muốn hiện thêm current time, lên prompt, rất
 
 <p>Đoạn code trên có nghĩa là gì:</p>
 
-<p><img src="/ktmtblog-octopress/images/UnixCommandPrompt/PS1-2.png"></p>
+<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/PS1-2.png"></p>
 
 <p>Hacking thêm một chút nữa, bạn hiện là một developer đang sử dụng git với rất nhiều repo, rất nhiều branch. Mỗi lần vào một repo nào đấy bạn lại phải {git branch} để xem bạn đang ở branch nào, bất tiện vô cùng. Bạn muốn prompt của bạn sẽ hiện branch name mỗi khi bạn vào folder của một repo nào đấy? Thật đơn giản, với backquote để execute bash command và sự trợ giúp của sed, bạn làm điều đó thật đơn giản:</p>
 
@@ -387,7 +323,7 @@ Hay hơn chút nữa, bạn muốn hiện thêm current time, lên prompt, rất
 </ul>
 
 
-<p><img src="/ktmtblog-octopress/images/UnixCommandPrompt/PS1-3.png"></p>
+<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/PS1-3.png"></p>
 
 <p>Looks so cool!!
 Ngoài ra bạn còn có rất nhiều thứ có thể hacking với PS1 như:</p>
@@ -404,48 +340,15 @@ mà bạn có thể tham khảo ở đây: http://www.thegeekstuff.com/2008/09/b
 <h2>Ending</h2>
 
 <p>Như vậy với PS[1-4], bạn đã có thể customize command prompt của bạn trở nên đẹp đẽ hơn, cool hơn và useful hơn. Trong các bài viết sắp tới mình sẽ nói về việc sử dụng các công cụ rất mạnh của unix family os như grep, sed, wc để giúp cho công việc development của bạn trở nên thú vị hơn :D. Happy hacking!</p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
+]]></content>
+  </entry>
   
-
-
-<time datetime="2013-04-28T00:06:00+09:00" pubdate data-updated="true">Apr 28<span>th</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/ktmtblog-octopress/blog/categories/linux-tips-tutorial/'>linux, tips, tutorial</a>
-
-
-</div>
-	
-		<div class="comments"><a href="/ktmtblog-octopress/blog/2013/04/28/make-fun-with-unix-command-prompt//index.html#disqus_thread">Comments</a></div>
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/ktmtblog-octopress/blog/2013/04/25/dem-bit/">
-		
-			Đếm Bit</a>
-	</h2>
-	<div class="entry-content">
-		<h2>Mở đầu</h2>
+  <entry>
+    <title type="html"><![CDATA[Đếm bit]]></title>
+    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/25/dem-bit/"/>
+    <updated>2013-04-25T00:00:00+09:00</updated>
+    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/25/dem-bit</id>
+    <content type="html"><![CDATA[<h2>Mở đầu</h2>
 
 <p>Bạn đang say sưa hacking code và bắt gặp một hàm với những con số bí ẩn như ở dưới đây:</p>
 
@@ -610,48 +513,15 @@ data = 10110011 &amp; 01010101 + ((10110011 >> 1 &amp; 01010101)</p>
 <li><a href="http://download.savannah.gnu.org/releases/pgubook/ProgrammingGroundUp-1-0-booksize.pdf">Programming groundup</a></li>
 </ol>
 
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
+]]></content>
+  </entry>
   
-
-
-<time datetime="2013-04-25T00:00:00+09:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/ktmtblog-octopress/blog/categories/programming-bit-twiddling/'>programming, bit twiddling</a>
-
-
-</div>
-	
-		<div class="comments"><a href="/ktmtblog-octopress/blog/2013/04/25/dem-bit//index.html#disqus_thread">Comments</a></div>
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/ktmtblog-octopress/blog/2013/04/24/happy-programmer/">
-		
-			Happy Programmer</a>
-	</h2>
-	<div class="entry-content">
-		<p>Happy programmer là gì nhỉ, chắc ai đọc xong title của bài post này cũng không hiểu ý mình định nói đến là gì :D. Đầu tiên với cá nhân mình thì happy programmer là những programmer(lập trình viên), có khả năng kiếm được tiền và sống tốt bằng việc lập trình, họ training liên tục để trở thành better programmer, và họ hạnh phúc với cuộc sống như vậy. Nếu bạn đã và đang là một programmer, có nhiều lý do để bạn nên happy với việc đấy. Lý do là:</p>
+  <entry>
+    <title type="html"><![CDATA[happy programmer]]></title>
+    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/24/happy-programmer/"/>
+    <updated>2013-04-24T23:33:00+09:00</updated>
+    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/24/happy-programmer</id>
+    <content type="html"><![CDATA[<p>Happy programmer là gì nhỉ, chắc ai đọc xong title của bài post này cũng không hiểu ý mình định nói đến là gì :D. Đầu tiên với cá nhân mình thì happy programmer là những programmer(lập trình viên), có khả năng kiếm được tiền và sống tốt bằng việc lập trình, họ training liên tục để trở thành better programmer, và họ hạnh phúc với cuộc sống như vậy. Nếu bạn đã và đang là một programmer, có nhiều lý do để bạn nên happy với việc đấy. Lý do là:</p>
 
 <ul>
 <li><p>Lý do đầu tiên là không happy thì bạn sẽ không làm được gì cả, đơn giản là vậy thôi. Bạn làm công việc gì cũng vậy, nếu bạn cảm thấy không thoải mái với nó thì tốt nhất là không nên làm, mỗi người chỉ có một cuộc sống, đừng phí thời gian làm những gì bạn không thích.</p></li>
@@ -681,48 +551,15 @@ data = 10110011 &amp; 01010101 + ((10110011 >> 1 &amp; 01010101)</p>
 <h2>The end</h2>
 
 <p>Trên đây là những điều mình vẫn đang làm hàng ngày, và những điều đấy giúp mình luôn tin là mình đang đi đúng con đường mình đã chọn. Bạn hãy thử làm xem bạn có trở nên happy hơn với việc là một programmer không, nếu không thì mình nghĩ là bạn nên đổi nghề&#8230; :D. Chúc các bạn thành công.</p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
+]]></content>
+  </entry>
   
-
-
-<time datetime="2013-04-24T23:33:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/ktmtblog-octopress/blog/categories/motivation/'>motivation</a>
-
-
-</div>
-	
-		<div class="comments"><a href="/ktmtblog-octopress/blog/2013/04/24/happy-programmer//index.html#disqus_thread">Comments</a></div>
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/ktmtblog-octopress/blog/2013/04/21/selenium/">
-		
-			Selenium và Jenkins</a>
-	</h2>
-	<div class="entry-content">
-		<h2>Mở đầu</h2>
+  <entry>
+    <title type="html"><![CDATA[Selenium và Jenkins]]></title>
+    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/21/selenium/"/>
+    <updated>2013-04-21T23:56:00+09:00</updated>
+    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/21/selenium</id>
+    <content type="html"><![CDATA[<h2>Mở đầu</h2>
 
 <p>Trong quy trình phát triển một phần mềm, Test nói chung và UT nói riêng luôn là những process rất quan trọng. Tuy nhiên khi Application càng ngày càng lớn thì khối lượng Test càng phình to và cost sẽ vượt quá cost bỏ ra cho coding. Để giảm thiểu số công sức bỏ ra, developer thường hay dùng các test framework có sẵn và tìm cách automation quy trình test.</p>
 
@@ -1004,13 +841,13 @@ data = 10110011 &amp; 01010101 + ((10110011 >> 1 &amp; 01010101)</p>
 
 <p>VD về Jenkins jobs</p>
 
-<p><img src="/ktmtblog-octopress/images/SeleniumAndJenkins/JenkinsJobs.png" title="image" alt="images">
+<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/SeleniumAndJenkins/JenkinsJobs.png" title="image" alt="images">
 Source Code Management</p>
 
-<p><img src="/ktmtblog-octopress/images/SeleniumAndJenkins/ExecuteShell.png" title="image" alt="images">
+<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/SeleniumAndJenkins/ExecuteShell.png" title="image" alt="images">
 Execute Shell</p>
 
-<p><img src="/ktmtblog-octopress/images/SeleniumAndJenkins/BuildTriggers.png" title="image" alt="images">
+<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/SeleniumAndJenkins/BuildTriggers.png" title="image" alt="images">
 Build Trigger</p>
 
 <p>Đặt lịch, tương tự cron jobs</p>
@@ -1026,48 +863,15 @@ Build Trigger</p>
 <li><p>Jenkins: CI Test Tool, dùng để lập lịch, theo dõi và quản lý health của system</p></li>
 </ul>
 
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
+]]></content>
+  </entry>
   
-
-
-<time datetime="2013-04-21T23:56:00+09:00" pubdate data-updated="true">Apr 21<span>st</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/ktmtblog-octopress/blog/categories/programming/'>programming</a>, <a class='category' href='/ktmtblog-octopress/blog/categories/test/'>test</a>, <a class='category' href='/ktmtblog-octopress/blog/categories/ut/'>ut</a>
-
-
-</div>
-	
-		<div class="comments"><a href="/ktmtblog-octopress/blog/2013/04/21/selenium//index.html#disqus_thread">Comments</a></div>
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/ktmtblog-octopress/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js/">
-		
-			Giới Thiệu về Script Loader Trong Js</a>
-	</h2>
-	<div class="entry-content">
-		<h2>I.Script loader là gì và tại sao lại cần nó</h2>
+  <entry>
+    <title type="html"><![CDATA[giới thiệu về script loader trong js]]></title>
+    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js/"/>
+    <updated>2013-04-14T00:23:00+09:00</updated>
+    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js</id>
+    <content type="html"><![CDATA[<h2>I.Script loader là gì và tại sao lại cần nó</h2>
 
 <p>Trong javascript, khi cần include một thư viện, hay một module từ ngoài vào, chắc hản mọi
 web developer đều nghĩ ngay đến việc include vào html:</p>
@@ -1137,9 +941,9 @@ là request đến server chứa script cần load thông qua XHR, lấy kết q
 
 <ol>
 <li><p>Load script trực tiếp vào html tag
-<img src="/ktmtblog-octopress/images/script-loader-images/withoutloader.png" title="image" alt="images"></p></li>
+<img src="http://ktmt.github.com/ktmtblog-octopress/images/script-loader-images/withoutloader.png" title="image" alt="images"></p></li>
 <li><p>Load script thông qua loader
-<img src="/ktmtblog-octopress/images/script-loader-images/withloader.png" title="image" alt="images"></p></li>
+<img src="http://ktmt.github.com/ktmtblog-octopress/images/script-loader-images/withloader.png" title="image" alt="images"></p></li>
 </ol>
 
 
@@ -1337,48 +1141,15 @@ javascript đang có những nỗ lực trở nên mature hơn, để có thể 
 thoải mái khi phát triển và khi scope của application bị phình to ra. Tại version ecma hiện tại (ECMA-262) thì
 vẫn chưa có một qui chuẩn nào cho việc load script theo module và dependency, tuy nhiên chúng ta có thể hy vọng
 về điều này trong một thời gian gần.</p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
+]]></content>
+  </entry>
   
-
-
-<time datetime="2013-04-14T00:23:00+09:00" pubdate data-updated="true">Apr 14<span>th</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/ktmtblog-octopress/blog/categories/javascript/'>javascript</a>, <a class='category' href='/ktmtblog-octopress/blog/categories/programming/'>programming</a>
-
-
-</div>
-	
-		<div class="comments"><a href="/ktmtblog-octopress/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js//index.html#disqus_thread">Comments</a></div>
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/ktmtblog-octopress/blog/2013/04/06/tu-khoa-static-trong-c/">
-		
-			Ý Nghĩa Của Từ Khóa Static Trong C</a>
-	</h2>
-	<div class="entry-content">
-		<h2>Mở đầu</h2>
+  <entry>
+    <title type="html"><![CDATA[Ý nghĩa của từ khóa static trong C]]></title>
+    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/06/tu-khoa-static-trong-c/"/>
+    <updated>2013-04-06T00:00:00+09:00</updated>
+    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/06/tu-khoa-static-trong-c</id>
+    <content type="html"><![CDATA[<h2>Mở đầu</h2>
 
 <p>Khi học C cơ bản, chắc hẳn bạn sẽ gặp cách dùng từ khoá static như ví dụ dưới đây:</p>
 
@@ -1595,48 +1366,15 @@ về điều này trong một thời gian gần.</p>
 <li>Khi được sự dụng trong phạm vi cục bộ của 1 thủ tục hay hàm, static có nghĩa là biến được khai báo tồn tại trong suốt thời gian chạy của chương trình và chỉ được khởi tạo 1 lần duy nhất.</li>
 </ul>
 
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
+]]></content>
+  </entry>
   
-
-
-<time datetime="2013-04-06T00:00:00+09:00" pubdate data-updated="true">Apr 6<span>th</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/ktmtblog-octopress/blog/categories/programming/'>programming</a>
-
-
-</div>
-	
-		<div class="comments"><a href="/ktmtblog-octopress/blog/2013/04/06/tu-khoa-static-trong-c//index.html#disqus_thread">Comments</a></div>
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/ktmtblog-octopress/blog/2013/04/01/gioi-thieu-ve-unix-process/">
-		
-			Giới Thiệu về Unix Process</a>
-	</h2>
-	<div class="entry-content">
-		<p>Là một kỹ sư lập trình hệ thống, một server guy, hay là một sys admin, sys dev,
+  <entry>
+    <title type="html"><![CDATA[Giới thiệu về Unix process]]></title>
+    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/01/gioi-thieu-ve-unix-process/"/>
+    <updated>2013-04-01T00:39:00+09:00</updated>
+    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/01/gioi-thieu-ve-unix-process</id>
+    <content type="html"><![CDATA[<p>Là một kỹ sư lập trình hệ thống, một server guy, hay là một sys admin, sys dev,
 sys ops,&#8230; phần lớn thời gian bạn sẽ phải làm việc trên hệ thống Unix.
 Để làm việc trên Unix, chúng ta tương tác với hệ điều hành thông qua các
 lệnh (command). Mỗi lệnh trên Unix khi thực thi sẽ run một process hoặc một
@@ -1906,77 +1644,11 @@ thuật ban đầu với Process. Còn rất nhiều vấn đề chưa đề c�
 
 <p>Bản slide tôi trình bày tại công ty Framgia về UNIX Process</p>
 
-<script async class="speakerdeck-embed" data-id="ce0d6da05a2e0130b5ab22000a8f8802" data-ratio="1.33333333333333" src="/ktmtblog-octopress//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="ce0d6da05a2e0130b5ab22000a8f8802" data-ratio="1.33333333333333" src="http://ktmt.github.com/ktmtblog-octopress//speakerdeck.com/assets/embed.js"></script>
 
 
 <p>Bài viết được lấy từ blog <a href="http://kiennt.com/blog/2013/01/20/introduction-to-unix-process.html">http://kiennt.com</a></p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
+]]></content>
+  </entry>
   
-
-
-<time datetime="2013-04-01T00:39:00+09:00" pubdate data-updated="true">Apr 1<span>st</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/ktmtblog-octopress/blog/categories/unix/'>unix</a>
-
-
-</div>
-	
-		<div class="comments"><a href="/ktmtblog-octopress/blog/2013/04/01/gioi-thieu-ve-unix-process//index.html#disqus_thread">Comments</a></div>
-	
-</div></article>
-
-<nav id="pagenavi">
-    
-    
-    <div class="center"><a href="/ktmtblog-octopress/blog/archives">Blog Archives</a></div>
-</nav></div>
-	<footer id="footer" class="inner">Copyright &copy; 2013
-
-    kỹ thuật máy tính
-
-</footer>
-	<script src="/ktmtblog-octopress/javascripts/slash.js"></script>
-<script src="/ktmtblog-octopress/javascripts/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-(function($){
-	$('.fancybox').fancybox();
-})(jQuery);
-</script> <!-- Delete or comment this line to disable Fancybox -->
-
-
-<script type="text/javascript">
-      var disqus_shortname = 'ktmt';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
-
-
-
-
-
-</body>
-</html>
+</feed>

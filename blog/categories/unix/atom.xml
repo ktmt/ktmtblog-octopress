@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: unix | Blog kỹ thuật máy tính]]></title>
+  <link href="http://ktmt.github.com/ktmtblog-octopress/blog/categories/unix/atom.xml" rel="self"/>
+  <link href="http://ktmt.github.com/ktmtblog-octopress/"/>
+  <updated>2013-04-30T18:33:48+09:00</updated>
+  <id>http://ktmt.github.com/ktmtblog-octopress/</id>
+  <author>
+    <name><![CDATA[kỹ thuật máy tính]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Giới thiệu về Unix process]]></title>
+    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/01/gioi-thieu-ve-unix-process/"/>
+    <updated>2013-04-01T00:39:00+09:00</updated>
+    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/01/gioi-thieu-ve-unix-process</id>
+    <content type="html"><![CDATA[<p>Là một kỹ sư lập trình hệ thống, một server guy, hay là một sys admin, sys dev,
+sys ops,... phần lớn thời gian bạn sẽ phải làm việc trên hệ thống Unix.
+Để làm việc trên Unix, chúng ta tương tác với hệ điều hành thông qua các
+lệnh (command). Mỗi lệnh trên Unix khi thực thi sẽ run một process hoặc một
+group các processes.</p>
+
+<p>Trong bài viết này mình giới thiệu các kiến thức và kỹ thuật cơ bản để làm việc
+với Process trên Unix. Bài viết sẽ trình bày với code minh hoạ bằng Ruby (rồi
+bạn sẽ thấy Ruby rất đơn giản). Tất cả các code mình hoạ được chạy trên
+môi trường Unix (Linux của chính là Unix - nếu bạn chưa biết, vì thế đừng ngần
+ngại thử nó trên máy bạn).</p>
+
+<p>Dù mình đã rất cố gắng, nhưng có thể vẫn có sai sót, mình rất cám ơn các ý kiến
+đóng góp</p>
+
+<h2>I. Một số kiến thức tổng quan</h2>
+
+<p>Tất cả các chương trình trong Unix thực chất đều là các processes. terminal bạn
+chạy, apache, nginx, vim, hay bất cứ lệnh nào bạn gõ vào terminal. Process chính
+là đơn vị cấu thành nên Unix. Nó chính là một instance của chương trình bạn viết
+ra. Nói cách khác mỗi dòng code của bạn, sẽ được thực thi trên một process.</p>
+
+<p>Unix cung cấp tool <code>ps</code> để list ra tất cả các process đang chạy trên hệ thống</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>proc.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$&gt;</span> ps -e -opid,ppid,user,rss,command
+</span><span class='line'>PID   PPID  USER     RSS      COMMAND
+</span><span class='line'>1     0     root     152      init <span class="o">[</span>2<span class="o">]</span>
+</span><span class='line'>1695  1     root     428      /usr/sbin/sshd
+</span><span class='line'>1863  1     root     48       /sbin/getty 38400 tty1
+</span><span class='line'>1864  1     root     48       /sbin/getty 38400 tty2
+</span><span class='line'>1865  1     root     48       /sbin/getty 38400 tty3
+</span><span class='line'>1866  1     root     48       /sbin/getty 38400 tty4
+</span><span class='line'>1867  1     root     48       /sbin/getty 38400 tty5
+</span><span class='line'>1868  1     root     48       /sbin/getty 38400 tty6
+</span><span class='line'>24477 1695  root     2888     sshd: vagrant <span class="o">[</span>priv<span class="o">]</span>
+</span><span class='line'>24479 24477 vagrant  1996     sshd: vagrant@pts/0
+</span><span class='line'>24480 24479 vagrant  2328     -bash
+</span><span class='line'>24591 24480 vagrant  1060     ps -e -opid,ppid,user,rss,command
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Ở đây, mình chạy lênh <code>ps</code> và show ra các thuộc tính <code>pid,ppid,user,rss,command</code>
+của process (chú ý (1) <code>ps</code> có rất nhiều option để chạy, nếu bạn muốn hiểu chỉ
+tiết, hãy sử dụng <code>man ps</code> để biết, (2) kểt quả trả về chỉ là một phần các
+process trên máy mình). Các thông tin mình muốn hiện thị ở đây bao gồm:</p>
+
+<ol>
+<li>PID - Process ID (id của process),</li>
+<li>PPID - Parent Process ID (id process cha của process đó),</li>
+<li>USER (tên user trên Unix start process),</li>
+<li>RSS (Resident Set Size) có thể coi bộ nhớ mà process sử dụng,</li>
+<li>COMMAND - command mà user sử dụng để chạy processs</li>
+</ol>
+
+
+<p>Chú ý rằng dòng cuối trong kết quả trả về show ra COMMAND là
+<code>ps -e -opid,ppid,user,rss,command</code> - chính là lệnh mà chúng ta dùng để chạy.
+Điều đó chứng tỏ, mỗi một command chính là một process !?</p>
+
+<p>Ngoài ra lệnh ps cũng cho chúng ta thấy, mỗi một Process sẽ có một Process ID,
+và thuộc về một Process cha nào đó. Process ID là duy nhất đối với mỗi một
+process, tức là 2 process khác nhau chắc chắn phải có PID khác nhau. Ngoài ra
+Process ID là không thể thay đổi trong khi chạy process.</p>
+
+<h3>1. Làm sao hệ điều hành đánh số các Process ID?</h3>
+
+<p>Process ID được đánh số theo thứ tự tăng dần. Bắt đầu từ 0 và tăng lên cho tới
+khi gặp giá trị maximum. Giá trị maximum của Process ID là có thể cấu hình được
+tuỳ vào từng hệ thống.</p>
+
+<p>Trên Linux bạn có thể xem và thay đổi giá trị mặc định của Process ID maximum
+bằng cách thay đổi file <code>/proc/sys/kernel/pid_max</code></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>main.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;read current maximum value of process id&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$&gt;</span> cat /proc/sys/kernel/pid_max
+</span><span class='line'>32768&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;set maximum value <span class="k">for </span>process id&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="nv">$&gt;</span> <span class="nb">echo </span>40000 &gt; /proc/sys/kernel/pid_max
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Khi process ID tăng đến giá trị maximum value, hệ điều hành (OS) sẽ quay trở lại
+đánh số từ một giá trị cụ thế (một số tài liệu nói giá trị này với Linux là 300,
+và với Mac OS là 100 - mình chưa biết cách để kiểm nghiệm điều này một cách an
+toàn)</p>
+
+<p>UNIX cung cấp syscall <code>getpid</code> trả về Process ID của process hiện tại. Bạn có thể
+viết một chương trình C đơn gian để lấy ra process id với <code>getpid</code>. Tuy nhiên,
+bài viết này của tôi sẽ tập trung vào ngôn ngữ Ruby</p>
+
+<p>Trong Ruby, muốn lấy Process ID của process hiện tai, bạn sử dụng <code>Process.pid</code>.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>pid.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="nb">puts</span> <span class="s2">&quot;Process pid: </span><span class="si">#{</span><span class="no">Process</span><span class="o">.</span><span class="n">pid</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Dòng code trên gọi tới hàm <code>puts</code> - hàm này có tác dụng in một String ra màn hình.
+Chúng ta có thể manipulate các String trong Ruby thông qua các syntax #{}. Code
+ruby trong #{ } sẽ được thực hiện trước khi truyền cho String</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>irb.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vg">$&gt;</span> <span class="n">irb</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;irb(main):001:0&gt; puts &quot;Example for String manipulate: 1 + 2 = </span><span class="si">#{</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="si">}</span><span class="sr">&quot;</span>
+</span><span class='line'><span class="sr">Example for String manipulate: 1 + 2 = 3</span>
+</span><span class='line'><span class="sr">=&gt; nil&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>(Các file Ruby có extension là .rb. Để chạy một file ruby, bạn dùng lệnh
+ <code>ruby &lt;file_name&gt;</code>. Không cần phải compile, rất đơn giản phải không)</p>
+
+<h3>2. Liệu có phải process nào cũng có Process cha?</h3>
+
+<p>Ở  trên tôi đã nói rằng, mỗi một process đều thuộc về một Process cha nào đó.
+Nếu bạn suy nghĩ kỹ, bạn sẽ thấy có điều gì đó không ổn? À, thực ra điều này
+liên quan đến quá trình khởi động của UNIX. Khi UNIX được khởi động, nó sẽ start
+một process số 0 (với PID = 0) (process này là process của Kernel UNIX). Process
+0 sẽ tạo ra cho nó một Process con, Process 1. Trong phần lớn hệ thống, Process 1
+được đặt tên là init process, các process khác được tạo ra đều từ init process.</p>
+
+<p>Hãy quay lại ví dụ về lệnh <code>ps</code> như ở phần đầu mục I. Bạn có thể để ý thấy PPID
+của dòng đầu tiên là 0. Đó chính là process đầu tiên của OS.</p>
+
+<p>Vậy là process trong Unix thực chất được tổ chức dưới dạng cây. Mỗi một node
+trong cây đại diện cho một process trong Unix. Gốc chính là process 0, các con
+của một node chính là các process con của process ứng với node đó.</p>
+
+<p>Trong Ruby, để lấy ra parent process id của một process, chúng ta sử dung <code>Process.ppid</code></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>ppid.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;h1&gt;file test_ppid.rb&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="nb">puts</span> <span class="s2">&quot;Process id </span><span class="si">#{</span><span class="no">Process</span><span class="o">.</span><span class="n">pid</span><span class="si">}</span><span class="s2">, parent process id </span><span class="si">#{</span><span class="no">Process</span><span class="o">.</span><span class="n">ppid</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Cũng rõ ràng đấy chứ. Liệu tôi có quên gì nữa không nhỉ?</p>
+
+<p>Vấn đề là làm sao một process  có thể sinh ra một process con? À đừng lo, tôi
+sẽ nói kỹ về điều này ở phần 2</p>
+
+<h3>3. Process Resource</h3>
+
+<p>Ngoài ra lệnh <code>ps</code> của chúng ta còn cho thấy, mỗi Process đều có RSS khác nhau.
+RSS chính là bộ nhớ mà Process sử dụng. Các process khác nhau, có bộ nhớ khác nhau.
+Nói cách khác, không gian địa chỉ của các Process là riêng biệt. Nhớ thiết kế này
+mà các Process là độc lập với nhau. Nếu một Process bị chết, thì nó cũng không
+ảnh hưởng gì tới các Process khác.</p>
+
+<p>Ngoài bộ nhớ, hệ điều hành còn cấp phát cho Process các tài nguyên khác đó là các
+file descriptor. Nhớ rằng trên UNIX, mọi thứ đều là file. Điều đó có nghĩa là,
+devide được coi như file, socket được coi như file, pipe cũng là file, và file
+cũng là file!!! Để cho đơn giản, chúng ta sẽ dùng Resource thay cho khái niệm
+file nói chung, và file đại diện cho khái niệm file thông thường.</p>
+
+<p>Bất cứ khi nào bạn mở một Resource trong một process, resource đó sẽ được gán với
+một số file descriptor. File descriptor là không được chia sẽ giữa các process
+không liên quan. Các resource sẽ sống và tồn tại cùng  với process mà nó thuộc về.
+Khi process chết đi, các resource gắn với nó sẽ được close và exit.</p>
+
+<p>Mỗi một process sẽ có 3 files descriptor mặc định, bạn hẳn rất quen thuộc với
+chúng, đó chính là stdin, stdout và stderr. Các file descriptor được đánh số tăng
+dần từ 0 đến giá trị lớn nhất. Mỗi một process sẽ có một số giới hạn các file
+descriptor nó được quyền sử dụng.</p>
+
+<h2>II. forking</h2>
+
+<p>Ở phần I.2, chúng ta đã nói về  process cha và process con, và đưa ra câu hỏi,
+làm sao một process có thể sinh ra các process khác.</p>
+
+<p>UNIX cung cấp một công cụ tuyệt vời để làm điều đó.
+Bạn chắc đã đoán ra, đó chính là <code>fork</code>.
+Theo cá nhân tôi, <code>fork</code> có lẽ là một trong những chức năng tốt nhất của UNIX.
+Vì sao ư? Vì process con được tạo ra với fork có 2 đặc điểm:</p>
+
+<ul>
+<li>process con được copy tất cả các memory từ process cha.</li>
+<li>process con sẽ được kế thứa từ process cha các resource</li>
+</ul>
+
+
+<p>Điều này có nghĩa là nếu trong process cha, bạn đã định nghĩa biến a, và gán
+giá trị cho nó, process con cũng có thể sử dụng biến đó.</p>
+
+<p>Uhm... Không phải như thế sẽ dẫn đến tình trạng 2 process cùng thay đổi một biến
+hay sao, vả lại chẳng phải các process là độc lập về bộ nhớ.</p>
+
+<p>À, tức là thế này, khi fork một process mới, bộ nhớ của process con và process
+cha vẫn là độc lập, nhưng hệ điều hành sẽ sử dụng cơ chế copy-on-wright (COW) để
+thực hiện việc đó. Tức là nếu process con không thay đổi các giá trị trong
+process cha, process con và process cha sẽ vẫn dùng chung bộ nhớ. Điều này làm
+cho các process con chỉ đọc, sẽ có memory rất nhỏ. Hay nói cách khác, UNIX cung
+cấp cho chúng ta một công cụ để chạy các multiprogram với một lượng resource vửa đủ.</p>
+
+<p>Điều này đặc biết tốt khi bạn cần load các library. Process cha sẽ đảm nhiệm việc
+load các library khác nhau. Sau khi load xong, nó fork ra các process con, và thực
+hiện việc điều khiển các process con. Các process con nhờ cơ chế COW, không cần
+phải tốn thời gian load library nữa mà vẫn có thể truy xuất vào các library</p>
+
+<p>Ngoài ra các process cha chia sẻ với process con các resource cũng dẫn đến một
+kỹ thuật khá thú vị: pre-forking - đặc biệt hiệu quả trong việc lập trình server.</p>
+
+<p>Kỹ thuật này được mô tả như sau:</p>
+
+<ul>
+<li>Main process khởi tạo một listening socket</li>
+<li>Main process fork ra một list các children process. Chú ý các children process
+này cũng sẽ listen trên socket mà main process tạo ra. Nhưng việc dispatch các
+incomming connection tới các children process là được thực hiện trên kernel.
+Điều này làm cho việc dispatch các incomming connection là rất nhanh</li>
+<li>Mỗi process sẽ accept các connection từ shared socket và xử lý chúng riêng biệt</li>
+<li>Main process sẽ kiểm soát các children process. (cung cấp lệnh để tắt tất cả
+các children process, tạo một child process mới khi một child process bị crash...)</li>
+</ul>
+
+
+<p>Kỹ thuật pre-forking được sử dụng rất nhiều. ví dụ: apache (httpd), nginx,</p>
+
+<pre><code>celery, postgresql, rabbitmq, ....
+</code></pre>
+
+<p>Process trong Unix là một lĩnh vực rất thú vị, đặc biệt là trong lập trình hệ
+thống và lập trình server. Bài viết chỉ mới đề cập đến một vài kiến thức và kỹ
+thuật ban đầu với Process. Còn rất nhiều vấn đề chưa đề cập, như</p>
+
+<ul>
+<li>Tương tác giữa các process (IPC)</li>
+<li>Điều khiển các process</li>
+<li>Orphaned, daemon, zoombie, process ...</li>
+</ul>
+
+
+<p>Hy vọng trong tương lai, mình sẽ có thể viết về các vấn đề này kỹ hơn.</p>
+
+<h2>Update</h2>
+
+<p>Bản slide tôi trình bày tại công ty Framgia về UNIX Process</p>
+
+<script async class="speakerdeck-embed" data-id="ce0d6da05a2e0130b5ab22000a8f8802" data-ratio="1.33333333333333" src="http://ktmt.github.com/ktmtblog-octopress//speakerdeck.com/assets/embed.js"></script>
+
+
+<p>Bài viết được lấy từ blog <a href="http://kiennt.com/blog/2013/01/20/introduction-to-unix-process.html">http://kiennt.com</a></p>
+]]></content>
+  </entry>
+  
+</feed>
