@@ -89,7 +89,7 @@ Thêm 1 ít sleep time random(VD random trong khoảng 10 phút) và đặt cron
 
 Khi xuất hiện 1 số ngày nghỉ ko phải thứ 7, CN mà muốn đặt lịch để con bot ko chạy, vấn đề sẽ hơi phức tạp hơn 1 chút. bạn cần phải viết 1 con bot observer khác check ngày và update lại cron job
 
-## Selenium và  Nose
+## Selenium và Nose
 Nếu bạn đã dùng Python 1 thời gian, chắc hẳn sẽ biết đến Nose - UT framework cho Python. Ở phần này sẽ demo thêm 1 config cho Selenium + Nose
 
 Yêu cầu: Trang web www.mysite.com của bạn có 100 sublink: www.mysite.com/1 , www.mysite.com/2, www.mysite.com/3 ..... www.mysite.com/100
