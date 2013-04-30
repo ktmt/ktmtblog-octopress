@@ -4,7 +4,7 @@
   <title><![CDATA[Blog kỹ thuật máy tính]]></title>
   <link href="http://ktmt.github.com/ktmtblog-octopress/atom.xml" rel="self"/>
   <link href="http://ktmt.github.com/ktmtblog-octopress/"/>
-  <updated>2013-04-30T18:33:48+09:00</updated>
+  <updated>2013-04-30T18:38:36+09:00</updated>
   <id>http://ktmt.github.com/ktmtblog-octopress/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
@@ -457,10 +457,13 @@ $ echo $?
 
 <p>Ta thử quay lại hàm <strong>fbc</strong> và xem cách con số này được sử dụng. Vì số 0x55555555 lên đến 32 bit nên rất khó theo dõi (nhiều 0 với 1 quá @.@), ta sẽ thử xét trường hợp số 8 bit với bit pattern không đổi (tức là số  0xFF). Dòng 1 của hàm fbc sẽ như dưới đây:</p>
 
-<p>data = (data &amp; 0x55) + ((data >> 1) &amp; 0x55);</p>
+<pre><code>    data = (data &amp; 0x55) + ((data &gt;&gt; 1) &amp; 0x55);
+</code></pre>
 
-<p>Giả sử data = 10110011b, ta sẽ có:
-data = 10110011 &amp; 01010101 + ((10110011 >> 1 &amp; 01010101)</p>
+<p>Giả sử data = 10110011b, ta sẽ có:</p>
+
+<pre><code>    data = 10110011 &amp; 01010101 + ((10110011 &gt;&gt; 1 &amp; 01010101)
+</code></pre>
 
 <p><strong>&#8220;Dễ dàng&#8221;</strong> nhận thấy chuỗi bit của 0xFF có các bit 1 ở vị trí chẵn (0, 2, 4&#8230;) do vậy bằng cách &amp; data với 0xFF, ta đã loại trừ các bit 1 ở vị trí lẻ (1,3,5&#8230;). Do vậy kết quả của data &amp; 0x55 sẽ cho ra các bit 1 ở vị trí chẵn. Bằng cách dịch 1 bit của data, ta chuyển các bit từ vị trí lẻ sang vị trí chẵn, và lại &amp; với 0xFF, do đó đại lượng sau dấu cộng sẽ có các bit 1 ở vị trí chẵn. Kết quả của phép cộng sẽ cho ra số lượng bit ở vị trí lẻ và vị trí chẵn</p>
 
