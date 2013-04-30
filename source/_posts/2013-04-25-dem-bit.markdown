@@ -70,27 +70,27 @@ Chương trình chạy bình thường, cho kết quả bằng 0 chứng tỏ h�
 
 Bằng cách ấn máy tính, đổi từ hệ 16 sang hệ 2, ta có giá trị nhị phân của các số trên như bảng dưới đây:
 
-| 0x55555555   |   01010101010101010101010101010101   |
-| 0x33333333   |   00110011001100110011001100110011   |  
-| 0x0F0F0F0F   |   00001111000011110000111100001111   | 
-| 0x00FF00FF   |   00000000111111110000000011111111   |
-| 0x0000FFFF   |   00000000000000001111111111111111   |
+	0x55555555      01010101010101010101010101010101   
+	0x33333333      00110011001100110011001100110011     
+	0x0F0F0F0F      00001111000011110000111100001111    
+	0x00FF00FF      00000000111111110000000011111111   
+	0x0000FFFF      00000000000000001111111111111111   
 
 Ta nhận thấy các con số trên không hoàn toàn bí ẩn mà nó hoàn toàn có quy luật. Từ trên xuống dưới, các bit 1 xen kẽ nhau theo chu kỳ 1, 2, 4, 8, 16. 
 
 Ta thử quay lại hàm **fbc** và xem cách con số này được sử dụng. Vì số 0x55555555 lên đến 32 bit nên rất khó theo dõi (nhiều 0 với 1 quá @.@), ta sẽ thử xét trường hợp số 8 bit với bit pattern không đổi (tức là số  0xFF). Dòng 1 của hàm fbc sẽ như dưới đây:
 
-data = (data & 0x55) + ((data >> 1) & 0x55);
+        data = (data & 0x55) + ((data >> 1) & 0x55);
 
 Giả sử data = 10110011b, ta sẽ có:
-data = 10110011 & 01010101 + ((10110011 >> 1 & 01010101)
+        data = 10110011 & 01010101 + ((10110011 >> 1 & 01010101)
 
 **"Dễ dàng"** nhận thấy chuỗi bit của 0xFF có các bit 1 ở vị trí chẵn (0, 2, 4...) do vậy bằng cách & data với 0xFF, ta đã loại trừ các bit 1 ở vị trí lẻ (1,3,5...). Do vậy kết quả của data & 0x55 sẽ cho ra các bit 1 ở vị trí chẵn. Bằng cách dịch 1 bit của data, ta chuyển các bit từ vị trí lẻ sang vị trí chẵn, và lại & với 0xFF, do đó đại lượng sau dấu cộng sẽ có các bit 1 ở vị trí chẵn. Kết quả của phép cộng sẽ cho ra số lượng bit ở vị trí lẻ và vị trí chẵn
 
 Lần tính 1
-|       data & 01010101  | 00 01 00 01  |
-| (data >> 1)& 01010101  | 01 01 00 01  |
-|                        | 01 10 00 10  |
+	       data & 01010101   00 01 00 01  
+	 (data >> 1)& 01010101   01 01 00 01  
+	                         01 10 00 10  
 
 Do kết quả tối đa của phép + này là 2, khả năng kết quả phép cộng "tràn sang" vùng bit bên cạnh là không có. Sau lần tính thứ nhất, ta có kết quả của số bit 1 của cặp đôi bit cạnh nhau. 
 
@@ -100,17 +100,18 @@ Tất nhiên ở đây ta vẫn chua có kết quả số bit. Tuy nhiên ta s�
 Nhìn dòng thứ 2 đoạn code bạn sẽ thấy: ...1100110011b: 2 bit đan xen! Phép dịch bit bây giờ là >> 2. 
 
 Lần tính 2
-|       data & 00110011  | 00 10 00 10  |
-| (data >> 1)& 00110011  | 00 01 00 00  |
-|                        | 00 11 00 10  |
+               data & 00110011   00 10 00 10  
+         (data >> 2)& 00110011   00 01 00 00  
+                                 00 11 00 10  
 
 Như vậy ta có 4 bit đằng sau có tổng số bit là 2, 4 bit đâu có tổng số bit là 11 (3 trong hệ thập phân)!!!
 
 Áp dụng cách tính tương tự, ta có kết quả như ở dưới.
+
 Lần tính 3
-|       data & 00001111  | 00 00 00 10  |
-| (data >> 1)& 00001111  | 00 00 00 11  |
-|                        | 00 00 01 01  |
+               data & 00001111   00 00 00 10  
+         (data >> 4)& 00001111   00 00 00 11  
+                                 00 00 01 01  
 
 Kết quả là 5, chính là số bit của data ban đầu!!
 
@@ -122,6 +123,11 @@ Kết quả là 5, chính là số bit của data ban đầu!!
 Hy vọng với giải thích trên, bạn đã hiểu ý nghĩa sâu sắc đằng sau hàm fbc. Bạn sẽ vẫn hét "What the fuck!!!" nhưng lần này cho sự tuyệt vời không những cho sự ngắn gọn, tinh tế của đoạn code.
 
 ## Tham khảo ##
-1. http://graphics.stanford.edu/~seander/bithacks.html
-2. http://www.drpaulcarter.com/pcasm/
-3. http://download.savannah.gnu.org/releases/pgubook/ProgrammingGroundUp-1-0-booksize.pdf
+1. [bithacks][]
+2. [assembly book][]
+3. [Programming groundup][]
+
+[bithacks]: http://graphics.stanford.edu/~seander/bithacks.html
+[assembly book]: http://www.drpaulcarter.com/pcasm/
+[Programming groundup]: http://download.savannah.gnu.org/releases/pgubook/ProgrammingGroundUp-1-0-booksize.pdf
+

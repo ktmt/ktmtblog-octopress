@@ -26,8 +26,40 @@ Selenium có 2 cách dùng, Selenium Server và Selenium WebDriver. Hiện nay t
 
 Tuy nhiên để quy trình test không tốn quá nhiều tài nguyên, người ta thường hay config để selenium chạy headless trên Linux. VD như Python sẽ có package Xvfb, cho phép tạo display chạy ngầm và bật web driver trên đó.
 
+Ở dưới là VD config cho CentOS distro
+
+{% codeblock  %}
+pip install selenium
+yum install Xvfb 
+yum install firefox
+pip install pyvirtualdisplay
+{% endcodeblock %} 
+
+{% codeblock  ~/.bash_profile %}
+...
+#Create virtual screen by Xvfb
+Xvfb :5 -ac -screen 0 1024x768x8 &
+...
+{% endcodeblock %} 
+
+{% codeblock  TestMySite.py%}
+from selenium import webdriver
+...
+class SeleniumHeadlessTest(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.base_url = "" #Testing URL here 
+        self.verificationErrors = []
+....
+{% endcodeblock %} 
+
+{% codeblock  running python test%}
+export DISPLAY=:5.0
+python TestMySite.py
+{% endcodeblock %} 
+
 ## Bypass the working attendance system ##
-Ví dụ đơn giản nhất: giả sử, công ty bạn có hệ thống check time làm việc của nhân viên. Nhân viên khi đến công ty phải login vào page, ấn vào button "Đã đến". Tương tự khi về lại phải login vào và ấn thêm button "Đã về"
+Ở phần này tôi sẽ đặt ra 1 ví dụ trực quan: giả sử, công ty bạn có hệ thống check time làm việc của nhân viên. Nhân viên khi đến công ty phải login vào page, ấn vào button "Đã đến". Tương tự khi về lại phải login vào và ấn thêm button "Đã về"
 
 Có selenium trong tay, bạn có thể giải quyết vấn đề khá đơn giản, viết 1 test script mô phỏng toàn bộ quá trình nói trên, đặt cron cho nó chạy vào giờ đến và giờ về chỉ định
 
@@ -57,6 +89,97 @@ Thêm 1 ít sleep time random(VD random trong khoảng 10 phút) và đặt cron
 
 Khi xuất hiện 1 số ngày nghỉ ko phải thứ 7, CN mà muốn đặt lịch để con bot ko chạy, vấn đề sẽ hơi phức tạp hơn 1 chút. bạn cần phải viết 1 con bot observer khác check ngày và update lại cron job
 
+## Selenium và Nose
+Nếu bạn đã dùng Python 1 thời gian, chắc hẳn sẽ biết đến Nose - UT framework cho Python. Ở phần này sẽ demo thêm 1 config cho Selenium + Nose
+
+Yêu cầu: Trang web www.mysite.com của bạn có 100 sublink: www.mysite.com/1 , www.mysite.com/2, www.mysite.com/3 ..... www.mysite.com/100
+
+Bạn phải test xem trong từ sublink đó có 1 file image tên là "myimage.png" với div=myimage hay không.
+
+Như vậy có 100 test case ở đây, tuy nhiên content khá giống nhau, bạn có thể nghĩ đến chuyện tạo 1 template
+
+{% codeblock template.py%}
+from selenium import webdriver
+from selenium import unittest 
+from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoSuchElementException
+
+class SeleniumHeadlessTest(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.base_url = "www.mysite.com"
+        self.failures = []
+ 
+    def Test(self):
+        driver = self.driver
+        driver.get(self.base_url+ "foo")
+        try: driver.find_element_by_xpath("//div[@id='myimage']")
+        except NoSuchElementException:
+            driver.back()
+            self.failures.append("foo")
+        self.assertEqual(len(self.failures),0)          
+
+    def tearDown(self):
+        self.driver.quit()
+
+if __name__ == "__main__":
+    unittest.main()
+{% endcodeblock %} 
+
+
+Tạo file config chứa các giá trị muốn replace cho "foo" trong template.py, ở đây cụ thể là 1..100
+
+{% codeblock config %}
+# any comment
+! another comment
+$ I'm comment too, do u believe me :D
+1
+2
+...
+100
+{% endcodeblock %} 
+
+Code 1 cái test_generator, ở đây tôi dùng chính Python fabric:D
+
+{% codeblock selenium - fabfile.py%}
+# pip install fabric
+from __future__ import with_statement
+from fabric.api import *
+import sys, os, fileinput, textwrap
+
+_DIR=os.getcwd()
+
+def test_generator():
+    with open('./config','r') as f:
+        # Ignore comment line in config file
+        prefs=["#","!","<","/","$","%","&","\n"]
+        ffilter = filter(lambda item: not any(item.startswith(prefix) for prefix in prefs), f.readlines()
+        for line in ffilter:
+            bar=line.strip()
+            with lcd(_DIR):
+                # create test source 
+                local('cp -r template.py '+bar+'.py') 
+            with open('./'+bar+'.py','r+') as tf:
+                # replace all "foo" with variable read from config file
+                tfmap = map(lambda l: l.replace("foo","bar") if "foo" in l else l, tf.readlines())
+                tf.seek(0)
+                tf.writelines(tfmap)
+            tf.closed
+    f.closed
+
+{% endcodeblock %} 
+
+
+Done! Giờ bạn có thể 
+
+{% codeblock %}
+#pip install multiprocessing
+export DISPLAY=:5.0
+fab test_generator 2>fabErr.log
+nosetest --exe -v --process=4 --process-restartworker . 
+{% endcodeblock %} 
+
+
 ## Jenkins ##
 Tiếp tục về quy trình test automation, Jenkins là 1 tool xuất sắc khác. Jenkins đại diện cho khái niệm CI (continuous integration). 
 
@@ -69,17 +192,9 @@ VD về Jenkins jobs
 {% img /images/SeleniumAndJenkins/JenkinsJobs.png 'image' 'images' %}
 Source Code Management
 
-
-{% img /images/SeleniumAndJenkins/WakeupGit.png 'image' 'images' %}
-Wake up by SVN or Git
-
-
 {% img /images/SeleniumAndJenkins/ExecuteShell.png 'image' 'images' %}
 Execute Shell
 
-Optional shell execute bên cạnh các jobs định nghĩa sẵn chạy các test framework. Ở đây là ví dụ của run Selenium trên Nose. Bạn có thể config trực tiếp trên plugin Selenium của Jenkins
-
- 
 {% img /images/SeleniumAndJenkins/BuildTriggers.png 'image' 'images' %}
 Build Trigger
 
@@ -91,7 +206,7 @@ Build Trigger
 
 * Cron jobs: package lập lịch của Linux
 
-* Xvfb: package tạo display ảo của Python
+* Xvfb: package tạo display ảo của Linux 
 
 * Selenium: là công cụ giả lập action trên browser, bắt chước y hệt thao tác của user và ko loại trừ bất cứ hạn chế nào
 
