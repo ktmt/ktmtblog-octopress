@@ -16,7 +16,7 @@ description:
 date_format: "ordinal"
 
 # RSS / Email (optional) subscription links (change if using something like Feedburner)
-subscribe_rss: /ktmtblog-octopress/atom.xml
+subscribe_rss: /ktmt-octopress/atom.xml
 subscribe_email:
 # RSS feeds can list your email address if you like
 email:
@@ -26,10 +26,10 @@ email:
 # ----------------------- #
 
 # If publishing to a subdirectory as in http://site.com/project set 'root: /project'
-root: /ktmtblog-octopress
+root: /
 permalink: /blog/:year/:month/:day/:title/
 source: source
-destination: public/ktmtblog-octopress
+destination: public/
 plugins: plugins
 code_dir: downloads/code
 category_dir: blog/categories
