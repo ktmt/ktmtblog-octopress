@@ -91,8 +91,11 @@ Khi xuất hiện 1 số ngày nghỉ ko phải thứ 7, CN mà muốn đặt l�
 
 ## Selenim + Nose
 Nếu bạn đã dùng Python 1 thời gian, chắc hẳn sẽ biết đến Nose - UT framework cho Python. Ở phần này sẽ demo thêm 1 config cho Selenium + Nose
+
 Yêu cầu: Trang web www.mysite.com của bạn có 100 sublink: www.mysite.com/1 , www.mysite.com/2, www.mysite.com/3 ..... www.mysite.com/100
+
 Bạn phải test xem trong từ sublink đó có 1 file image tên là "myimage.png" với div=myimage hay không.
+
 Như vậy có 100 test case ở đây, tuy nhiên content khá giống nhau, bạn có thể nghĩ đến chuyện tạo 1 template
 
 {% codeblock template.py%}
@@ -159,9 +162,9 @@ def test_generator():
             with open('./'+bar+'.py','r+') as tf:
                 # replace all "foo" with variable read from config file
                 tfmap = map(lambda l: l.replace("foo","bar") if "foo" in l else l, tf.readlines())
-            tf.seek(0)
-            tf.writelines(tfmap)
-        rf.closed
+                tf.seek(0)
+                tf.writelines(tfmap)
+            tf.closed
     f.closed
 
 {% endcodeblock %} 
