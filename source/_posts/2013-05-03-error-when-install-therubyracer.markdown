@@ -40,16 +40,17 @@ extconf.rb:15:in `<main>': undefined method `include_path' for Libv8:Module (NoM
 {% endcodeblock %}
 
 Bị lỗi này hình như là do version của v8 đang cài trong máy bị conflict với version v8 therubyracer reference đến, để fix thì có 2 cách:
+Cách đầu tiên là uninstall bản gem libv8 đang có trong máy đi, rồi install lại therubyracer
 {% codeblock fix1 fix1.sh %}
 $ gem uninstall libv8
 $ gem install therubyracer
 {% endcodeblock %}
 Khi install therubyracer thì gem sẽ tự động install lại bản v8 thích hợp vào đúng chỗ.
 
-Hoặc bạn có thể:
+Hoặc bạn có thể dùng cách thứ 2 là update lại bản libv8 mới nhất, rồi tiến hành cài đặt như bình thường
 {% codeblock fix1 fix1.sh %}
 $ gem update libv8
-$ bundle install
+$ gem install therubyracer
 {% endcodeblock %}
 
 
