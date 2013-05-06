@@ -20,7 +20,7 @@ def fac(n):
     return n * fac(n - 1)
 {% endcodeblock %} 
 
-Có gì không ổn ở đoạn code này ? Cách giải quyết hoàn toàn không có vấn đề, nhưng nếu tinh ý bạn sẽ nhận thấy có 1 khối lượng tính toán bị lặp lại khá nhiều khi chạy nhiều hàm fac(n). fac(3), fac(4) và fac(10) lần lượt đòi hỏi 3 flow tính toán riêng rẽ mà không có reuse. 
+Có gì không ổn ở đoạn code này ? Cách giải quyết hoàn toàn không có vấn đề, nhưng nếu tinh ý bạn sẽ nhận thấy có 1 khối lượng tính toán bị lặp lại khá nhiều khi chạy nhiều hàm fac(n). VD, nếu tính fac(3), fac(4) và fac(10) lần lượt sẽ đòi hỏi 3 flow tính toán riêng rẽ mà không có reuse: fac(3) sẽ tính đệ quy từ fac(2) xuống fac(1), fac(4) tính đệ quy từ fac(3) xuống fac(1) và fac(10) tính đệ quy từ fac(9) xuống fac(1) !
 
 Áp dụng memoization dưới dạng dict, ta có thể viết hàm fac_m như sau:
 
@@ -29,11 +29,11 @@ memo = {}
 def fac_m(n):
     if n<2: return 1
     if n not in memo:
-        rel = n * fac_m(n-1)
-    return rel
+        memo[n] = n * fac_m(n-1)
+    return memo[n]
 {% endcodeblock %} 
 
-Ở đây memo đóng vài trò như 1 cache. fac(3) sẽ generate ra 3 record in cache, và fac(4) sẽ hit cache khi chạy đệ quy được 1 lần. Tương tự fac(10) sẽ hit cache khi giảm xuống fac(4)
+Ở đây memo đóng vài trò như 1 cache. fac(3) sẽ generate ra 3 record in cache, và fac(4) sẽ hit cache khi chạy đệ quy được 1 lần. Tương tự fac(10) sẽ hit cache khi đệ quy xuống đến fac(4)
 
 Như vậy memoization đơn giản chỉ là tìm cách nhớ những phần tử để giảm khối lượng tính toán
 
@@ -78,9 +78,9 @@ Decorator ở đây là từ khoá "@Memoize" trước định nghĩa của hàm
 Vậy decorator trong Python là gì và cách dùng ra sao ?
 
 ## Python decorator ##
-Trong số các design pattern, có 1 design pattern gọi là "decorator design pattern". Decorator ở Python chỉ là 1 cách implement decorator design pattern. 2 khái niệm này không hoàn toàn giống nhau. Một điểm nữa cần nhớ là, memoization ở trên chỉ là 1 trong các ứng dụng của decorator, decorator còn có nhiều ứng dựng khác.
+Trong số các design pattern, có 1 design pattern gọi là "decorator design pattern". Python decorator chỉ là 1 cách implement của decorator design pattern. 2 khái niệm này không hoàn toàn giống nhau. Một điểm nữa cần nhớ là, memoization ở trên chỉ là 1 trong các ứng dụng của python decorator, python decorator còn có nhiều ứng dựng khác.
 
-Decorator cho phép ta execute code trước hoặc sau function mà ko làm thay đổi code của function. Mọi function trong python đều là object, cho phép ta có thể assign funtion cho variable hoặc defince function trong chính 1 function khác. Dựa vào đó, decorator có thể là decorator class như trên, hoặc là decorator function
+Mọi function trong python đều là object, cho phép ta có thể assign funtion cho variable hoặc defince function trong chính 1 function khác. Dựa vào đó, decorator có thể dưới dạng decorator function như ví dụ dưới đây:
 
 {% codeblock  python.py %}
 def gotham(f):
@@ -92,13 +92,23 @@ def gotham(f):
 @gotham
 def batman():
     print "Batman Here! Gotham is saved! " 
+batman()
 {% endcodeblock %} 
 
-Cơ chế của decorator có thể hiểu đơn giản là, khi compiler đọc đến đoạn code đefine function với decorator, compiler sẽ compile function 1 cách bình thường và pass function object kết quả thẳng cho decorator(function hoặc class). Có thể coi decorator là một "function" đặc biệt, lấy agrument là 1 function object và return kết quả cũng là 1 function object. 
+Đoạn code sẽ cho output:
+
+{% codeblock %}
+Gotham needs Batman
+Batman Here! Gotham is saved! 
+{% endcodeblock %} 
+
+Cơ chế của decorator có thể hiểu đơn giản là, khi compiler đọc đến đoạn code đefine function với decorator, compiler sẽ compile function 1 cách bình thường và pass function object kết quả thẳng cho decorator(dưới dạng function hoặc class). Decorator(function hoăc class) lấy agrument là 1 function object và return kết quả là 1 function object khác. 
+
+Function object kết quả nói trên gồm function object ban đầu đã được gói lại và "thêm thắt", và từ nay về sau sẽ được gọi thay cho function object ban đầu mỗi khi có lệnh call.
 
 Ngoài memoization bên trên, bạn có thể dễ thấy rất nhiều ứng dụng của decorator trong các task liên quan đến wrap VD như:
 
-Timing
+Timing, benchmark tính toán thời gian run code
 
 {% codeblock  python.py %}
 def time_cal(func):
