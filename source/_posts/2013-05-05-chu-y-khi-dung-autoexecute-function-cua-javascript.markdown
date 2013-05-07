@@ -56,9 +56,3 @@ Khi xxx.callback được gọi bởi một hàm ** ở ngoài** scope của clo
 khi mà cái closure (function(){})() đã được execute xong, đồng nghĩa với việc xxx cũng bị dọn dẹp rồi thì cái callback này đương
 nhiên cũng bị mất đi, và tất nhiên sẽ không chui vào được nữa. Một lỗi rất cơ bản nhưng mình cũng mất một lúc mới phát hiện ra nguyên
 nhân.
-
-
-
-
-
-
