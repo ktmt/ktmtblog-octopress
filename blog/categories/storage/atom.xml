@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: storage | Blog kỹ thuật máy tính]]></title>
+  <link href="http://ktmt.github.com/blog/categories/storage/atom.xml" rel="self"/>
+  <link href="http://ktmt.github.com/"/>
+  <updated>2013-05-13T07:51:45+09:00</updated>
+  <id>http://ktmt.github.com/</id>
+  <author>
+    <name><![CDATA[kỹ thuật máy tính]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Exclusive Lock - Shared Lock]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/13/exclusivelock-sharedlock/"/>
+    <updated>2013-05-13T04:52:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/13/exclusivelock-sharedlock</id>
+    <content type="html"><![CDATA[<h2>1. Mở đầu</h2>
+
+<p>Nhân tiện trả lời thắc mắc của bạn kiennt về <em>shared lock</em> và <em>exclusive lock</em> được nhắc đến trong bài viết <a href="http://ktmt.github.io/blog/2013/05/07/storageenginemysql/">Giới Thiệu Một Số Storage Engine Của Mysql</a>, mình viết bài này để giải thích khái niệm và ý nghĩa của exclusive lock, shared lock, MVCC cũng như làm rõ một số điểm chưa rõ ràng trong bài viết trên.</p>
+
+<h2>2. Cơ chế và ý nghĩa của Lock và MVCC</h2>
+
+<h3>2.1 Khái niệm và ý nghĩa của lock</h3>
+
+<p><a href="http://en.wikipedia.org/wiki/Lock_%28computer_science%29">Lock</a> (khóa) là <em>cơ chế đồng bộ</em> và <em>giới hạn truy cập</em> đến <em>tài nguyên đươc chia sẻ</em> trong một môi trường có <em>nhiều luồng xử lý cùng truy cập</em>.</p>
+
+<p>Nói một cách hình tượng, lock giống một cái cờ tuyên bố chủ quyền đối với tài nguyên máy tính. Mỗi luồng xử lý (thread) khi truy cập tài nguyên dùng chung nào đó sẽ phải "dựng cờ lên" để báo cho các luồng xử lý khác biết tài nguyên đó đang được xử dụng và "hạ cờ xuống" khi hoàn thành xử lý trên tài nguyên đó. Các luồng xử lý khác bằng việc quan sát trạng thái của cờ này mà sẽ chiếm tài nguyên cho xử lý của mình, hay chờ đợi cho đến khi luồng xử lý khác kết thúc. Có thể nói lock là một phương tiện khẳng định quyền sở hữu đối với 1 loại tài nguyên. Nhờ cơ chế lock này mà tại mỗi thời điểm chỉ có duy nhất 1 luồng xử lý truy cập tài nguyên dùng chung..</p>
+
+<p><em>Shared lock</em>, hay còn gọi là read-only lock (khóa chỉ đọc) là lock mà một luồng xử lý phải chiếm hữu khi muốn đọc từ một vùng nhớ được chia sẻ.</p>
+
+<p><em>Exclusive lock</em>, hay còn gọi là read-write lock (khóa đọc ghi) là lock mà một luồng xử lý phải chiếm hữu khi muốn cập nhật một vùng nhớ được chia sẻ.</p>
+
+<h3>2.2 Tại sao phải cần lock</h3>
+
+<h4>a. Tác dụng của exclusive lock</h4>
+
+<p>Xét bài toán ta có 2 luồng xử lý A, B cùng thao tác trên 2 biến a, b.
+Giá trị hiện tại của các biến</p>
+
+<ul>
+<li>a = 0</li>
+<li>b = 0</li>
+</ul>
+
+
+<p>Nhiệm vụ của 2 luồng xử lý:</p>
+
+<ul>
+<li>Luồng xử lý A đọc giá trị 2 biến, tăng giá trị của a lên 1, và cập nhật giá trị cả 2 biến vào bộ nhớ.</li>
+<li>Luồng xử lý B đọc giá trị 2 biến, tăng giá trị của b lên 1, và cập nhật giá trị cả 2 biến vào bộ nhớ.</li>
+</ul>
+
+
+<p>Giả sử A thực hiện trước, đọc giá trị của a và b (a=0, b=0) và tăng a lên 1. Lúc này giá trị của a đang là 1, của b là 0. Tuy nhiên, chính tại thời điểm này, hệ điều hành quyết định dừng A, và thực hiện B. B đọc giá trị 2 biến a và b và tăng b lên 1 rồi cập nhật cả 2 biến vào bộ nhớ. Do A chưa cập nhật giá trị 2 biến, giá trị của a lúc này vẫn là 0, của b là 1 (a=0,b=1 do A chưa hoàn thành). Vì vậy, tại thời điểm B kết thúc a = 0, b = 1. Đến đây hệ điều hành thực hiện chạy A ở bước cuối cùng, cập nhật giá trị 2 biến (a = 1, b = 0) vào bộ nhớ, ghi đè giá trị b = 1 được cập nhật bởi B. Kết quả cuối cùng (a = 1, b = 0) sai so với kết quả mong đợi (a = 1, b = 1).</p>
+
+<pre><code>    Luồng A            |  Luồng B
+    -------------------|-------------------------
+    Đọc a, b (a=0, b=0)| 
+    a = 1, b = 0       |
+                       |  Đọc a, b (a=0, b=0)
+                       |  a = 0, b = 1
+                       |  Ghi a, b (a = 0, b = 1)
+    Ghi a, b (a=1, b=0)|
+
+
+Trạng thái cuối cùng (a=1, b=0)
+Kết quả mong chờ: (a=1, b=1)
+</code></pre>
+
+<p>Để giải quyết bài toán này, người ta dùng một exclusive lock. Luồng A, B muốn cập nhật giá trị a, b phải trước tiên chiếm lock, rồi mới thực hiện xử lý của mình. Các bước thực hiện giờ sẽ như sau:</p>
+
+<ul>
+<li>Chiếm lock. Nếu như chiếm được lock thì tiến hành xử lý tiếp theo. Nếu không, chờ đến khi chiếm được lock</li>
+<li>Đọc a, b</li>
+<li>Cập nhật a (hoặc b)</li>
+<li>Ghi a, b</li>
+<li>Thôi chiếm lock</li>
+</ul>
+
+
+<p>Quy trình bây giờ tăng 2 bước (chiếm lock hoặc chờ đến khi nào chiếm được lock và nhả lock). Các bước chạy ở  trên giờ sẽ như sau:
+A chiếm lock thành công (do chưa có luồn nào chiếm lock) và tiến hành đọc và cập nhật a (a=1, b=0). Tại thời điểm A bị dùng, B được chạy và thử chiếm lock nhưng do A đang nắm giữ lock nên B sẽ <em>phải</em> chờ. Lúc này A thực hiện nốt bước cuối cùng ghi giá trị vào bộ nhớ (a=1, b=0) và nhả lock. B lúc này thấy lock bị nhả và nắm giữ lock, đọc giá trị từ bộ nhớ (a=1, b=0!!), cập nhật b (a=1, b=1) và ghi dữ liệu vào bộ nhớ (a=1, b=1) đồng thời nhả lock. Kết quả cuối cùng như mong đợi (a=1, b=1)</p>
+
+<pre><code>    Luồng A             | Luồng B
+    --------------------|--------------------------------
+    Chiếm lock          |
+    Đọc a, b            |    
+    a = 1, b = 0        |
+                        | Chiếm lock (không thành công)
+    Ghi a, b (a=1, b=0) |
+    Nhả lock            |
+                        | Chiếm lock (thành công)
+                        | Đọc a, b (a=1, b=0)
+                        | a = 1, b = 1
+                        | Ghi a, b (a = 1, b = 1)
+                        | Nhả lock
+
+Trạng thái cuối cùng (a=1, b=1)
+Kết quả mong chờ: (a=1, b=1)!!!!
+</code></pre>
+
+<p>Ta có thể thấy nhờ có lock, mà tại mỗi thời điểm chỉ có 1 luồng xử lý truy cập a, b. Các luồng khác khi không chiếm được lock sẽ phải chờ đến lượt.</p>
+
+<p><em>Kết luận</em>: exclusive lock được sử dụng để đồng bộ 2 xử lý ghi đồng thời.</p>
+
+<h4>b. Tác dụng của shared lock</h4>
+
+<p>Để hiểu ý nghĩa shared lock, ta xét bài toán tương tự như ở trên. Lần này, thay vì 2 luồng cùng cập nhật vùng nhớ chung, 1 luồng sẽ đọc, còn một luồng sẽ cập nhật. Giả sử A đọc và B cập nhật, và giá trị ban đầu là a=0, b=0.</p>
+
+<p>A tiến hành đọc a (a=0) và bị hệ điều hành <em>cho nghỉ</em> để B thực hiện. B đọc a, b (a=0, b=0) và thực hiện cập nhật b (a=0, b=1) và ghi kết quả lên bộ nhớ. A đọc nốt giá trị còn lại b (b=1).</p>
+
+<p>Kết quả cuối cùng đối với A rõ ràng không như mong đợi (Mong chờ: a=0, b=0 nhưng nhận về a=0, b=1).</p>
+
+<pre><code>    Luồng A     | Luồng B
+    ------------|-------------------------
+    Đọc a (a=0) |
+                | Đọc a, b (a=0, b=0)
+                | a = 0, b = 1
+                | Ghi a, b (a = 0, b = 1)
+    Đọc b (b=0) |
+
+Kết quả cuối cùng (a=0, b=1)
+Kết quả mong chờ: (a=0, b=0)
+</code></pre>
+
+<p>Để giải quyết bài toán này, ta dùng shared-lock. Luồng A muốn đọc sẽ cần phải chiếm shared-lock. Luồng B muốn ghi sẽ phải nhìn xem shared-lock có bị chiếm hay không. Nếu shared-lock đang bị chiếm. B phải đợi cho đến khi tất cả shared-lock được giải phóng mới tiến hành cập nhật. Luồng chạy sau bây giờ sẽ như sau:</p>
+
+<p>A chiếm shared-lock và tiến hành đọc a (a=0). A được <em>cho nghỉ</em> và B được <em>đưa vào sân</em>. Do A đang chiếm shared lock nên B không được quyền cập nhật và được <em>cho nghỉ</em>. A thực hiện nốt việc đọc b (b=0) và nhả shared-lock. B không thấy shared-lock và tiến hành cập nhật b (b=1) như bình thường.</p>
+
+<pre><code>    Luồng A           | Luồng B
+    ------------------|-----------------------------
+    Chiếm shared-lock |
+    Đọc a (a=0)       |
+                      | Nhìn thấy shared-lock. Nghỉ
+    Đọc b (b=0)       |
+    Nhả shared-lock   |
+                      | Chiếm exclusive lock
+                      | Đọc a, b (a=0, b=0)
+                      | a = 0, b = 1
+                      | Ghi a, b (a = 0, b = 1)
+                      | Nhả exclusive lock.
+
+Kết quả cuối cùng (a=0, b=0)
+Kết quả mong chờ: (a=0, b=0)
+</code></pre>
+
+<p><em>Kết luận</em>: shared-lock được sử dụng để đồng bộ 2 xử lý đọc ghi đồng thời.</p>
+
+<h4>c. Tại sao cần chiếm shared lock khi đọc dữ liệu</h4>
+
+<p>Đến đây ta có thể dễ dàng trả lời câu hỏi thứ nhất của kiennt! Khi tiến hành đọc dữ liệu, nếu không chiếm shared-lock, dữ liệu đó có thể bị cập nhật bởi 1 thread khác, dẫn tới giá trị đọc được bị thay đổi một phần, không bảo đảm tính toàn vẹn.</p>
+
+<p>Tuy vậy có một điểm trong bài viết cần được làm rõ như sau: Trong câu nói "MyISAM lock toàn bộ table. User (MySQL server) chiếm shared-lock khi đọc và chiếm exclusive-lock khi ghi. Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!", thì câu nói: "Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!" là không đúng.</p>
+
+<p>Nói một cách chính xác hơn: việc <em>đọc và cập nhật (SELECT và UPDATE)</em> không được tiến hành đồng thời (Do tại thời điểm chiếm exclusive lock, không shared-lock nào được phép tồn tại). Tuy nhiên, việc <em>ghi mới</em> dữ liệu có thể được tiến hành mà không gây ảnh hưởng gì đến tính toàn vẹn của dữ liệu được đọc (vì chúng khác nhau!). Nói cách khác việc <em>đọc và ghi mới (SELECT và INSERT)</em> có thể được tiến hành đồng thời, và thực tế đây cũng là một tính năng của MyISAM.</p>
+
+<h3>2.2 MVCC (Multiversion concurrency control)</h3>
+
+<p>MVCC được đặt ra để giải quyết vấn đề đọc và ghi đồng thời. Rõ ràng ở giải pháp shared-lock trình bày ở trên, việc A phải chiếm shared lock là rất mất thời gian; B phải chờ đợi A hoàn thành xử lý đọc mới được cập nhật cũng hoàn toàn không hiệu quả. MVCC giải quyết sự không hiệu quả này bằng nhận xét: <em>Thao tác đọc không cập nhật dữ liệu</em> vì vậy nếu ta duy trì 2 version của dữ liệu (1 cũ - 1 mới) và chỉ tiến hành ghi đè dữ liệu mới vào cũ khi A hoàn thành việc đọc, thì ta không cần shared-lock. B sẽ cập nhật và <em>version mới</em> thay vì phải chờ A hoàn thành việc đọc.</p>
+
+<p>MVCC lưu timestamp và transaction ID để duy trì tính tính nhất quán của dữ liệu.</p>
+
+<p>Để hiểu cách MVCC hoạt động, ta xét ví dụ sau (Copy từ Wikipedia :D)</p>
+
+<pre><code>    Thời gian       | Object 1      | Object 2
+    ----------------|---------------|------------
+    0               | Foo           | Bar
+    1               | Hello (T1)    | 
+</code></pre>
+
+<p>Tại thời điểm 0, Object 1 có giá trị Foo, Object 2 có giá trị Bar. Tại thời điểm 1, thread T1 cập nhật giá trị Object 1 thành Hello. Như vậy trước khi T1 commit dữ liệu, bất cứ xử lý đọc nào cũng cho kết quả Object 1 và 2 tại thời điểm 0 (Foo-Bar). Khi T1 commit dữ liệu, xử lý đọc sẽ trả về giá trị Hello-Bar.</p>
+
+<p>Giả sử tại thời điểm T1 chưa commit, T2 lại cập nhật Object 2 như sau:</p>
+
+<pre><code>    Thời gian       | Object 1      | Object 2
+    ----------------|---------------|------------
+    0               | Foo           | Bar
+    1               | Hello (T1)    | 
+    2               |               | World (T2)
+</code></pre>
+
+<p>Lúc này, mọi thao tác đọc sẽ vẫn trả về Foo-Bar. Khi T2 commit, dữ liệu đọc tiếp theo sẽ là Hello-Bar. Và khi T2 commit, dữ liệu đọc sẽ là Hello-World. Nói cách khác, tại mỗi thời điểm ta nhìn thấy 1 phiên bản dữ liệu, các cập nhật bởi thread khác sẽ được lưu tại một version khác.</p>
+
+<p>Chính nhờ cách quản lý nhiều version dữ liệu này, mà việc đọc không cần lock shared-lock vẫn đảm bảo được tính toàn vẹn của dữ liệu được đọc.</p>
+
+<h2>3. Tổng kết</h2>
+
+<p>Bài viết đã giải thích phần nào hiểu hơn ý nghĩa của exclusive lock và shared-lock cũng như tác dụng và sự cần thiết của chúng. Đồng thời, bài viết cũng làm rõ những điểm được nói đến trong viết trong bài <a href="http://ktmt.github.io/blog/2013/05/07/storageenginemysql/">Giới Thiệu Một Số Storage Engine Của Mysql</a> cũng như giải đáp những thắc mắc của bạn kiennt.</p>
+
+<h2>4. Tham khảo:</h2>
+
+<ol>
+<li><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control">MVCC</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Lock_%28computer_science%29">Lock</a></li>
+<li><a href="http://stackoverflow.com/questions/11837428/whats-the-difference-between-an-exclusive-lock-and-a-shared-lock">Exclusive lock &amp; shared lock</a></li>
+<li><a href="http://www.amazon.com/High-Performance-MySQL-Optimization-Replication/dp/1449314287">High performance MySQL</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Giới thiệu một số storage engine của Mysql]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/07/storageenginemysql/"/>
+    <updated>2013-05-07T16:53:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/07/storageenginemysql</id>
+    <content type="html"><![CDATA[<h1>Giới thiệu</h1>
+
+<p>MySQL là một trong những hệ thống cơ sở dữ liệu quan hệ phổ biến số một thế giới, được sử dụng bởi hầu hết các website lớn. Do vậy, việc nắm vững MySQL là yêu cầu không thể thiếu đối với một webmaster.</p>
+
+<p>Kiến trúc logic của MySQL nhìn tổng quan có thể được mô tả như hình dưới đây</p>
+
+<p>{% img /images/logical_mysql_architecture.jpeg %}</p>
+
+<p>Ta có thể thấy MySQL có các component cơ bản như ở dưới đây</p>
+
+<ul>
+<li>Connection/thread handling</li>
+<li>Query cache</li>
+<li>Parser</li>
+<li>Optimizer</li>
+<li>Storage engine</li>
+</ul>
+
+
+<p>Việc nắm rõ từng chức năng và nhiệm vụ của từng thành phần là điều không thể thiếu trong việc sử dụng MySQL một cách hiệu quả. Bài viết sẽ tập trung giới thiệu về thành phần dưới cùng trong mô hình trên: Storage engine (Máy lưu trữ)</p>
+
+<h1>Storage Engine (Máy lưu trữ)</h1>
+
+<p>Storage Engine thực chất là cách MySQL lưu trữ dữ liệu trên đĩa cứng. MySQL lưu mỗi database như là một thư mục con nằm dưới thư mục data. Khi một table được tạo ra, MySQL sẽ lưu định nghĩa bảng ở file đuôi .frm và tên trùng với tên của bảng được tạo. Việc quản lý định nghĩa bảng là nhiệm vụ của MySQL server, dù rằng mỗi storage engine sẽ lưu trữ và đánh chỉ mục (index) dữ liệu khác nhau.</p>
+
+<p>Ví dụ: mình chỉ định --datadir là /usr/local/mysql/data và định nghĩa bảng users trong database tên là test như sau</p>
+
+<p>{% highlight bash %}
+create table users (</p>
+
+<pre><code>id int not null auto_increment, 
+name varchar(30), 
+password varchar(20), 
+primary key(id)
+</code></pre>
+
+<p>);
+{% endhighlight %}</p>
+
+<p>thì trong thư mục /usr/local/mysql/data sẽ có thư mục con là test, và dưới test sẽ có các file</p>
+
+<p>{% highlight bash %}
+-rw-rw----  1 <em>mysql  wheel   8624  5  7 17:35 users.frm
+-rw-rw----  1 </em>mysql  wheel  98304  5  7 17:35 users.ibd
+{% endhighlight %}</p>
+
+<p>Để xem loại storage engine của bảng hiện tại, bạn có thể dùng câu lệnh <em>SHOW DATABASE STATUS</em></p>
+
+<p>{% highlight bash %}
+mysql> show table status like 'users' \G
+<strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em> 1. row </em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></p>
+
+<pre><code>       Name: users
+     Engine: InnoDB
+    Version: 10
+ Row_format: Compact
+       Rows: 2
+</code></pre>
+
+<p> Avg_row_length: 8192</p>
+
+<pre><code>Data_length: 16384
+</code></pre>
+
+<p>Max_data_length: 0
+   Index_length: 0</p>
+
+<pre><code>  Data_free: 0
+</code></pre>
+
+<p> Auto_increment: 3</p>
+
+<pre><code>Create_time: 2013-05-07 17:35:09
+Update_time: NULL
+ Check_time: NULL
+  Collation: latin1_swedish_ci
+   Checksum: NULL
+</code></pre>
+
+<p> Create_options:</p>
+
+<pre><code>    Comment:
+</code></pre>
+
+<p>1 row in set (0.01 sec)
+{% endhighlight %}</p>
+
+<p>Cụ thể trong trường hợp này:</p>
+
+<pre><code>storage engine          : innodb
+loại row                : compact
+Số lượng row dữ liệu    : 2
+giá trị auto increment tiếp theo: 3
+...
+</code></pre>
+
+<h2>Tổng quan các engine</h2>
+
+<h3>1. MyISAM engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>full-text indexing</li>
+<li>compression.</li>
+<li>spatial functions (GIS)</li>
+<li>Không hỗ trợ transactions</li>
+<li>Không hỗ trợ row-level lock.</li>
+</ul>
+
+
+<h5>Lưu trữ</h5>
+
+<p>MyISAM lưu mỗi bảng dữ liệu trên 2 file: .MYD cho dữ liệu và .MYI cho chỉ mục. Row có 2 loại: dynamic và static (tuỳ thuộc bạn có dữ liệu thay đổi độ dài hay không). Số lượng row tối đa có thể lưu trữ bị giới hạn bởi hệ điều hành, dung lượng đĩa cứng. MyISAM mặc định sử dụng con trỏ độ dài 6 bytes để trỏ tới bản ghi dữ liệu, do vậy giới hạn kích thước dữ liệu xuống 256TB.</p>
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>MyISAM lock toàn bộ table. User (MySQL server) chiếm shared-lock khi đọc và chiếm exclusive-lock khi ghi. Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!</li>
+<li>MyISAM có khả năng tự sửa chữa và phục hồi dữ liệu sau khi hệ thống crashed.</li>
+<li>Dùng command check table / repair table để kiểm tra lỗi và phục hồi sau khi bị lỗi.</li>
+<li>MyISAM có thể đánh chỉ mục full-text, hỗ trợ tìm kiếm full-text.</li>
+<li>MyISAM không ghi dữ liệu ngay vào ổ đĩa cứng, mà ghi vào 1 buffer trên memory (và chỉ ghi vào đĩa cứng sau 1 khoảng thời gian), do đó tăng tốc độ ghi. Tuy vậy, sau khi server crash, ta cần phải phục hồi dữ liệu bị hư hỏng bằng myisamchk.</li>
+<li>MyISAM hỗ trợ nén dữ liệu, hỗ trợ tăng tốc độ đọc dữ liệu. Mặc dù vậy dữ liệu sau khi nén không thể cập nhật được.</li>
+</ul>
+
+
+<h3>2. InnoDB engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Là engine phức tạp nhất trong các engine của MySQL</li>
+<li>Hỗ trợ transactions</li>
+<li>Hỗ trợ phục hồi, sửa chữa tốt</li>
+</ul>
+
+
+<h5>Lưu trữ</h5>
+
+<p>InnoDB lưu dữ liệu trên 1 file (thuật ngữ gọi là tablespace).</p>
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>InnoDB hỗ trợ MVCC (Multiversion Concurrency Control) để cải thiện việc truy cập đồng thời và hỗ trợ chiến thuật next-key locking.</li>
+<li>InnoDB được xây dựng dựa trên clustered index, do đó việc tìm kiếm theo primary key có hiệu năng rất cao. InnoDB không hỗ trợ sắp xếp index do vậy việc thay đổi cấu trúc bảng sẽ dẫn tới toàn bộ dữ liệu phải được đánh chỉ mục từ đầu (CHẬM với những bảng lớn).</li>
+</ul>
+
+
+<h3>3. Memory engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Còn được gọi là HEAP tables.</li>
+</ul>
+
+
+<h5>Lưu trữ</h5>
+
+<p>Tất cả dữ liệu đều nằm trên memory.</p>
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>Sau khi server restart, cấu trúc bảng được bảo toàn, dữ liệu bị mất hết.</li>
+<li>Memory engine sử dụng HASH index nên rất nhanh cho query lookup.</li>
+<li>Memory engine dùng table-level locking do vậy tính concurrency không cao.</li>
+</ul>
+
+
+<h3>4. Archive engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Chỉ hỗ trợ Insert và Select.</li>
+<li>Không đánh chỉ mục</li>
+<li>Dữ liệu được buffer và nén bằng zlib nên tốn ít I/O, tốc độ ghi do đó cao.</li>
+</ul>
+
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>Tốc độ ghi cao, phù hợp cho ứng dụng log.</li>
+</ul>
+
+
+<h3>5. CSV engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Coi file CSV như là 1 table.</li>
+<li>Không hỗ trợ đánh chỉ mục</li>
+</ul>
+
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>Nếu bài toán là trích xuất thông tin từ file CSV và ghi vào cơ sở dữ liệu, đồng thời cần kết quả CSV ngay từ DB, engine này có vẻ thích hợp.</li>
+</ul>
+
+
+<h3>6. Falcon engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Được thiết kế cho phần cứng hiện đại: server 64 bit, bộ nhớ "thênh thang"</li>
+<li>Vẫn còn khá mới, chưa có nhiều usercase</li>
+</ul>
+
+
+<h3>7. Maria engine (Cơ sở dữ liệu liên quan: <a href="https://mariadb.org/">MariaDB</a>)</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Được thiết kế bởi những chiến tướng dày dạn kinh nghiêm của MySQL, với mục đích thay thế MyISAM</li>
+<li>Hỗ trợ transactions theo lựa chọn</li>
+<li>Khôi phục lỗi</li>
+<li>Row-level locking và MVCC</li>
+<li>Hỗ trợ BLOB tốt hơn.</li>
+</ul>
+
+
+<h2>Tiêu chí lựa chọn engine</h2>
+
+<ul>
+<li>Transactions: Nếu ứng dụng yêu cầu transactions, InnoDB là lựa chọn duy nhất. Nếu không yêu cầu transactions, MyISAM là lựa chọn tốt.</li>
+<li>Concurrency: Nếu yêu cầu chịu tải cao và không cần thiết transactions, MyISAM là lựa chọn số 1.</li>
+<li>Sao lưu: Các engine đều phần nào hỗ trợ sao lưu. Ngoài ra ta cần hỗ trợ sao lưu trên cả quan điểm thiết kế hệ thống. Ví dụ: bạn thiết kế database server gồm master và slave, master yêu cần transaction nên dùng innodb, slave cần sao lưu và đọc nên có thể dùng MyISAM. Cơ chế đồng bộ master-slave sẽ giúp bạn quản lý sự khác nhau giữa các engine nhưng đảm bảo tính sao lưu. Tiêu chí này có trọng số nhỏ.</li>
+<li>Phục hồi sau crash: MyISAM có khả năng phục hồi sau crash kém hơn InnoDB.</li>
+<li>Tính năng theo yêu cầu hệ thống: Nếu yêu cầu là logging, MyISAM hoặc Archive là lựa chọn hợp lý. Nếu cần lưu trực tiếp CSV, CSV engine là lựa chọn đáng cân nhắc. Nếu ứng dụng không thay đổi dữ liệu mấy (ví dụ cơ sở dữ liệu sách), MyISAM và tính năng nén là lựa chọn phù hợp.</li>
+</ul>
+
+
+<h1>Kết luận</h1>
+
+<p>Bài viết này đã giới thiệu tổng quan về storage engine, một thành phần quan trọng của hệ thống cơ sở dữ liệu. Một số engine tiêu biểu và tính năng đặc điểm cũng được đưa ra. Tiêu chí chọn lựa mỗi loại engine cũng được giới thiệu.</p>
+
+<p>Hy vọng qua bài viết, bạn có cái nhìn tổng quan về database storate engine nói chung, và MySQL storage engine nói riêng, đồng thời hiểu được tầm quan trọng của việc chọn lựa storage engine.</p>
+
+<h1>Tham khảo</h1>
+
+<ol>
+<li><a href="http://shop.oreilly.com/product/9780596101718.do">High performance MySQL, 2ed</a></li>
+<li><a href="http://dev.mysql.com/doc/refman/5.7/en/storage-engines.html">Storage Engines</a></li>
+<li><a href="http://www.linux.org/article/view/an-introduction-to-mysql-storage-engines">Storage Engine Introduction</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

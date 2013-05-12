@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: unix | Blog kỹ thuật máy tính]]></title>
-  <link href="http://ktmt.github.com/ktmtblog-octopress/blog/categories/unix/atom.xml" rel="self"/>
-  <link href="http://ktmt.github.com/ktmtblog-octopress/"/>
-  <updated>2013-04-30T18:38:36+09:00</updated>
-  <id>http://ktmt.github.com/ktmtblog-octopress/</id>
+  <link href="http://ktmt.github.com/blog/categories/unix/atom.xml" rel="self"/>
+  <link href="http://ktmt.github.com/"/>
+  <updated>2013-05-13T07:51:45+09:00</updated>
+  <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Giới thiệu về Unix process]]></title>
-    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/01/gioi-thieu-ve-unix-process/"/>
+    <link href="http://ktmt.github.com/blog/2013/04/01/gioi-thieu-ve-unix-process/"/>
     <updated>2013-04-01T00:39:00+09:00</updated>
-    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/01/gioi-thieu-ve-unix-process</id>
+    <id>http://ktmt.github.com/blog/2013/04/01/gioi-thieu-ve-unix-process</id>
     <content type="html"><![CDATA[<p>Là một kỹ sư lập trình hệ thống, một server guy, hay là một sys admin, sys dev,
 sys ops,... phần lớn thời gian bạn sẽ phải làm việc trên hệ thống Unix.
 Để làm việc trên Unix, chúng ta tương tác với hệ điều hành thông qua các
@@ -42,36 +42,22 @@ ra. Nói cách khác mỗi dòng code của bạn, sẽ được thực thi trê
 
 <p>Unix cung cấp tool <code>ps</code> để list ra tất cả các process đang chạy trên hệ thống</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>proc.sh </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$&gt;</span> ps -e -opid,ppid,user,rss,command
-</span><span class='line'>PID   PPID  USER     RSS      COMMAND
-</span><span class='line'>1     0     root     152      init <span class="o">[</span>2<span class="o">]</span>
-</span><span class='line'>1695  1     root     428      /usr/sbin/sshd
-</span><span class='line'>1863  1     root     48       /sbin/getty 38400 tty1
-</span><span class='line'>1864  1     root     48       /sbin/getty 38400 tty2
-</span><span class='line'>1865  1     root     48       /sbin/getty 38400 tty3
-</span><span class='line'>1866  1     root     48       /sbin/getty 38400 tty4
-</span><span class='line'>1867  1     root     48       /sbin/getty 38400 tty5
-</span><span class='line'>1868  1     root     48       /sbin/getty 38400 tty6
-</span><span class='line'>24477 1695  root     2888     sshd: vagrant <span class="o">[</span>priv<span class="o">]</span>
-</span><span class='line'>24479 24477 vagrant  1996     sshd: vagrant@pts/0
-</span><span class='line'>24480 24479 vagrant  2328     -bash
-</span><span class='line'>24591 24480 vagrant  1060     ps -e -opid,ppid,user,rss,command
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock proc.sh %}
+$> ps -e -opid,ppid,user,rss,command
+PID   PPID  USER     RSS      COMMAND
+1     0     root     152      init [2]
+1695  1     root     428      /usr/sbin/sshd
+1863  1     root     48       /sbin/getty 38400 tty1
+1864  1     root     48       /sbin/getty 38400 tty2
+1865  1     root     48       /sbin/getty 38400 tty3
+1866  1     root     48       /sbin/getty 38400 tty4
+1867  1     root     48       /sbin/getty 38400 tty5
+1868  1     root     48       /sbin/getty 38400 tty6
+24477 1695  root     2888     sshd: vagrant [priv]
+24479 24477 vagrant  1996     sshd: vagrant@pts/0
+24480 24479 vagrant  2328     -bash
+24591 24480 vagrant  1060     ps -e -opid,ppid,user,rss,command
+{% endcodeblock %}</p>
 
 <p>Ở đây, mình chạy lênh <code>ps</code> và show ra các thuộc tính <code>pid,ppid,user,rss,command</code>
 của process (chú ý (1) <code>ps</code> có rất nhiều option để chạy, nếu bạn muốn hiểu chỉ
@@ -105,28 +91,17 @@ tuỳ vào từng hệ thống.</p>
 <p>Trên Linux bạn có thể xem và thay đổi giá trị mặc định của Process ID maximum
 bằng cách thay đổi file <code>/proc/sys/kernel/pid_max</code></p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>main.sh </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;read current maximum value of process id&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="nv">$&gt;</span> cat /proc/sys/kernel/pid_max
-</span><span class='line'>32768&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;h1&gt;set maximum value <span class="k">for </span>process id&lt;/h1&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;<span class="nv">$&gt;</span> <span class="nb">echo </span>40000 &gt; /proc/sys/kernel/pid_max
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock main.sh %}</p>
+
+<h1>read current maximum value of process id</h1>
+
+<p>$> cat /proc/sys/kernel/pid_max
+32768</p>
+
+<h1>set maximum value for process id</h1>
+
+<p>$> echo 40000 > /proc/sys/kernel/pid_max
+{% endcodeblock %}</p>
 
 <p>Khi process ID tăng đến giá trị maximum value, hệ điều hành (OS) sẽ quay trở lại
 đánh số từ một giá trị cụ thế (một số tài liệu nói giá trị này với Linux là 300,
@@ -139,31 +114,22 @@ bài viết này của tôi sẽ tập trung vào ngôn ngữ Ruby</p>
 
 <p>Trong Ruby, muốn lấy Process ID của process hiện tai, bạn sử dụng <code>Process.pid</code>.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>pid.rb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="nb">puts</span> <span class="s2">&quot;Process pid: </span><span class="si">#{</span><span class="no">Process</span><span class="o">.</span><span class="n">pid</span><span class="si">}</span><span class="s2">&quot;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock pid.rb %}
+puts "Process pid: #{Process.pid}"
+{% endcodeblock %}</p>
 
 <p>Dòng code trên gọi tới hàm <code>puts</code> - hàm này có tác dụng in một String ra màn hình.
 Chúng ta có thể manipulate các String trong Ruby thông qua các syntax #{}. Code
 ruby trong #{ } sẽ được thực hiện trước khi truyền cho String</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>irb.rb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vg">$&gt;</span> <span class="n">irb</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;irb(main):001:0&gt; puts &quot;Example for String manipulate: 1 + 2 = </span><span class="si">#{</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="si">}</span><span class="sr">&quot;</span>
-</span><span class='line'><span class="sr">Example for String manipulate: 1 + 2 = 3</span>
-</span><span class='line'><span class="sr">=&gt; nil&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock irb.rb %}
+$> irb</p>
+
+<p>irb(main):001:0> puts "Example for String manipulate: 1 + 2 = #{1 + 2}"
+Example for String manipulate: 1 + 2 = 3
+=> nil</p>
+
+<p>{% endcodeblock %}</p>
 
 <p>(Các file Ruby có extension là .rb. Để chạy một file ruby, bạn dùng lệnh
  <code>ruby &lt;file_name&gt;</code>. Không cần phải compile, rất đơn giản phải không)</p>
@@ -186,18 +152,12 @@ của một node chính là các process con của process ứng với node đó
 
 <p>Trong Ruby, để lấy ra parent process id của một process, chúng ta sử dung <code>Process.ppid</code></p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>ppid.rb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;h1&gt;file test_ppid.rb&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="nb">puts</span> <span class="s2">&quot;Process id </span><span class="si">#{</span><span class="no">Process</span><span class="o">.</span><span class="n">pid</span><span class="si">}</span><span class="s2">, parent process id </span><span class="si">#{</span><span class="no">Process</span><span class="o">.</span><span class="n">ppid</span><span class="si">}</span><span class="s2">&quot;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock ppid.rb %}</p>
+
+<h1>file test_ppid.rb</h1>
+
+<p>puts "Process id #{Process.pid}, parent process id #{Process.ppid}"
+{% endcodeblock %}</p>
 
 <p>Cũng rõ ràng đấy chứ. Liệu tôi có quên gì nữa không nhỉ?</p>
 
@@ -301,7 +261,7 @@ thuật ban đầu với Process. Còn rất nhiều vấn đề chưa đề c�
 
 <p>Bản slide tôi trình bày tại công ty Framgia về UNIX Process</p>
 
-<script async class="speakerdeck-embed" data-id="ce0d6da05a2e0130b5ab22000a8f8802" data-ratio="1.33333333333333" src="http://ktmt.github.com/ktmtblog-octopress//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="ce0d6da05a2e0130b5ab22000a8f8802" data-ratio="1.33333333333333" src="http://ktmt.github.com//speakerdeck.com/assets/embed.js"></script>
 
 
 <p>Bài viết được lấy từ blog <a href="http://kiennt.com/blog/2013/01/20/introduction-to-unix-process.html">http://kiennt.com</a></p>

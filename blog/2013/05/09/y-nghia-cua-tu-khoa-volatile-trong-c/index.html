@@ -1,0 +1,294 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Ý nghĩa của từ khóa volatile trong C - Blog kỹ thuật máy tính</title>
+	<meta name="author" content="kỹ thuật máy tính">
+
+	
+	<meta name="description" content="Ý Nghĩa Của Từ Khóa Volatile Trong C Mở đầu Trong lập trình nhúng (embedded system), ta rất thường hay gặp khai báo biến với từ khóa volatile. Việc &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Blog kỹ thuật máy tính" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://ktmt.github.com/blog/2013/05/09/y-nghia-cua-tu-khoa-volatile-trong-c/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<script src="/javascripts/md5.js"></script>
+	<img src='/images/logo.jpg' alt='Profile Picture' style='width: 160px;' />
+</div>
+<h1><a href="/">Blog kỹ thuật máy tính</a></h1>
+<p class="subtitle">kỹ thuật máy tính</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Ý Nghĩa Của Từ Khóa Volatile Trong C</h1>
+	<div class="entry-content" itemprop="articleBody"><h1>Mở đầu</h1>
+
+<p>Trong lập trình nhúng (embedded system), ta rất thường hay gặp khai báo biến với từ khóa volatile. Việc khai báo biến volatile là rất cần thiết để tránh những lỗi sai khó phát hiện do tính năng optimization của compiler. Trong bài viết này, ta sẽ tìm hiểu ý nghĩa của từ khóa này, cách sử dụng nó và giải thích tại sao nó quan trọng trong một số trường hợp lập trình với hệ thống nhúng và lập trình ứng dụng đa luồng.</p>
+
+<h1>Tại sao cần phải có biến volatile</h1>
+
+<p>Cách khai báo biến với từ khóa volatile:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>volatile int foo;//both this way...
+</span><span class='line'>int volatile foo;//... and this way is OK! Define a volatile integer variable
+</span><span class='line'>
+</span><span class='line'>volatile uint8_t *pReg;//both this way...
+</span><span class='line'>uint8_t volatile *pReg;//... and this way is OK! Define a pointer to a volatile unsigned 8-bit integer</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Một biến cần được khai báo dưới dạng biến volatile khi nào? Khi mà giá trị của nó có thể thay đổi một cách không báo trước. Trong thực tế, có 3 loại biến mà giá trị có thể bị thay đổi như vậy:</p>
+
+<ul>
+<li>Memory-mapped peripheral registers (thanh ghi ngoại vi có ánh xạ đến ô nhớ)</li>
+<li>Biến toàn cục được truy xuất từ các tiến trình con xử lý ngắt (interrupt service routine)</li>
+<li>Biến toàn cục được truy xuất từ nhiều tác vụ trong một ứng dụng đa luồng.</li>
+</ul>
+
+
+<h2>Thanh ghi ngoại vi</h2>
+
+<p>Trong các hệ thống nhúng thường có các thiết bị ngoại vi (ví dụ như cổng vào ra đa chức năng GPIO, cổng UART, cổng SPI, &#8230;), và các thiết bị ngoại vi này chứa các thanh ghi mà giá trị của nó có thể thay đổi ngoài ý muốn của dòng chương trình (program flow). Ví dụ một thanh ghi trạng thái 8 bit được đánh địa chỉ 0xFEEF. Ta cần phải thực hiện polling thanh ghi trạng thái này đến khi nó khác 0</p>
+
+<figure class='code'><figcaption><span>mappedIO.c</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">uint8_t</span> <span class="o">*</span> <span class="n">pStatReg</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint8_t</span> <span class="o">*</span><span class="p">)</span> <span class="mh">0xFEEF</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//Wait for the status register to become non-zero</span>
+</span><span class='line'><span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pStatReg</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoạn code này có gì không ổn? Nó sẽ chạy sai khi ta bật chức năng tối ưu (optimization) của compiler. Compiler đã đọc được giá trị mà con trỏ pStatReg trỏ đến sau dòng thứ nhất. Tiếp theo, khi đến vòng lặp while, compiler nhận thấy không cần thiết phải đọc lại giá trị mà con trỏ pStatReg trỏ đến nữa, vì nó không thấy đoạn code nào ở giữa có thể thay đổi giá trị này được. Như vậy, *pStatReg luôn giữ nguyên một giá trị, và do đó vòng lặp while sẽ chạy vô tận, hoặc không chạy gì cả (tùy theo giá trị ban đầu mà pStatReg trỏ đến).</p>
+
+<p> Trong hệ thống nhúng, một thanh ghi có thể bị thay đổi giá trị do những điều kiện bên ngoài. Ví dụ như mức điện áp không vượt quá ngưỡng, làm cho giá trị 0 thành 1, 1 thành 0. Hoặc, khi cổng UART nhận được đầy buffer thì thanh ghi BUFFER_READY tự động chuyển 0 thành 1&#8230; Bằng cách sử dụng biến volatile, chương trình C được compiler biên dịch sẽ đảm bảo luôn luôn đọc lại giá trị của thanh ghi, tránh mọi assumption của compiler.</p>
+
+<h2>Tiến trình con xử lý ngắt (Interrupt Service Routine)##</h2>
+
+<p>Ngắt là một khái niệm quan trọng trong hệ thống nhúng. Có nhiều loại ngắt khác nhau như ngắt vào ra (I/O), ngắt SPI, ngắt UART&#8230; Mỗi khi xảy ra ngắt, stack pointer sẽ nhảy đến chương trình con xử lý ngắt (ISR). Thường thì các chương trình con xử lý ngắt này sẽ thay đổi giá trị của biến toàn cục và trong chương trình chính sẽ đọc những giá trị này để xử lý.</p>
+
+<p>Để dễ hiểu, lấy ví dụ ngắt cổng serial (UART) kiểm tra các kí tự nhận được xem có phải là 0xFF không. Nếu là kí tự 0xFF, ISR sẽ set một biến cờ toàn cục. Nếu không có volatile, code như sau:</p>
+
+<figure class='code'><figcaption><span>isr.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="n">etx_rcvd</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">ext_rcvd</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="c1">//Wait...</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">interrupt</span> <span class="kt">void</span> <span class="nf">rx_isr</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="mh">0xFF</span> <span class="o">==</span> <span class="n">rx_char</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="p">...</span>
+</span><span class='line'>      <span class="n">etx_rcvd</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ta để ý trong main(): compiler không thể biết được là biến ext_rcvd có thể bị thay đổi trong ISR. Compiler dò đoạn code, thấy rằng biểu thức !ext_rcvd luôn đúng, vì thế không thể thoát được vòng lặp while. Nếu compiler được bật optimization lên, tất cả đoạn code sau vòng lặp while sẽ bị loại bỏ. Nếu không có warning cẩn thận, chương trình của ta có thể bị lỗi mà phát hiện rất khó.</p>
+
+<p>Giải pháp là đặt biến ext_rcvd là biến volatile. compiler sẽ biết đó là biến có thể bị thay đổi theo một cách nào đó ngoài ý muốn (ở đây là do ISR). Compiler sẽ bị buộc phải check giá trị của biến ext_rcvd.</p>
+
+<h2>Ứng dụng đa luồng</h2>
+
+<p>Trong các ứng dụng đa luồng, thường xảy ra trường hợp các tác vụ trao đổi thông tin với nhau thông qua một biến toàn cục. Như vậy, một tác vụ thay đổi giá trị của biến toàn cục cũng sẽ giống như trường hợp ISR ở trên. Nếu compiler mà bật tính năng optimization thì sẽ xảy ra vấn đề.</p>
+
+<p>Ví dụ đoạn code</p>
+
+<figure class='code'><figcaption><span>multithreaded.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="n">cntr</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">task1</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">cntr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="n">cntr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="c1">//code follows...</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">task2</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="c1">//...code...</span>
+</span><span class='line'>  <span class="n">cntr</span> <span class="o">++</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//...code...</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cách khắc phục vấn như cũ: đặt biến cntr thành biến volatile !</p>
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2013
+
+    kỹ thuật máy tính
+
+
+</footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'ktmt';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ktmt.github.com/blog/2013/05/09/y-nghia-cua-tu-khoa-volatile-trong-c/';
+        var disqus_url = 'http://ktmt.github.com/blog/2013/05/09/y-nghia-cua-tu-khoa-volatile-trong-c/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>

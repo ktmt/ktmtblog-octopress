@@ -1,0 +1,318 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Exclusive Lock - Shared Lock - Blog kỹ thuật máy tính</title>
+	<meta name="author" content="kỹ thuật máy tính">
+
+	
+	<meta name="description" content="Exclusive Lock - Shared Lock 1. Mở đầu Nhân tiện trả lời thắc mắc của bạn kiennt về shared lock và exclusive lock được nhắc đến trong bài viết Giới &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Blog kỹ thuật máy tính" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://ktmt.github.com/blog/2013/05/13/exclusivelock-sharedlock/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<script src="/javascripts/md5.js"></script>
+	<img src='/images/logo.jpg' alt='Profile Picture' style='width: 160px;' />
+</div>
+<h1><a href="/">Blog kỹ thuật máy tính</a></h1>
+<p class="subtitle">kỹ thuật máy tính</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Exclusive Lock - Shared Lock</h1>
+	<div class="entry-content" itemprop="articleBody"><h2>1. Mở đầu</h2>
+
+<p>Nhân tiện trả lời thắc mắc của bạn kiennt về <em>shared lock</em> và <em>exclusive lock</em> được nhắc đến trong bài viết <a href="http://ktmt.github.io/blog/2013/05/07/storageenginemysql/">Giới Thiệu Một Số Storage Engine Của Mysql</a>, mình viết bài này để giải thích khái niệm và ý nghĩa của exclusive lock, shared lock, MVCC cũng như làm rõ một số điểm chưa rõ ràng trong bài viết trên.</p>
+
+<h2>2. Cơ chế và ý nghĩa của Lock và MVCC</h2>
+
+<h3>2.1 Khái niệm và ý nghĩa của lock</h3>
+
+<p><a href="http://en.wikipedia.org/wiki/Lock_%28computer_science%29">Lock</a> (khóa) là <em>cơ chế đồng bộ</em> và <em>giới hạn truy cập</em> đến <em>tài nguyên đươc chia sẻ</em> trong một môi trường có <em>nhiều luồng xử lý cùng truy cập</em>.</p>
+
+<p>Nói một cách hình tượng, lock giống một cái cờ tuyên bố chủ quyền đối với tài nguyên máy tính. Mỗi luồng xử lý (thread) khi truy cập tài nguyên dùng chung nào đó sẽ phải &#8220;dựng cờ lên&#8221; để báo cho các luồng xử lý khác biết tài nguyên đó đang được xử dụng và &#8220;hạ cờ xuống&#8221; khi hoàn thành xử lý trên tài nguyên đó. Các luồng xử lý khác bằng việc quan sát trạng thái của cờ này mà sẽ chiếm tài nguyên cho xử lý của mình, hay chờ đợi cho đến khi luồng xử lý khác kết thúc. Có thể nói lock là một phương tiện khẳng định quyền sở hữu đối với 1 loại tài nguyên. Nhờ cơ chế lock này mà tại mỗi thời điểm chỉ có duy nhất 1 luồng xử lý truy cập tài nguyên dùng chung..</p>
+
+<p><em>Shared lock</em>, hay còn gọi là read-only lock (khóa chỉ đọc) là lock mà một luồng xử lý phải chiếm hữu khi muốn đọc từ một vùng nhớ được chia sẻ.</p>
+
+<p><em>Exclusive lock</em>, hay còn gọi là read-write lock (khóa đọc ghi) là lock mà một luồng xử lý phải chiếm hữu khi muốn cập nhật một vùng nhớ được chia sẻ.</p>
+
+<h3>2.2 Tại sao phải cần lock</h3>
+
+<h4>a. Tác dụng của exclusive lock</h4>
+
+<p>Xét bài toán ta có 2 luồng xử lý A, B cùng thao tác trên 2 biến a, b.
+Giá trị hiện tại của các biến</p>
+
+<ul>
+<li>a = 0</li>
+<li>b = 0</li>
+</ul>
+
+
+<p>Nhiệm vụ của 2 luồng xử lý:</p>
+
+<ul>
+<li>Luồng xử lý A đọc giá trị 2 biến, tăng giá trị của a lên 1, và cập nhật giá trị cả 2 biến vào bộ nhớ.</li>
+<li>Luồng xử lý B đọc giá trị 2 biến, tăng giá trị của b lên 1, và cập nhật giá trị cả 2 biến vào bộ nhớ.</li>
+</ul>
+
+
+<p>Giả sử A thực hiện trước, đọc giá trị của a và b (a=0, b=0) và tăng a lên 1. Lúc này giá trị của a đang là 1, của b là 0. Tuy nhiên, chính tại thời điểm này, hệ điều hành quyết định dừng A, và thực hiện B. B đọc giá trị 2 biến a và b và tăng b lên 1 rồi cập nhật cả 2 biến vào bộ nhớ. Do A chưa cập nhật giá trị 2 biến, giá trị của a lúc này vẫn là 0, của b là 1 (a=0,b=1 do A chưa hoàn thành). Vì vậy, tại thời điểm B kết thúc a = 0, b = 1. Đến đây hệ điều hành thực hiện chạy A ở bước cuối cùng, cập nhật giá trị 2 biến (a = 1, b = 0) vào bộ nhớ, ghi đè giá trị b = 1 được cập nhật bởi B. Kết quả cuối cùng (a = 1, b = 0) sai so với kết quả mong đợi (a = 1, b = 1).</p>
+
+<pre><code>    Luồng A            |  Luồng B
+    -------------------|-------------------------
+    Đọc a, b (a=0, b=0)| 
+    a = 1, b = 0       |
+                       |  Đọc a, b (a=0, b=0)
+                       |  a = 0, b = 1
+                       |  Ghi a, b (a = 0, b = 1)
+    Ghi a, b (a=1, b=0)|
+
+
+Trạng thái cuối cùng (a=1, b=0)
+Kết quả mong chờ: (a=1, b=1)
+</code></pre>
+
+<p>Để giải quyết bài toán này, người ta dùng một exclusive lock. Luồng A, B muốn cập nhật giá trị a, b phải trước tiên chiếm lock, rồi mới thực hiện xử lý của mình. Các bước thực hiện giờ sẽ như sau:</p>
+
+<ul>
+<li>Chiếm lock. Nếu như chiếm được lock thì tiến hành xử lý tiếp theo. Nếu không, chờ đến khi chiếm được lock</li>
+<li>Đọc a, b</li>
+<li>Cập nhật a (hoặc b)</li>
+<li>Ghi a, b</li>
+<li>Thôi chiếm lock</li>
+</ul>
+
+
+<p>Quy trình bây giờ tăng 2 bước (chiếm lock hoặc chờ đến khi nào chiếm được lock và nhả lock). Các bước chạy ở  trên giờ sẽ như sau:
+A chiếm lock thành công (do chưa có luồn nào chiếm lock) và tiến hành đọc và cập nhật a (a=1, b=0). Tại thời điểm A bị dùng, B được chạy và thử chiếm lock nhưng do A đang nắm giữ lock nên B sẽ <em>phải</em> chờ. Lúc này A thực hiện nốt bước cuối cùng ghi giá trị vào bộ nhớ (a=1, b=0) và nhả lock. B lúc này thấy lock bị nhả và nắm giữ lock, đọc giá trị từ bộ nhớ (a=1, b=0!!), cập nhật b (a=1, b=1) và ghi dữ liệu vào bộ nhớ (a=1, b=1) đồng thời nhả lock. Kết quả cuối cùng như mong đợi (a=1, b=1)</p>
+
+<pre><code>    Luồng A             | Luồng B
+    --------------------|--------------------------------
+    Chiếm lock          |
+    Đọc a, b            |    
+    a = 1, b = 0        |
+                        | Chiếm lock (không thành công)
+    Ghi a, b (a=1, b=0) |
+    Nhả lock            |
+                        | Chiếm lock (thành công)
+                        | Đọc a, b (a=1, b=0)
+                        | a = 1, b = 1
+                        | Ghi a, b (a = 1, b = 1)
+                        | Nhả lock
+
+Trạng thái cuối cùng (a=1, b=1)
+Kết quả mong chờ: (a=1, b=1)!!!!
+</code></pre>
+
+<p>Ta có thể thấy nhờ có lock, mà tại mỗi thời điểm chỉ có 1 luồng xử lý truy cập a, b. Các luồng khác khi không chiếm được lock sẽ phải chờ đến lượt.</p>
+
+<p><em>Kết luận</em>: exclusive lock được sử dụng để đồng bộ 2 xử lý ghi đồng thời.</p>
+
+<h4>b. Tác dụng của shared lock</h4>
+
+<p>Để hiểu ý nghĩa shared lock, ta xét bài toán tương tự như ở trên. Lần này, thay vì 2 luồng cùng cập nhật vùng nhớ chung, 1 luồng sẽ đọc, còn một luồng sẽ cập nhật. Giả sử A đọc và B cập nhật, và giá trị ban đầu là a=0, b=0.</p>
+
+<p>A tiến hành đọc a (a=0) và bị hệ điều hành <em>cho nghỉ</em> để B thực hiện. B đọc a, b (a=0, b=0) và thực hiện cập nhật b (a=0, b=1) và ghi kết quả lên bộ nhớ. A đọc nốt giá trị còn lại b (b=1).</p>
+
+<p>Kết quả cuối cùng đối với A rõ ràng không như mong đợi (Mong chờ: a=0, b=0 nhưng nhận về a=0, b=1).</p>
+
+<pre><code>    Luồng A     | Luồng B
+    ------------|-------------------------
+    Đọc a (a=0) |
+                | Đọc a, b (a=0, b=0)
+                | a = 0, b = 1
+                | Ghi a, b (a = 0, b = 1)
+    Đọc b (b=0) |
+
+Kết quả cuối cùng (a=0, b=1)
+Kết quả mong chờ: (a=0, b=0)
+</code></pre>
+
+<p>Để giải quyết bài toán này, ta dùng shared-lock. Luồng A muốn đọc sẽ cần phải chiếm shared-lock. Luồng B muốn ghi sẽ phải nhìn xem shared-lock có bị chiếm hay không. Nếu shared-lock đang bị chiếm. B phải đợi cho đến khi tất cả shared-lock được giải phóng mới tiến hành cập nhật. Luồng chạy sau bây giờ sẽ như sau:</p>
+
+<p>A chiếm shared-lock và tiến hành đọc a (a=0). A được <em>cho nghỉ</em> và B được <em>đưa vào sân</em>. Do A đang chiếm shared lock nên B không được quyền cập nhật và được <em>cho nghỉ</em>. A thực hiện nốt việc đọc b (b=0) và nhả shared-lock. B không thấy shared-lock và tiến hành cập nhật b (b=1) như bình thường.</p>
+
+<pre><code>    Luồng A           | Luồng B
+    ------------------|-----------------------------
+    Chiếm shared-lock |
+    Đọc a (a=0)       |
+                      | Nhìn thấy shared-lock. Nghỉ
+    Đọc b (b=0)       |
+    Nhả shared-lock   |
+                      | Chiếm exclusive lock
+                      | Đọc a, b (a=0, b=0)
+                      | a = 0, b = 1
+                      | Ghi a, b (a = 0, b = 1)
+                      | Nhả exclusive lock.
+
+Kết quả cuối cùng (a=0, b=0)
+Kết quả mong chờ: (a=0, b=0)
+</code></pre>
+
+<p><em>Kết luận</em>: shared-lock được sử dụng để đồng bộ 2 xử lý đọc ghi đồng thời.</p>
+
+<h4>c. Tại sao cần chiếm shared lock khi đọc dữ liệu</h4>
+
+<p>Đến đây ta có thể dễ dàng trả lời câu hỏi thứ nhất của kiennt! Khi tiến hành đọc dữ liệu, nếu không chiếm shared-lock, dữ liệu đó có thể bị cập nhật bởi 1 thread khác, dẫn tới giá trị đọc được bị thay đổi một phần, không bảo đảm tính toàn vẹn.</p>
+
+<p>Tuy vậy có một điểm trong bài viết cần được làm rõ như sau: Trong câu nói &#8220;MyISAM lock toàn bộ table. User (MySQL server) chiếm shared-lock khi đọc và chiếm exclusive-lock khi ghi. Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!&#8221;, thì câu nói: &#8220;Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!&#8221; là không đúng.</p>
+
+<p>Nói một cách chính xác hơn: việc <em>đọc và cập nhật (SELECT và UPDATE)</em> không được tiến hành đồng thời (Do tại thời điểm chiếm exclusive lock, không shared-lock nào được phép tồn tại). Tuy nhiên, việc <em>ghi mới</em> dữ liệu có thể được tiến hành mà không gây ảnh hưởng gì đến tính toàn vẹn của dữ liệu được đọc (vì chúng khác nhau!). Nói cách khác việc <em>đọc và ghi mới (SELECT và INSERT)</em> có thể được tiến hành đồng thời, và thực tế đây cũng là một tính năng của MyISAM.</p>
+
+<h3>2.2 MVCC (Multiversion concurrency control)</h3>
+
+<p>MVCC được đặt ra để giải quyết vấn đề đọc và ghi đồng thời. Rõ ràng ở giải pháp shared-lock trình bày ở trên, việc A phải chiếm shared lock là rất mất thời gian; B phải chờ đợi A hoàn thành xử lý đọc mới được cập nhật cũng hoàn toàn không hiệu quả. MVCC giải quyết sự không hiệu quả này bằng nhận xét: <em>Thao tác đọc không cập nhật dữ liệu</em> vì vậy nếu ta duy trì 2 version của dữ liệu (1 cũ - 1 mới) và chỉ tiến hành ghi đè dữ liệu mới vào cũ khi A hoàn thành việc đọc, thì ta không cần shared-lock. B sẽ cập nhật và <em>version mới</em> thay vì phải chờ A hoàn thành việc đọc.</p>
+
+<p>MVCC lưu timestamp và transaction ID để duy trì tính tính nhất quán của dữ liệu.</p>
+
+<p>Để hiểu cách MVCC hoạt động, ta xét ví dụ sau (Copy từ Wikipedia :D)</p>
+
+<pre><code>    Thời gian       | Object 1      | Object 2
+    ----------------|---------------|------------
+    0               | Foo           | Bar
+    1               | Hello (T1)    | 
+</code></pre>
+
+<p>Tại thời điểm 0, Object 1 có giá trị Foo, Object 2 có giá trị Bar. Tại thời điểm 1, thread T1 cập nhật giá trị Object 1 thành Hello. Như vậy trước khi T1 commit dữ liệu, bất cứ xử lý đọc nào cũng cho kết quả Object 1 và 2 tại thời điểm 0 (Foo-Bar). Khi T1 commit dữ liệu, xử lý đọc sẽ trả về giá trị Hello-Bar.</p>
+
+<p>Giả sử tại thời điểm T1 chưa commit, T2 lại cập nhật Object 2 như sau:</p>
+
+<pre><code>    Thời gian       | Object 1      | Object 2
+    ----------------|---------------|------------
+    0               | Foo           | Bar
+    1               | Hello (T1)    | 
+    2               |               | World (T2)
+</code></pre>
+
+<p>Lúc này, mọi thao tác đọc sẽ vẫn trả về Foo-Bar. Khi T2 commit, dữ liệu đọc tiếp theo sẽ là Hello-Bar. Và khi T2 commit, dữ liệu đọc sẽ là Hello-World. Nói cách khác, tại mỗi thời điểm ta nhìn thấy 1 phiên bản dữ liệu, các cập nhật bởi thread khác sẽ được lưu tại một version khác.</p>
+
+<p>Chính nhờ cách quản lý nhiều version dữ liệu này, mà việc đọc không cần lock shared-lock vẫn đảm bảo được tính toàn vẹn của dữ liệu được đọc.</p>
+
+<h2>3. Tổng kết</h2>
+
+<p>Bài viết đã giải thích phần nào hiểu hơn ý nghĩa của exclusive lock và shared-lock cũng như tác dụng và sự cần thiết của chúng. Đồng thời, bài viết cũng làm rõ những điểm được nói đến trong viết trong bài <a href="http://ktmt.github.io/blog/2013/05/07/storageenginemysql/">Giới Thiệu Một Số Storage Engine Của Mysql</a> cũng như giải đáp những thắc mắc của bạn kiennt.</p>
+
+<h2>4. Tham khảo:</h2>
+
+<ol>
+<li><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control">MVCC</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Lock_%28computer_science%29">Lock</a></li>
+<li><a href="http://stackoverflow.com/questions/11837428/whats-the-difference-between-an-exclusive-lock-and-a-shared-lock">Exclusive lock &amp; shared lock</a></li>
+<li><a href="http://www.amazon.com/High-Performance-MySQL-Optimization-Replication/dp/1449314287">High performance MySQL</a></li>
+</ol>
+
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2013
+
+    kỹ thuật máy tính
+
+
+</footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'ktmt';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ktmt.github.com/blog/2013/05/13/exclusivelock-sharedlock/';
+        var disqus_url = 'http://ktmt.github.com/blog/2013/05/13/exclusivelock-sharedlock/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>

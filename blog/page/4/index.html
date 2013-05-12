@@ -1,0 +1,1074 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Blog kỹ thuật máy tính</title>
+	<meta name="author" content="kỹ thuật máy tính">
+
+	
+	<meta name="description" content="Apr 29th, 2013 programming, python Comments Python Object Model 1. old-style và new-style class trong Python Bạn đã nghe ở đâu đó &#8220;In python &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Blog kỹ thuật máy tính" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://ktmt.github.com/blog/page/4/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<script src="/javascripts/md5.js"></script>
+	<img src='/images/logo.jpg' alt='Profile Picture' style='width: 160px;' />
+</div>
+<h1><a href="/">Blog kỹ thuật máy tính</a></h1>
+<p class="subtitle">kỹ thuật máy tính</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner">
+<div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-29T00:00:00+09:00" data-updated="true" itemprop="datePublished">Apr 29<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming/'>programming</a>, <a class='category' href='/blog/categories/python/'>python</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/04/29/python-object-model/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/04/29/python-object-model/" itemprop="url">Python Object Model</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>1. old-style và new-style class trong Python</h3>
+
+<p>Bạn đã nghe ở đâu đó &#8220;In python everything is object&#8221;.</p>
+
+<p>Điều đó có nghĩa là gì? Liệu nó có giống các ngôn ngữ lập trình khác,
+mọi thứ trong Python đều là instance của BaseClass? Tôi đã nghe về <strong>object</strong>
+class trong Python, liệu đó có phải là Base Class của Python</p>
+
+<p>Python có hai mô hình <strong>old-style</strong> và <strong>new-style</strong>. Thực tế trong các phiên bản cũ của Python, không có một class cụ thể nào cho mọi object cả. Nhưng từ Python 2.2, với sự giới thiệu của <strong>new-style</strong> class, chúng ta có thể biến mọi object là instance của <strong>object</strong></p>
+
+<p>Từ Python 2.1 trở về trước, <strong>old-style</strong> class là lựa chọn duy nhất cho các lập trình viên. Khái niệm <strong>old-style</strong> class là không liên quan tới khái niệm kiểu. Nếu x là một instance của old-style class, x.<strong>class</strong> sẽ trỏ tới class của x, nhưng type(x) thì không.</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># old-style class was define by statement:</span>
+</span><span class='line'><span class="c">#   class &lt;class-name&gt;: &lt;class definition body&gt;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">pass</span>
+</span><span class='line'><span class="c"># type of class A is &#39;type&#39; because &#39;type&#39; is base-class in Python</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># make an instance of A</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+</span><span class='line'><span class="c"># a.__class__ reference to class A</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">A</span> <span class="n">at</span> <span class="mh">0x10aea6ce8</span><span class="o">&gt;</span>
+</span><span class='line'><span class="c"># bute type of a is not A but &#39;instance&#39;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;instance&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="c"># &#39;instance&#39; still is &#39;type&#39; class</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>new-style</strong> class được giới thiệu với động lực tạo ra một mô hình object thống nhất cho Python. Mọi đối tượng sẽ được kế thừa từ <strong>object</strong></p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">object</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>new-style</strong> class được định nghĩa bằng cách kế thừa từ <strong>object</strong> class.
+Khác với <strong>old-style</strong> class, nếu x là một instance của <strong>new-style</strong> class, cả x.<strong>class</strong> và type(x) đều trỏ về class của x</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">A</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;A&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Để tương thích với các phiên bản của của Python, class mặc định vẫn được để ở <strong>old-style</strong>.
+Nếu chúng ta muốn sử dụng <strong>new-style</strong>, chúng ta bắt buộc phải định nghĩa class là subclass của <strong>object</strong></p>
+
+<h3>2. Điểm khác biệt giữa <strong>old-style</strong> và <strong>new-style</strong> class</h3>
+
+<p>Điểm khác biệt rõ nhất được nhìn thấy trong hệ thống kiểu.
+Hãy xem làm thế nào <strong>old-style</strong> class và <strong>new-style</strong> class thực hiện việc đa kế thừa. &#8220;Đa kế thừa&#8221; là khả năng một class có thể kế thừa từ nhiều class khác nhau. Nếu A kế thừa từ B, A là subclass(child class, derived class) của B, còn B là superclass (base class, parent class của A)</p>
+
+<p>Đa kế thừa cho phép một class A có thể có nhiều cha (theo tôi, đa kế thừa không thực sự tốt. có nhiều cách để giải quyết vấn đề đa kế thừa, hãy xem Ruby với mixins hay Java với interface thực hiện điều đó. tôi thực sự rất thích mô hình mixins của Ruby)</p>
+
+<p>Trong mô hình object của Python, mọi class đều có thuộc tình <strong><strong>bases</strong></strong> để lưu lại tất cả các class cha của nó, theo thứ tự xuất hiện của việc thừa kế.</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">C</span><span class="o">.</span><span class="n">__bases__</span>
+</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">A</span> <span class="n">at</span> <span class="mh">0x10aea6ce8</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">B</span> <span class="n">at</span> <span class="mh">0x10af8de20</span><span class="o">&gt;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Vấn đề của đa kế thừa đó là thự tự của các superclass.</p>
+
+<p>Khi một instance của một subclass truy cập vào một thuộc tính (hoặc một method),</p>
+
+<pre><code>đầu tiên, nó sẽ tìm kiếm các thuộc tính được định nghĩa trong không gian của nó.
+Nếu thuộc tình (hoặc method) không được tìm thấy, nó sẽ tìm đến không gian
+của class (thuộc tính của class, hàm của class). Nếu vẫn không tìm thấy, nó
+sẽ tìm kiếm tiếp trong không gian của các super class. Khi một class có nhiều
+super class, thứ tự của các super class chính là thứ tự khi tìm kiếm
+</code></pre>
+
+<p>Trong <strong>old-style</strong> class, thứ tự của các superclass là depth-first, left-to-right
+theo thứ tự xuất hiện trong bases list</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;A&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;B&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;C&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="c"># order of D.__bases__ is (B, C) so D.test =&gt; B.test</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">D</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;B&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">E</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="c"># order of E.__bases__ is (C, B) so E.test =&gt; C.test</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">E</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;C&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># so what if we make an class is inherited from D, E</span>
+</span><span class='line'><span class="c"># note that, D and E are inherited from 2 class B, C with reverse order</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="c"># in old-style class, it does not matter, the searching method</span>
+</span><span class='line'><span class="c"># only care about order of superclass in __bases__</span>
+</span><span class='line'><span class="c"># so now F.test =&gt; D.test =&gt; B.test</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">F</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;B&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># even if we make an class is inherited from A, D, E</span>
+</span><span class='line'><span class="c"># it still works and test() method will be test() method of A</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">G</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">G</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;A&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cách phân giải method của <strong>old-style</strong> khá đơn giản và dễ hiểu. Nhưng nếu chúng
+ta áp dụng quy luật này, đôi khi chúng ta sẽ phạm phải sai lầm khi kế thừa.
+Giả sử, một class G được kế thừa từ A, D và E, trong khi A là parent class của D và E.
+Rõ ràng, một lỗi nên được Python ném ra trong trường hợp này để bảo về việc kế thừa vòng tròn như vậy</p>
+
+<p><strong>new-stlye</strong> giải quyết vấn đề này. <strong>new-style</strong> sử dụng MRO (Method Resolution Order) được giới thiệu từ Python 2.3</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">mro</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Return ordering of superclass of cls</span>
+</span><span class='line'><span class="sd">    This ordering was used when we want to access class instance atrribute</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    `cls`: class type we want to resolve</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    @raise `TypeError` if cannot resolution superclass order</span>
+</span><span class='line'><span class="sd">    @return `list` of class</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="n">bases_cls</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__bases__</span>
+</span><span class='line'>    <span class="n">mro_base_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">mro</span><span class="p">(</span><span class="n">base_cls</span><span class="p">)</span> <span class="k">for</span> <span class="n">base_cls</span> <span class="ow">in</span> <span class="n">bases_cls</span><span class="p">]</span>
+</span><span class='line'>    <span class="n">mro_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">cls</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">while</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>        <span class="c"># find the good head</span>
+</span><span class='line'>        <span class="c"># good head is head of a list which is not is tail of any list in mro_base_lists</span>
+</span><span class='line'>        <span class="n">list_head</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">set_tails</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">set_tails</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">good_head</span> <span class="o">=</span> <span class="bp">None</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">head</span> <span class="ow">in</span> <span class="n">list_head</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">if</span> <span class="n">head</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">set_tails</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">good_head</span> <span class="o">=</span> <span class="n">head</span>
+</span><span class='line'>                <span class="k">break</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># if cannot find good_head, raise TypeError</span>
+</span><span class='line'>        <span class="k">if</span> <span class="ow">not</span> <span class="n">good_head</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">raise</span> <span class="ne">TypeError</span>
+</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>            <span class="c"># add to mro_list</span>
+</span><span class='line'>            <span class="n">mro_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">good_head</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c"># remove good_head in all list and add to mro_list</span>
+</span><span class='line'>            <span class="k">for</span> <span class="n">alist</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>                <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>                    <span class="n">alist</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">good_head</span><span class="p">)</span>
+</span><span class='line'>                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span class='line'>                    <span class="k">pass</span>
+</span><span class='line'>            <span class="n">mro_base_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">mro_list</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">E</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">test_mro</span><span class="p">():</span>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test1 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">B</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test2 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test 3 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">D</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test 4 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">E</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test 5 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">mro</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;Test 6 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">test_mro</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ý tướng của MRO là sắp xếp các super class với điều kiện:</p>
+
+<pre><code>+ Nếu B là cha của C, B luôn luôn đứng trước C trong list.
+</code></pre>
+
+<p>Với điều kiện đó, Python sẽ ném ra một lỗi nếu chúng ta cố gắng định nghĩa class
+D kế thừa từ (B, C), E kế thừa từ (C, B) và F kế thừa từ (D, E)</p>
+
+<p>Tham khảo
+<a href="http://www.python.org/download/releases/2.3/mro/">explaination in python docs</a></p>
+
+		
+		
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-28T00:06:00+09:00" data-updated="true" itemprop="datePublished">Apr 28<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/linux-tips-tutorial/'>linux, tips, tutorial</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/04/28/make-fun-with-unix-command-prompt/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/04/28/make-fun-with-unix-command-prompt/" itemprop="url">Fun With Unix Command Prompt</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p><img src="/images/UnixCommandPrompt/unix.png"></p>
+
+<p>Chắc hẳn là một unix user (có thể mac os hay linux), lại là một programmer, bạn sẽ phải hàng ngày sử dụng terminal cho việc lập trình, quản lý source, monitoring hệ thống&#8230;. Và đã là người sử dụng terminal hàng ngày thì cái bạn phải nhìn thấy nhiều nhất chính là cái gọi là &#8220;Command prompt&#8221;</p>
+
+<p><img src="/images/UnixCommandPrompt/unix-terminal.png"></p>
+
+<p>Cái command prompt này thì tùy thuộc vào shell bạn đang dùng (bash hay zsh..) mà sẽ có những cách tùy chỉnh khác nhau. Mình thì đang dùng bash (chắc một ngày gần đây sẽ chuyển qua zsh), nên bài viết này sẽ áp dụng chủ yếu ở trên bash. Command prompt ở trên bash thì gồm có 4 biến môi trường (environment variable) chính: PS1, PS2, PS3, PS4 (Ngoài ra còn có COMMAND_PROMPT nữa nhưng thằng này na ná PS1 nên mình không đề cập đến). Để sử dụng các biến môi trường này thì bạn chỉ cần:</p>
+
+<figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span> <span class="o">=</span> <span class="s2">&quot;abcxyz&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>hoặc đặt đoạn code đó vào ~/.bash_profile hoặc ~/.bashrc rồi</p>
+
+<figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.bash_profile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>để shell load lại các setting trong file tương ứng là biến môi trường đã được set.</p>
+
+<p>Dưới đây mình sẽ nói về việc sử dụng các biến môi trường này để biến cái command prompt của bạn trở nên <strong>màu mè</strong> và <strong>thân thiện</strong> hơn. Về thứ tự thì mình sẽ nói về cái có độ tùy biến thấp đến cao</p>
+
+<h2>PS2</h2>
+
+<p>Trong 5 biến mình nói ở trên thì biến PS2 là thằng nhàm chán nhất. PS2 gọi là Continuation interactive prompt. Tại sao lại gọi như vậy thì: khi một câu lệnh unix quá dài thì bạn thường dùng kí hiệu &#8220;&#92;&#8221; ở cuối dòng để làm cho câu lệnh đấy thành multiple-line (gõ được ở nhiều dòng). Và PS2 là biến quyết định <strong>cái gì được in ở đầu mỗi dòng đó</strong></p>
+
+<p><img src="/images/UnixCommandPrompt/PS2-1.png"></p>
+
+<p>Cách sử dụng thì vô cùng đơn giản:</p>
+
+<figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS2</span><span class="o">=</span><span class="s2">&quot;continue here -&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Và kết quả là:</p>
+
+<p><img src="/images/UnixCommandPrompt/PS2-2.png"></p>
+
+<p>Chắc bạn cũng đã hình dung ra cách dùng PS2 thế nào rồi nhỉ, và hẳn bạn đang nghĩ, biến này chả có gì thú vị lắm nhỉ, mình cũng nghĩ thế :D. Thế nên chúng ta qua thằng tiếp theo nhé: PS3</p>
+
+<h2>PS3</h2>
+
+<p>PS3 gọi là biến dùng cho việc &#8220;select inside shell script&#8221;
+Giả sử bạn phải viết một đoạn script cho lựa chọn (ví dụ như bạn làm infra, phải viết script kiểu như: hãy chọn giữa install rvm hay rbenv chẳng hạn).Thì chắc đoạn script đó sẽ trông như sau:</p>
+
+<figure class='code'><figcaption><span>select select.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Select your option:&quot;</span>
+</span><span class='line'><span class="k">select </span>i in 1<span class="o">)</span> 2<span class="o">)</span> 3<span class="o">)</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'><span class="k">  case</span> <span class="nv">$i</span> in
+</span><span class='line'>    x<span class="o">)</span>....
+</span><span class='line'>    y<span class="o">)</span>....
+</span><span class='line'>    z<span class="o">)</span>....
+</span><span class='line'>  <span class="k">esac</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'><span class="c"># /.select.sh</span>
+</span><span class='line'>x<span class="o">)</span>....
+</span><span class='line'>y<span class="o">)</span>....
+</span><span class='line'>z<span class="o">)</span>....
+</span><span class='line'>
+</span><span class='line'><span class="c">#? 1</span>
+</span><span class='line'>x<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như các bạn thấy, prompt để lựa chọn khi không có setting gì sẽ là <strong>không hiện gì</strong>, quite boring
+Giờ nếu chúng ta chỉ cần setting PS3 cho đoạn code đó như sau</p>
+
+<figure class='code'><figcaption><span>select select.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code
+</span><span class='line'><span class="nv">PS3</span><span class="o">=</span><span class="s2">&quot;Select an option of installer (1-3): &quot;</span>
+</span><span class='line'><span class="k">select </span>i in 1<span class="o">)</span> 2<span class="o">)</span> 3<span class="o">)</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'><span class="k">  case</span> <span class="nv">$i</span> in
+</span><span class='line'>    x<span class="o">)</span>....
+</span><span class='line'>    y<span class="o">)</span>....
+</span><span class='line'>    z<span class="o">)</span>....
+</span><span class='line'>  <span class="k">esac</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'><span class="c"># /.select.sh</span>
+</span><span class='line'>x<span class="o">)</span>....
+</span><span class='line'>y<span class="o">)</span>....
+</span><span class='line'>z<span class="o">)</span>....
+</span><span class='line'>
+</span><span class='line'><span class="c">#? Select an option of installer (1-3): 1</span>
+</span><span class='line'>x<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như vậy là chúng ta sẽ có một cái prompt <strong>có hiện gì</strong>, use case để dùng thì chắc trong phần lớn các trường hợp sẽ là để cung cấp thông tin cho user về các option lựa chọn phía dưới. PS3 có vẻ khá useful trong một số case nhất định đúng không :D, tiếp theo chúng ta sẽ đến với PS4</p>
+
+<h2>PS4</h2>
+
+<p>Khi execute một đoạn script mà bạn muốn tracking output (để debug chẳng hạn), bạn sẽ dùng {set -x} để làm việc đó. ví dụ như đoạn code ở dưới đây:</p>
+
+<figure class='code'><figcaption><span>tracking tracking.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code tracking.sh
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>ls -all -lrt | grep xyz
+</span><span class='line'><span class="nb">pwd</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'>++ ls -all -lrt
+</span><span class='line'>++ grep xyz
+</span><span class='line'>drwxr-xr-x   2 doxuanhuy  staff   68 Apr 28 11:45 xyz
+</span><span class='line'>++ <span class="nb">pwd</span>
+</span><span class='line'>/Users/doxuanhuy/cur-project/android-globalit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như các bạn thấy, {set -x} sẽ output ra các câu lệnh được execute và prefix bằng cái &#8220;++&#8221;. 2 kí tự này có vè không thể hiện được gì nhỉ, và với PS4, bạn có thể thêm thông tin hữu ích cho việc debug như line number thông qua biến $LINENO, hay function name thông qua biến $FUNCNAME, hay script name thông qua biến $0</p>
+
+<figure class='code'><figcaption><span>tracking tracking.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code tracking.sh
+</span><span class='line'><span class="nb">export </span><span class="nv">PS4</span><span class="o">=</span><span class="s1">&#39;$0.$FUNCNAME $LINENO &#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>somefunction<span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    ls -all -lrt | grep xyz
+</span><span class='line'>      <span class="nb">pwd</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="nv">somefunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'>../test.sh. 8 somefunction
+</span><span class='line'>../test.sh.somefunction 5 ls -all -lrt
+</span><span class='line'>../test.sh.somefunction 5 grep xyz
+</span><span class='line'>drwxr-xr-x   2 doxuanhuy  staff   68 Apr 28 11:45 xyz
+</span><span class='line'>../test.sh.somefunction 6 <span class="nb">pwd</span>
+</span><span class='line'>/Users/doxuanhuy/cur-project/android-globalit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như vậy chúng ta đã có những thông tin khá hữu ích để debug đúng không.
+Và tiếp theo chúng ta sẽ đi đến bộ đôi thú vị nhất trong ngày: PS1 và COMMAND_PROMPT</p>
+
+<h2>PS1</h2>
+
+<p>Đây chính là biến quyết định cái gì sẽ hiện lên ở command prompt, và là biến có nhiều cái để hack nhất trong các loại PSx</p>
+
+<p><img src="/images/UnixCommandPrompt/PS1-1.png"></p>
+
+<p>Đầu tiên chúng ta sẽ nói về PS1
+Giả sử chúng ta muốn command prompt hiện lên Username, Hostname và full-path đến directory hiện tại, đơn giản chúng ta chỉ cần</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\u@\h \w&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đây \u là Username, \h là Hostname và \w là full path của current dir.
+Như vậy chúng ta sẽ có 1 cái prompt như dưới đây</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>doxuanhuy@xxx ~/cur-project/android-globalit&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Quite easy phải không :D
+Hay hơn chút nữa, bạn muốn hiện thêm current time, lên prompt, rất đơn giản:</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\$(date +%k:%M:%S) \w&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đây (date +%k:%M:%S) là để format date và biến nó thành variable thông qua $</p>
+
+<p>Và kết quả là</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>12:23:59 ~/cur-project/android-globalit&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ngoài ra còn rất nhiều cái bạn có thể cho vào command prompt để biến nó thêm phần phong phú như:</p>
+
+<ul>
+<li>!: The history number of the command</li>
+<li>$kernel_version: The output of the uname -r command from $kernel_version variable</li>
+<li>\$?: Status of the last command</li>
+</ul>
+
+
+<p>Hacking thêm chút nữa, bạn có thể thay đổi màu của từng phần trên command prompt thông qua 3 metacharacter sau:</p>
+
+<ul>
+<li>\e[ - Indicates the beginning of color prompt ( giống như cái &#8221;<sup>&#8221;</sup> của regex vậy)</li>
+<li>x;ym - Indicates color code. Use the color code values mentioned below ( bạn đặt x;ym ở trước node nào thì node đó sẽ được colorize theo màu đó)</li>
+<li>\e[m - indicates the end of color prompt (giống như cái &#8220;$&#8221; của regex)</li>
+</ul>
+
+
+<p>Một ví dụ đơn giản:</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\e[0;34m\u@\h \w&gt; \e[m&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoạn code trên có nghĩa là gì:</p>
+
+<p><img src="/images/UnixCommandPrompt/PS1-2.png"></p>
+
+<p>Hacking thêm một chút nữa, bạn hiện là một developer đang sử dụng git với rất nhiều repo, rất nhiều branch. Mỗi lần vào một repo nào đấy bạn lại phải {git branch} để xem bạn đang ở branch nào, bất tiện vô cùng. Bạn muốn prompt của bạn sẽ hiện branch name mỗi khi bạn vào folder của một repo nào đấy? Thật đơn giản, với backquote để execute bash command và sự trợ giúp của sed, bạn làm điều đó thật đơn giản:</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s1">&#39;\e[0;36m\u⌘ \e[0;35m\W \e[0;33m`git branch 2&gt; /dev/null | grep -e ^* | sed -E  s/^\*\ \(.+\)$/\(\1\)\ /`\e[m\]&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Trông có vẻ đáng sợ, nhưng thực ra lại rất đơn giản :D, Chúng ta sẽ đi từng phần nhé:</p>
+
+<ul>
+<li>\e[ : start của command prompt</li>
+<li>[0;36m\u⌘ : bạn tô màu phần user (\u) bởi 0;36m (màu xanh dương) và thêm vào đằng sau cái kí tự ⌘ (cho cool thôi :D)</li>
+<li>\e[0;35m\W : bạn tô màu phần directory hiện tại (\W) bởi 0;35m (màu hồng)</li>
+<li>\e[0;33m : tô màu <strong>toàn bộ phần đằng sau</strong> bởi màu 0;33m (màu vàng)</li>
+<li>git branch 2> /dev/null | grep -e ^* | sed -E  s/<sup>&#92;*\</sup> (.+)$/(&#92;\1)\ /: nguyên văn đoạn này sẽ như sau: đầu tiên bạn dùng &#8220;git branch&#8221; để lấy branch hiện tại. Trong trường hợp không ở trong git repo nào thì sẽ có lỗi ra stderr, bạn redirect cái lỗi này vào dev/null thông qua &#8220;2> /dev/null&#8221; để nó không hiện ra prompt (2 là stderr). Sau đấy bạn tìm line nào có * ở đầu (current git branch) thông qua việc pipe vào grep. Tìm được line đó rồi thì bạn sẽ tách phần đằng sau dấu * ra thông qua sed , và output phần đó ra ngoài với format (branch) thông qua $/(\1). Tất cả đoạn code này được để vào backquote để được execute trực tiếp mỗi khi PS1 được gọi. Và kết quả thật bất ngờ:</li>
+</ul>
+
+
+<p><img src="/images/UnixCommandPrompt/PS1-3.png"></p>
+
+<p>Looks so cool!!
+Ngoài ra bạn còn có rất nhiều thứ có thể hacking với PS1 như:</p>
+
+<ul>
+<li>\j the number of jobs currently managed by the shell</li>
+<li># the command number of this command</li>
+<li>\l the basename of the shell&#8217;s terminal device name
+&#8230;..
+mà bạn có thể tham khảo ở đây: http://www.thegeekstuff.com/2008/09/bash-shell-ps1-10-examples-to-make-your-linux-prompt-like-angelina-jolie/</li>
+</ul>
+
+
+<h2>Ending</h2>
+
+<p>Như vậy với PS[1-4], bạn đã có thể customize command prompt của bạn trở nên đẹp đẽ hơn, cool hơn và useful hơn. Trong các bài viết sắp tới mình sẽ nói về việc sử dụng các công cụ rất mạnh của unix family os như grep, sed, wc để giúp cho công việc development của bạn trở nên thú vị hơn :D. Happy hacking!</p>
+
+		
+		
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-25T00:00:00+09:00" data-updated="true" itemprop="datePublished">Apr 25<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming-bit-twiddling/'>programming, bit twiddling</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/04/25/dem-bit/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/04/25/dem-bit/" itemprop="url">Đếm Bit</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h2>Mở đầu</h2>
+
+<p>Bạn đang say sưa hacking code và bắt gặp một hàm với những con số bí ẩn như ở dưới đây:</p>
+
+<figure class='code'><figcaption><span>fbc.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">fbc</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">data</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Chắc hẳn bạn sẽ không khỏi hét lên: &#8220;what the fuck! Không hiểu gì hết&#8221; khi nhìn đoạn code này. Bạn hoàn toàn không hiểu mục đích của nó. Tên hàm không cho bạn một thông tin nào hữu ích. Những con số bí ẩn cùng phép toán >>, &amp;, + làm bạn rối.</p>
+
+<p>Nếu tôi nói với bạn fcb có nghĩa là &#8220;fast bit count&#8221; và hàm trên trả về số bit 1 của 1 số 32 bit (unsigned int trong C), tôi cá chắc chắn bạn sẽ không khỏi hoài nghi. Vậy chúng ta hãy thử  biên dịch chương trình và test thử hàm này. Tôi viết chương trình như dưới đây để test hàm fbc.</p>
+
+<figure class='code'><figcaption><span>test.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;assert.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">fbc</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">data</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">ans</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">ans</span> <span class="o">=</span> <span class="n">fbc</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">assert</span><span class="p">(</span><span class="n">ans</span> <span class="o">==</span> <span class="mi">2</span><span class="p">);</span>  <span class="c1">// 5 = 101b</span>
+</span><span class='line'>        <span class="n">ans</span> <span class="o">=</span> <span class="n">fbc</span><span class="p">(</span><span class="mi">198123</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">assert</span><span class="p">(</span><span class="n">ans</span> <span class="o">==</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// 198123 = 110000010111101011b</span>
+</span><span class='line'>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Kết quả chạy:</p>
+
+<div>
+  <pre><code class='bash'>$ gcc -o test test.c
+$ ./test
+$ echo $?
+0</code></pre>
+</div>
+
+
+<p>Chương trình chạy bình thường, cho kết quả bằng 0 chứng tỏ hàm fbc trả về giá trị như ta mong muốn.</p>
+
+<p><strong>Bạn sẽ thắc mắc</strong>: Tại sao hàm này lại có thể đếm được số bit 1? Chúng ta hãy cùng tìm hiểu cơ chế đếm của hàm này.</p>
+
+<h2>Cơ chế</h2>
+
+<p>Để có thể hiểu tại sao hàm này trả về số bit 1, ta hãy thử xem các con số 0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF và 0x0000FFFF có ý nghĩa gì.</p>
+
+<p>Bằng cách ấn máy tính, đổi từ hệ 16 sang hệ 2, ta có giá trị nhị phân của các số trên như bảng dưới đây:</p>
+
+<pre><code>0x55555555      01010101010101010101010101010101   
+0x33333333      00110011001100110011001100110011     
+0x0F0F0F0F      00001111000011110000111100001111    
+0x00FF00FF      00000000111111110000000011111111   
+0x0000FFFF      00000000000000001111111111111111   
+</code></pre>
+
+<p>Ta nhận thấy các con số trên không hoàn toàn bí ẩn mà nó hoàn toàn có quy luật. Từ trên xuống dưới, các bit 1 xen kẽ nhau theo chu kỳ 1, 2, 4, 8, 16.</p>
+
+<p>Ta thử quay lại hàm <strong>fbc</strong> và xem cách con số này được sử dụng. Vì số 0x55555555 lên đến 32 bit nên rất khó theo dõi (nhiều 0 với 1 quá @.@), ta sẽ thử xét trường hợp số 8 bit với bit pattern không đổi (tức là số  0xFF). Dòng 1 của hàm fbc sẽ như dưới đây:</p>
+
+<pre><code>    data = (data &amp; 0x55) + ((data &gt;&gt; 1) &amp; 0x55);
+</code></pre>
+
+<p>Giả sử data = 10110011b, ta sẽ có:</p>
+
+<pre><code>    data = 10110011 &amp; 01010101 + ((10110011 &gt;&gt; 1 &amp; 01010101)
+</code></pre>
+
+<p><strong>&#8220;Dễ dàng&#8221;</strong> nhận thấy chuỗi bit của 0xFF có các bit 1 ở vị trí chẵn (0, 2, 4&#8230;) do vậy bằng cách &amp; data với 0xFF, ta đã loại trừ các bit 1 ở vị trí lẻ (1,3,5&#8230;). Do vậy kết quả của data &amp; 0x55 sẽ cho ra các bit 1 ở vị trí chẵn. Bằng cách dịch 1 bit của data, ta chuyển các bit từ vị trí lẻ sang vị trí chẵn, và lại &amp; với 0xFF, do đó đại lượng sau dấu cộng sẽ có các bit 1 ở vị trí chẵn. Kết quả của phép cộng sẽ cho ra số lượng bit ở vị trí lẻ và vị trí chẵn</p>
+
+<p>Lần tính 1</p>
+
+<pre><code>       data &amp; 01010101   00 01 00 01  
+ (data &gt;&gt; 1)&amp; 01010101   01 01 00 01  
+                         01 10 00 10  
+</code></pre>
+
+<p>Do kết quả tối đa của phép + này là 2, khả năng kết quả phép cộng &#8220;tràn sang&#8221; vùng bit bên cạnh là không có. Sau lần tính thứ nhất, ta có kết quả của số bit 1 của cặp đôi bit cạnh nhau.</p>
+
+<p>Tất nhiên ở đây ta vẫn chua có kết quả số bit. Tuy nhiên ta sẽ áp dụng phương pháp tương tự cho cụm 4 bit.</p>
+
+<p>Nhìn dòng thứ 2 đoạn code bạn sẽ thấy: &#8230;1100110011b: 2 bit đan xen! Phép dịch bit bây giờ là >> 2.</p>
+
+<p>Lần tính 2</p>
+
+<pre><code>           data &amp; 00110011   00 10 00 10  
+     (data &gt;&gt; 2)&amp; 00110011   00 01 00 00  
+                             00 11 00 10  
+</code></pre>
+
+<p>Như vậy ta có 4 bit đằng sau có tổng số bit là 2, 4 bit đâu có tổng số bit là 11 (3 trong hệ thập phân)!!!</p>
+
+<p>Áp dụng cách tính tương tự, ta có kết quả như ở dưới.</p>
+
+<p>Lần tính 3</p>
+
+<pre><code>           data &amp; 00001111   00 00 00 10  
+     (data &gt;&gt; 4)&amp; 00001111   00 00 00 11  
+                             00 00 01 01  
+</code></pre>
+
+<p>Kết quả là 5, chính là số bit của data ban đầu!!</p>
+
+<p>Để tính số bit của 1 số 32 bit, ta chỉ việc tăng số bit của các &#8220;magic number&#8221; lên. Đấy là lý do ta có các số 0x55555555, 0x33333333, &#8230;</p>
+
+<p>Đến đây chắc hẳn bạn đã hiểu tại sao hàm <strong>fbc</strong> trả về số bit 1.</p>
+
+<h2>Tổng kết</h2>
+
+<p>Hy vọng với giải thích trên, bạn đã hiểu ý nghĩa sâu sắc đằng sau hàm fbc. Bạn sẽ vẫn hét &#8220;What the fuck!!!&#8221; nhưng lần này cho sự tuyệt vời không những cho sự ngắn gọn, tinh tế của đoạn code.</p>
+
+<h2>Tham khảo</h2>
+
+<ol>
+<li><a href="http://graphics.stanford.edu/~seander/bithacks.html">bithacks</a></li>
+<li><a href="http://www.drpaulcarter.com/pcasm/">assembly book</a></li>
+<li><a href="http://download.savannah.gnu.org/releases/pgubook/ProgrammingGroundUp-1-0-booksize.pdf">Programming groundup</a></li>
+</ol>
+
+
+		
+		
+	</div>
+
+</article>
+
+</div>
+<nav id="pagenavi">
+    
+        <a href="/blog/page/3/" class="prev">Prev</a>
+    
+    
+        <a href="/blog/page/5/" class="next">Next</a>
+    
+    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
+</nav></div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2013
+
+    kỹ thuật máy tính
+
+
+</footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'ktmt';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>

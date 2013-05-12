@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Blog kỹ thuật máy tính]]></title>
-  <link href="http://ktmt.github.com/ktmtblog-octopress/atom.xml" rel="self"/>
-  <link href="http://ktmt.github.com/ktmtblog-octopress/"/>
-  <updated>2013-04-30T18:38:36+09:00</updated>
-  <id>http://ktmt.github.com/ktmtblog-octopress/</id>
+  <link href="http://ktmt.github.com/atom.xml" rel="self"/>
+  <link href="http://ktmt.github.com/"/>
+  <updated>2013-05-13T07:51:12+09:00</updated>
+  <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
     
@@ -14,15 +14,2048 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Exclusive Lock - Shared Lock]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/13/exclusivelock-sharedlock/"/>
+    <updated>2013-05-13T04:52:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/13/exclusivelock-sharedlock</id>
+    <content type="html"><![CDATA[<h2>1. Mở đầu</h2>
+
+<p>Nhân tiện trả lời thắc mắc của bạn kiennt về <em>shared lock</em> và <em>exclusive lock</em> được nhắc đến trong bài viết <a href="http://ktmt.github.io/blog/2013/05/07/storageenginemysql/">Giới Thiệu Một Số Storage Engine Của Mysql</a>, mình viết bài này để giải thích khái niệm và ý nghĩa của exclusive lock, shared lock, MVCC cũng như làm rõ một số điểm chưa rõ ràng trong bài viết trên.</p>
+
+<h2>2. Cơ chế và ý nghĩa của Lock và MVCC</h2>
+
+<h3>2.1 Khái niệm và ý nghĩa của lock</h3>
+
+<p><a href="http://en.wikipedia.org/wiki/Lock_%28computer_science%29">Lock</a> (khóa) là <em>cơ chế đồng bộ</em> và <em>giới hạn truy cập</em> đến <em>tài nguyên đươc chia sẻ</em> trong một môi trường có <em>nhiều luồng xử lý cùng truy cập</em>.</p>
+
+<p>Nói một cách hình tượng, lock giống một cái cờ tuyên bố chủ quyền đối với tài nguyên máy tính. Mỗi luồng xử lý (thread) khi truy cập tài nguyên dùng chung nào đó sẽ phải &#8220;dựng cờ lên&#8221; để báo cho các luồng xử lý khác biết tài nguyên đó đang được xử dụng và &#8220;hạ cờ xuống&#8221; khi hoàn thành xử lý trên tài nguyên đó. Các luồng xử lý khác bằng việc quan sát trạng thái của cờ này mà sẽ chiếm tài nguyên cho xử lý của mình, hay chờ đợi cho đến khi luồng xử lý khác kết thúc. Có thể nói lock là một phương tiện khẳng định quyền sở hữu đối với 1 loại tài nguyên. Nhờ cơ chế lock này mà tại mỗi thời điểm chỉ có duy nhất 1 luồng xử lý truy cập tài nguyên dùng chung..</p>
+
+<p><em>Shared lock</em>, hay còn gọi là read-only lock (khóa chỉ đọc) là lock mà một luồng xử lý phải chiếm hữu khi muốn đọc từ một vùng nhớ được chia sẻ.</p>
+
+<p><em>Exclusive lock</em>, hay còn gọi là read-write lock (khóa đọc ghi) là lock mà một luồng xử lý phải chiếm hữu khi muốn cập nhật một vùng nhớ được chia sẻ.</p>
+
+<h3>2.2 Tại sao phải cần lock</h3>
+
+<h4>a. Tác dụng của exclusive lock</h4>
+
+<p>Xét bài toán ta có 2 luồng xử lý A, B cùng thao tác trên 2 biến a, b.
+Giá trị hiện tại của các biến</p>
+
+<ul>
+<li>a = 0</li>
+<li>b = 0</li>
+</ul>
+
+
+<p>Nhiệm vụ của 2 luồng xử lý:</p>
+
+<ul>
+<li>Luồng xử lý A đọc giá trị 2 biến, tăng giá trị của a lên 1, và cập nhật giá trị cả 2 biến vào bộ nhớ.</li>
+<li>Luồng xử lý B đọc giá trị 2 biến, tăng giá trị của b lên 1, và cập nhật giá trị cả 2 biến vào bộ nhớ.</li>
+</ul>
+
+
+<p>Giả sử A thực hiện trước, đọc giá trị của a và b (a=0, b=0) và tăng a lên 1. Lúc này giá trị của a đang là 1, của b là 0. Tuy nhiên, chính tại thời điểm này, hệ điều hành quyết định dừng A, và thực hiện B. B đọc giá trị 2 biến a và b và tăng b lên 1 rồi cập nhật cả 2 biến vào bộ nhớ. Do A chưa cập nhật giá trị 2 biến, giá trị của a lúc này vẫn là 0, của b là 1 (a=0,b=1 do A chưa hoàn thành). Vì vậy, tại thời điểm B kết thúc a = 0, b = 1. Đến đây hệ điều hành thực hiện chạy A ở bước cuối cùng, cập nhật giá trị 2 biến (a = 1, b = 0) vào bộ nhớ, ghi đè giá trị b = 1 được cập nhật bởi B. Kết quả cuối cùng (a = 1, b = 0) sai so với kết quả mong đợi (a = 1, b = 1).</p>
+
+<pre><code>    Luồng A            |  Luồng B
+    -------------------|-------------------------
+    Đọc a, b (a=0, b=0)| 
+    a = 1, b = 0       |
+                       |  Đọc a, b (a=0, b=0)
+                       |  a = 0, b = 1
+                       |  Ghi a, b (a = 0, b = 1)
+    Ghi a, b (a=1, b=0)|
+
+
+Trạng thái cuối cùng (a=1, b=0)
+Kết quả mong chờ: (a=1, b=1)
+</code></pre>
+
+<p>Để giải quyết bài toán này, người ta dùng một exclusive lock. Luồng A, B muốn cập nhật giá trị a, b phải trước tiên chiếm lock, rồi mới thực hiện xử lý của mình. Các bước thực hiện giờ sẽ như sau:</p>
+
+<ul>
+<li>Chiếm lock. Nếu như chiếm được lock thì tiến hành xử lý tiếp theo. Nếu không, chờ đến khi chiếm được lock</li>
+<li>Đọc a, b</li>
+<li>Cập nhật a (hoặc b)</li>
+<li>Ghi a, b</li>
+<li>Thôi chiếm lock</li>
+</ul>
+
+
+<p>Quy trình bây giờ tăng 2 bước (chiếm lock hoặc chờ đến khi nào chiếm được lock và nhả lock). Các bước chạy ở  trên giờ sẽ như sau:
+A chiếm lock thành công (do chưa có luồn nào chiếm lock) và tiến hành đọc và cập nhật a (a=1, b=0). Tại thời điểm A bị dùng, B được chạy và thử chiếm lock nhưng do A đang nắm giữ lock nên B sẽ <em>phải</em> chờ. Lúc này A thực hiện nốt bước cuối cùng ghi giá trị vào bộ nhớ (a=1, b=0) và nhả lock. B lúc này thấy lock bị nhả và nắm giữ lock, đọc giá trị từ bộ nhớ (a=1, b=0!!), cập nhật b (a=1, b=1) và ghi dữ liệu vào bộ nhớ (a=1, b=1) đồng thời nhả lock. Kết quả cuối cùng như mong đợi (a=1, b=1)</p>
+
+<pre><code>    Luồng A             | Luồng B
+    --------------------|--------------------------------
+    Chiếm lock          |
+    Đọc a, b            |    
+    a = 1, b = 0        |
+                        | Chiếm lock (không thành công)
+    Ghi a, b (a=1, b=0) |
+    Nhả lock            |
+                        | Chiếm lock (thành công)
+                        | Đọc a, b (a=1, b=0)
+                        | a = 1, b = 1
+                        | Ghi a, b (a = 1, b = 1)
+                        | Nhả lock
+
+Trạng thái cuối cùng (a=1, b=1)
+Kết quả mong chờ: (a=1, b=1)!!!!
+</code></pre>
+
+<p>Ta có thể thấy nhờ có lock, mà tại mỗi thời điểm chỉ có 1 luồng xử lý truy cập a, b. Các luồng khác khi không chiếm được lock sẽ phải chờ đến lượt.</p>
+
+<p><em>Kết luận</em>: exclusive lock được sử dụng để đồng bộ 2 xử lý ghi đồng thời.</p>
+
+<h4>b. Tác dụng của shared lock</h4>
+
+<p>Để hiểu ý nghĩa shared lock, ta xét bài toán tương tự như ở trên. Lần này, thay vì 2 luồng cùng cập nhật vùng nhớ chung, 1 luồng sẽ đọc, còn một luồng sẽ cập nhật. Giả sử A đọc và B cập nhật, và giá trị ban đầu là a=0, b=0.</p>
+
+<p>A tiến hành đọc a (a=0) và bị hệ điều hành <em>cho nghỉ</em> để B thực hiện. B đọc a, b (a=0, b=0) và thực hiện cập nhật b (a=0, b=1) và ghi kết quả lên bộ nhớ. A đọc nốt giá trị còn lại b (b=1).</p>
+
+<p>Kết quả cuối cùng đối với A rõ ràng không như mong đợi (Mong chờ: a=0, b=0 nhưng nhận về a=0, b=1).</p>
+
+<pre><code>    Luồng A     | Luồng B
+    ------------|-------------------------
+    Đọc a (a=0) |
+                | Đọc a, b (a=0, b=0)
+                | a = 0, b = 1
+                | Ghi a, b (a = 0, b = 1)
+    Đọc b (b=0) |
+
+Kết quả cuối cùng (a=0, b=1)
+Kết quả mong chờ: (a=0, b=0)
+</code></pre>
+
+<p>Để giải quyết bài toán này, ta dùng shared-lock. Luồng A muốn đọc sẽ cần phải chiếm shared-lock. Luồng B muốn ghi sẽ phải nhìn xem shared-lock có bị chiếm hay không. Nếu shared-lock đang bị chiếm. B phải đợi cho đến khi tất cả shared-lock được giải phóng mới tiến hành cập nhật. Luồng chạy sau bây giờ sẽ như sau:</p>
+
+<p>A chiếm shared-lock và tiến hành đọc a (a=0). A được <em>cho nghỉ</em> và B được <em>đưa vào sân</em>. Do A đang chiếm shared lock nên B không được quyền cập nhật và được <em>cho nghỉ</em>. A thực hiện nốt việc đọc b (b=0) và nhả shared-lock. B không thấy shared-lock và tiến hành cập nhật b (b=1) như bình thường.</p>
+
+<pre><code>    Luồng A           | Luồng B
+    ------------------|-----------------------------
+    Chiếm shared-lock |
+    Đọc a (a=0)       |
+                      | Nhìn thấy shared-lock. Nghỉ
+    Đọc b (b=0)       |
+    Nhả shared-lock   |
+                      | Chiếm exclusive lock
+                      | Đọc a, b (a=0, b=0)
+                      | a = 0, b = 1
+                      | Ghi a, b (a = 0, b = 1)
+                      | Nhả exclusive lock.
+
+Kết quả cuối cùng (a=0, b=0)
+Kết quả mong chờ: (a=0, b=0)
+</code></pre>
+
+<p><em>Kết luận</em>: shared-lock được sử dụng để đồng bộ 2 xử lý đọc ghi đồng thời.</p>
+
+<h4>c. Tại sao cần chiếm shared lock khi đọc dữ liệu</h4>
+
+<p>Đến đây ta có thể dễ dàng trả lời câu hỏi thứ nhất của kiennt! Khi tiến hành đọc dữ liệu, nếu không chiếm shared-lock, dữ liệu đó có thể bị cập nhật bởi 1 thread khác, dẫn tới giá trị đọc được bị thay đổi một phần, không bảo đảm tính toàn vẹn.</p>
+
+<p>Tuy vậy có một điểm trong bài viết cần được làm rõ như sau: Trong câu nói &#8220;MyISAM lock toàn bộ table. User (MySQL server) chiếm shared-lock khi đọc và chiếm exclusive-lock khi ghi. Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!&#8221;, thì câu nói: &#8220;Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!&#8221; là không đúng.</p>
+
+<p>Nói một cách chính xác hơn: việc <em>đọc và cập nhật (SELECT và UPDATE)</em> không được tiến hành đồng thời (Do tại thời điểm chiếm exclusive lock, không shared-lock nào được phép tồn tại). Tuy nhiên, việc <em>ghi mới</em> dữ liệu có thể được tiến hành mà không gây ảnh hưởng gì đến tính toàn vẹn của dữ liệu được đọc (vì chúng khác nhau!). Nói cách khác việc <em>đọc và ghi mới (SELECT và INSERT)</em> có thể được tiến hành đồng thời, và thực tế đây cũng là một tính năng của MyISAM.</p>
+
+<h3>2.2 MVCC (Multiversion concurrency control)</h3>
+
+<p>MVCC được đặt ra để giải quyết vấn đề đọc và ghi đồng thời. Rõ ràng ở giải pháp shared-lock trình bày ở trên, việc A phải chiếm shared lock là rất mất thời gian; B phải chờ đợi A hoàn thành xử lý đọc mới được cập nhật cũng hoàn toàn không hiệu quả. MVCC giải quyết sự không hiệu quả này bằng nhận xét: <em>Thao tác đọc không cập nhật dữ liệu</em> vì vậy nếu ta duy trì 2 version của dữ liệu (1 cũ - 1 mới) và chỉ tiến hành ghi đè dữ liệu mới vào cũ khi A hoàn thành việc đọc, thì ta không cần shared-lock. B sẽ cập nhật và <em>version mới</em> thay vì phải chờ A hoàn thành việc đọc.</p>
+
+<p>MVCC lưu timestamp và transaction ID để duy trì tính tính nhất quán của dữ liệu.</p>
+
+<p>Để hiểu cách MVCC hoạt động, ta xét ví dụ sau (Copy từ Wikipedia :D)</p>
+
+<pre><code>    Thời gian       | Object 1      | Object 2
+    ----------------|---------------|------------
+    0               | Foo           | Bar
+    1               | Hello (T1)    | 
+</code></pre>
+
+<p>Tại thời điểm 0, Object 1 có giá trị Foo, Object 2 có giá trị Bar. Tại thời điểm 1, thread T1 cập nhật giá trị Object 1 thành Hello. Như vậy trước khi T1 commit dữ liệu, bất cứ xử lý đọc nào cũng cho kết quả Object 1 và 2 tại thời điểm 0 (Foo-Bar). Khi T1 commit dữ liệu, xử lý đọc sẽ trả về giá trị Hello-Bar.</p>
+
+<p>Giả sử tại thời điểm T1 chưa commit, T2 lại cập nhật Object 2 như sau:</p>
+
+<pre><code>    Thời gian       | Object 1      | Object 2
+    ----------------|---------------|------------
+    0               | Foo           | Bar
+    1               | Hello (T1)    | 
+    2               |               | World (T2)
+</code></pre>
+
+<p>Lúc này, mọi thao tác đọc sẽ vẫn trả về Foo-Bar. Khi T2 commit, dữ liệu đọc tiếp theo sẽ là Hello-Bar. Và khi T2 commit, dữ liệu đọc sẽ là Hello-World. Nói cách khác, tại mỗi thời điểm ta nhìn thấy 1 phiên bản dữ liệu, các cập nhật bởi thread khác sẽ được lưu tại một version khác.</p>
+
+<p>Chính nhờ cách quản lý nhiều version dữ liệu này, mà việc đọc không cần lock shared-lock vẫn đảm bảo được tính toàn vẹn của dữ liệu được đọc.</p>
+
+<h2>3. Tổng kết</h2>
+
+<p>Bài viết đã giải thích phần nào hiểu hơn ý nghĩa của exclusive lock và shared-lock cũng như tác dụng và sự cần thiết của chúng. Đồng thời, bài viết cũng làm rõ những điểm được nói đến trong viết trong bài <a href="http://ktmt.github.io/blog/2013/05/07/storageenginemysql/">Giới Thiệu Một Số Storage Engine Của Mysql</a> cũng như giải đáp những thắc mắc của bạn kiennt.</p>
+
+<h2>4. Tham khảo:</h2>
+
+<ol>
+<li><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control">MVCC</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Lock_%28computer_science%29">Lock</a></li>
+<li><a href="http://stackoverflow.com/questions/11837428/whats-the-difference-between-an-exclusive-lock-and-a-shared-lock">Exclusive lock &amp; shared lock</a></li>
+<li><a href="http://www.amazon.com/High-Performance-MySQL-Optimization-Replication/dp/1449314287">High performance MySQL</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[closure và scope trong javascript]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/12/closure-va-scope-cua-javascript/"/>
+    <updated>2013-05-12T00:15:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/12/closure-va-scope-cua-javascript</id>
+    <content type="html"><![CDATA[<h1>Scope và closure là gì?</h1>
+
+<p>Là một programmer, chắc hẳn ít nhất bạn phải biết scope là gì :D, nhưng thôi mình cứ quote lại từ wikipedia đề phòng có người quên:</p>
+
+<blockquote><p>[Scope refers to where variables and functions are accessible, and in what context it is being executed]
+ => Dịch ra đại thể là scope là nơi mà <em>biến</em> hoặc <em>hàm</em> có thể truy cập vào và sử dụng/ tham chiếu được qua tên trực tiếp. Và ở ngoài scope đó thì <em>biến</em> hoặc <em>hàm</em> đó sẽ không thể <strong>nhìn</strong> được một cách trực tiếp nữa. (hơi khó hình dung nhỉ). Để phân loại scope thì có rất nhiều cách tùy thuộc vào từng góc nhìn , nhưng mình sẽ không đi sâu vào vấn đề này. Mỗi ngôn ngữ lại có đặc trưng về scope khác nhau. Trong bài viết này chúng ta sẽ chỉ tập trung vào javascript.</p></blockquote>
+
+<p> Khái niệm tiếp theo là về closure, khái niệm này thì không phải ai cũng biết, vì không phải ai cũng cần đến và từng động đến. Một số ngôn ngữ mainstream như C++ , java cũng không hỗ trợ closure, càng làm ít người để ý đến nó (java 8 expected sẽ cho closure vào). Hãy xem wiki nói về closure thế nào:</p>
+
+<blockquote><p>[a closure (also lexical closure or function closure) is a function or reference to a function together with a <strong>referencing environment</strong>]
+ => Dịch ra đại thể là closure là một hàm hoặc một tham chiếu đi kèm với cái môi trường mà nó tham chiếu đến (khá là xoắn). Cái cần nhấn mạnh ở đây là cái <strong>referencing environment</strong> mà các bạn sẽ hiểu hơn ở các ví dụ dưới đây.</p></blockquote>
+
+<h1>Scope và closure trong javascript</h1>
+
+<p>Javascript là một ngôn ngữ mainstream hiện nay và ngày càng trở nên phổ biến. Người biết về js thì nhiều, nhưng người hiểu rõ một số corner của js thì chắc không nhiều đến thế :D. Một trong các corner đấy chính là <strong>scope và closure</strong>. Js là một ngôn ngữ khá đặc biệt, đặc biệt ở chỗ js mang hơi hướng của lập trình hàm (functional programming), khi mà <strong>function ở js cũng là một first-class object</strong>, tức là function có thể được construct new tại run-time, được lưu ở trong data structure, được parse qua parameter, được return như một value. Chính vì đặc điểm đấy khiến cho scope và closure của js không giống như các ngôn ngữ phổ biến khác.</p>
+
+<p>Đầu tiên chúng ta sẽ nói về scope</p>
+
+<h2>1. <strong><em><u>Scope</u></em></strong></h2>
+
+<p>Như chúng ta vừa nói ở trên, scope là khái niệm qui định &#8220;visibility&#8221; và &#8220;lifetime&#8221; của variable. Thông thường, ví dụ như C thì scope sẽ là <strong>block scope</strong>, tức là những biến <strong>tạo ra</strong> trong block sẽ chỉ được nhìn thấy trong block đấy thôi, và khi ra ngoài block đấy thì những variable nằm trong block sẽ được giải phóng ( như trong C là các biến tạo ra trong stack sẽ được free khi ra khỏi block), và không nhìn thấy được nữa.</p>
+
+<p>Tuy nhiên rất buồn là javascript của chúng ta lại không có cái scope dễ hiểu đến thế, mà nó lại là <strong>function block</strong>.Function block ở đây là gì: tức là những gì bạn tạo ra trong một function sẽ available ở trong function đó. Vì javascript cũng là block syntax, nên sẽ hơi dễ confusing, chúng ta sẽ dùng ví dụ dễ hiểu này:</p>
+
+<figure class='code'><figcaption><span>function.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">scope</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">test</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">alert</span><span class="p">(</span><span class="nx">test</span><span class="p">);</span> <span class="err">#</span><span class="o">=&gt;</span> <span class="mi">1</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">scope</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Nói đến đây chắc chắn có bạn sẽ nghĩ đến điều gì xảy ra khi chúng ta có <strong>nested function</strong>. Let&#8217;s try</p>
+
+<figure class='code'><figcaption><span>function.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">outer</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">outer_var</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">inner</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">alert</span><span class="p">(</span><span class="nx">outer_var</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">inner</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">outer</span><span class="p">();</span> <span class="err">#</span><span class="o">=&gt;</span> <span class="mi">2</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Từ ví dụ trên ta có thể dễ dàng thấy là inner function có thể access được outer function variable. Từ ví dụ này chúng ta có thể thấy là <strong>inner function có thể inherit biến của outer function</strong>, hay nói cách khác, inner function <strong>chứa(contain)</strong> scope của outer function. Chính nhờ điều đặc biệt này mà chúng ta có cái gọi là <strong>Closure</strong> mà mình sắp sửa nói đến ngay dưới đây. Một điều chú ý là đối với nhiều ngôn ngữ thì các bạn hay được khuyên là declare biến muộn nhất có thể để tránh overhead, tuy nhiên với javascript là ngôn ngữ với <strong>function scope</strong> thì best practice lại là <strong>declare biến sớm nhất có thể </strong> để tránh nguy cơ xảy ra một số lỗi không mong muốn.</p>
+
+<h2>2. <strong><em><u>Closure</u></em></strong></h2>
+
+<p> Quote lại cái định nghĩa cho đỡ quên:</p>
+
+<blockquote><p>A closure is an expression (typically a function) that can have free variables <strong>together with an environment that binds those variables (that &#8220;closes&#8221; the expression).</strong></p></blockquote>
+
+<p>Chắc có bạn sẽ thắc mắc, <strong>environment</strong> ở đây là gì. Để hình dung một cách dễ hiểu, thì environment ở đây trong phần lớn các trường hợp chính là cái outer function mà chung ta vừa thử ở ví dụ về scope ở trên. Một đặc điểm rất hay của closure là <strong>closure sẽ keep reference đến các biến nằm bên trong nó, hoặc được reference bên trong nó</strong>. Điều này dẫn đến việc gì? Chắc sẽ có bạn nghĩ đến một case rất đặc biệt là khi bạn muốn context của một function được giữ lại sau khi hàm đó đã được execute xong :D. Hãy bắt đầu bằng một ví dụ:</p>
+
+<figure class='code'><figcaption><span>closure.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">outside</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">inside</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">inside</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">fn_inside</span> <span class="o">=</span> <span class="nx">outside</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'><span class="nx">result</span> <span class="o">=</span> <span class="nx">fn_inside</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">// #=&gt; 8</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">result1</span> <span class="o">=</span> <span class="nx">outside</span><span class="p">(</span><span class="mi">3</span><span class="p">)(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">// #=&gt; 8</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bạn có nhận thấy điều gì đặc biệt ở trên? Điều đặc biệt nằm ở hàm <strong>fn_inside</strong> : hàm fn_inside được tạo ra bởi kết quả return của hàm outside() với parameter là 3, và bạn có thể nhận thấy hàm fn_inside vẫn giữ tham chiếu đến cái parameter 3 đó <strong>ngay cả khi hàm outside() đã được execute xong</strong>. Chắc các bạn sẽ thấy mâu thuẫn với cái lý thuyết về function scope chúng ta đã nói đến ở trên, khi mà <em>mọi thứ được tạo ra trong function của js chỉ visible ở trong đó, và sẽ được free hoặc không nhìn thấy khi ra ngoài function đó</em>.
+Thực tế là không hề mâu thuẫn chút nào cả, chính vì cái gọi là closure của js :D. Nói một cách cụ thể hơn: <strong>fn_inside khi được tạo ra đã form một cái closure (bao đóng), trong cái bao đó, giá trị 3 được truyền vào, và cái bao của fn_inside sẽ vẫn giữ cái giá trị 3 đó cho dù outside() function có execute xong</strong>. Các bạn cứ hình dung trực quan closure như một cái bao chứa rất nhiều thứ trong nó là sẽ thấy dễ hiểu hơn:</p>
+
+<p><img src="http://ktmt.github.com/images/closurejs/closure.png"></p>
+
+<p>Như vậy chúng ta có thể tóm gọn lại đoạn code ở trên như sau:</p>
+
+<ol>
+<li>Khi outside() được gọi, outside trả về một function</li>
+<li>function được outside trả lại (fn_inside) đó đóng lại cái context hiện tại và cái context đó <strong>chứa biến x tại thời điểm outside() được gọi</strong></li>
+<li>Khi fn_inside được gọi, nó vẫn nhớ x có giá trị là 3</li>
+<li>Khi invoke fn_inside(5) thì nó sẽ lấy giá trị biến y=5 + giá trị biến x=3 và kết quả sẽ là 8</li>
+</ol>
+
+
+<p>Như vậy chúng ta có thể rút ra một đặc điểm của closure là:</p>
+
+<blockquote><p> <strong><em>A closure must preserve the arguments and variables in all scopes it references</em></strong></p></blockquote>
+
+<ul>
+<li><p>Một câu hỏi được đặt ra là: Khi nào cái biến x được giải phóng?? Câu trả lời là khi mà cái context mà biến x được reference đến ( ở đây là fn_inside ) không còn accessible được nữa ( refer đến scope của js, chúng ta có thể hiểu là khi mà function chứa fn_inside được execute xong và không còn bất kì tham chiếu nào đến fn_inside nữa ).</p></li>
+<li><p>Một câu hỏi khác được đặt ra là với multi-nested function thì điều gì sẽ xảy ra?? Let&#8217;s give a try:</p></li>
+</ul>
+
+
+<figure class='code'><figcaption><span>multinested.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">A</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">B</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">function</span> <span class="nx">C</span><span class="p">(</span><span class="nx">z</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">alert</span><span class="p">(</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">+</span> <span class="nx">z</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="nx">C</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">B</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">A</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="err">#</span><span class="o">=&gt;</span> <span class="mi">6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đoạn code trên thì điều gì đã xảy ra?</p>
+
+<ol>
+<li>B tạo ra một cái closure chữa context của A, do đó B có thể access vào A&#8217;s variable, ở đây là x</li>
+<li>C tạo ra một cái closure chứa context của B</li>
+<li>Vì B chứa context của A nên C cũng sẽ chứa context của A, tức là C cũng access được vào biến x của A, và cả biến y của B.</li>
+</ol>
+
+
+<p>Do đó kết quả sẽ là 1+2+3=6, khá là obvious nhỉ. Đoạn code ở trên giúp chúng ta có thêm một khái niệm mới gọi là <strong><em>scope chaining</em></strong>. Tại sao gọi là chaining, vì khi context được include từ outer function vào inner function, thì chúng ta sẽ hiểu một cách đơn giản là context của inner function và context của outer function được nối với nhau, một cách có chiều (<strong>directed</strong>). Và độ ưu tiên khi access biến là từ trong ra ngoài.</p>
+
+<p><img src="http://ktmt.github.com/images/closurejs/closure2.png"></p>
+
+<p>Do cái scope chaining là directed nên ở phía ngược lại, A lại không thể access được C, vì C nằm trong context của B, và chỉ visible <strong>inside B</strong>, hay nói cách khác là C sẽ là private của B, và không nhìn được từ A.</p>
+
+<ul>
+<li>Lại có một bạn nghĩ là khi outer function có biến tên là x, mà ta cũng truyền 1 biến tên là x vào inner function, tức là khi có name-conflict thì chuyện gì sẽ xảy ra. Let&#8217;s take an example</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>nameconflict.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">outside</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">inside</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">inside</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">result</span> <span class="o">=</span> <span class="nx">outside</span><span class="p">()(</span><span class="mi">20</span><span class="p">);</span> <span class="err">#</span><span class="o">=&gt;</span> <span class="mi">20</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bạn có thể thấy kết quả trả về biến x được trực tiếp truyền vào inner function thay vì biến x của outer function. Sử dụng khái niệm scope chaining ở trên thì chúng ta có thể thấy độ ưu tiên của context inside là cao hon context outside khi intepreter tìm giá trị của x, nên giá trị của x ở inside (ở đây là 20) sẽ được sử dụng.</p>
+
+<p>Hy vọng là với 3 ví dụ trên các bạn đã có cái nhìn rõ ràng hơn về closure.</p>
+
+<h2>3. <strong><em><u>Closure pitfalls</u></em></strong></h2>
+
+<p>Closure là một khái niệm khá dễ nhầm lẫn và khó nắm rõ với những người người ít quan tâm đến javascript. Một trong những ví dụ hay được dùng để minh họa cái sự dễ nhầm này được gọi là <strong>The Infamous Loop Problem</strong>. Ví dụ này được minh họa bằng đoạn code dưới đây:</p>
+
+<figure class='code'><figcaption><span>closurepitfall.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">add_the_handlers</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">nodes</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">i</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nodes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">nodes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">onclick</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">alert</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">nodes</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">add_the_handlers</span><span class="p">(</span><span class="nx">nodes</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoan code ở trên làm một việc là tìm tất cả các node có id là &#8220;click&#8221;, add vào node đó một cái sự kiện là khi click vào node đó sẽ alert lên thứ tự của node đó. Giả sử bạn có một file html như sau:</p>
+
+<figure class='code'><figcaption><span>closurepitfall.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;click&quot;</span><span class="nt">&gt;</span>link 1 <span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;click&quot;</span><span class="nt">&gt;</span>link 2 <span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;click&quot;</span><span class="nt">&gt;</span>link 3 <span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;click&quot;</span><span class="nt">&gt;</span>link 4 <span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;click&quot;</span><span class="nt">&gt;</span>link 5 <span class="nt">&lt;/li&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bạn expect là khi click vào link 1 sẽ alert 1, click vào link 2 sẽ alert ra 2&#8230;. đúng không. Tuy nhiên thực tế là <strong>bạn click vào link nào nó cũng alert ra 5 cả</strong>. Kì lạ nhỉ? Để giải thích cho hiện tượng này thì chúng ta hãy xem lại khái niệm về closure nào. Biến i được sử dụng trong anonymous function được gán cho onclick, được <strong>kế thừa từ context của add_the_handlers function</strong>. Tại thời điểm mà bạn gọi onclick, for loop đã được execute xong, và biến i <strong>của context của add_the_handlers</strong> lúc này có giá trị là 5. Do đó bạn có click vào link nào thì giá trị được alert ra cũng là 5 cả. Point của việc này chính là do bạn đang nhầm lẫn, hay chính xác là có sự khác biệt giữa <strong>scope/context của for-loop</strong> với <strong>scope/context của outer function là add_the_handlers </strong>.</p>
+
+<p>Để giải quyết vấn đề này thì bạn có thể làm như dưới đây:</p>
+
+<figure class='code'><figcaption><span>pitfall.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">add_the_handlers</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">nodes</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">helper</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">alert</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">i</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nodes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">modes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">onclick</span> <span class="o">=</span> <span class="nx">helper</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Point của solution này chính là việc truyền được giá trị của (i) tại thời điểm hiện tại vào closure của function được bind vào onclick. Giúp cho hàm helper() luôn refer đến giá trị i đúng. Một best practice để tránh những pitfall như thế này là</p>
+
+<blockquote><p>Avoid creating functions within a loop. It can be wasteful computationally,and it can cause confusion</p></blockquote>
+
+<h1>Kết luận</h1>
+
+<p>Như vậy qua bài viết này chúng ta đã nắm được khái niệm về function scope và closure trong javascript, cũng như một số khái niệm liên quan về scope chaining, và một số best practices trong việc sử dụng closure và scope. Closure trong javascript hay sử dụng để tạo ra một cái bao mà các thứ trong đấy không được nhìn thấy bởi bên ngoài nhưng vẫn truy cập được từ bên trong, và thường được áp dụng cho một số design pattern trong js (tiêu biểu nhất là module pattern).Chi tiết hơn các bạn có thể tham khảo ở các tài liệu sau:</p>
+
+<ul>
+<li><a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742/ref=sr_1_1?ie=UTF8&amp;qid=1368334060&amp;sr=8-1&amp;keywords=javascript+the+good+part">Javascript the good part (by Douglas Crockford)</a></li>
+<li><a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm">Ecma-262 standard</a></li>
+<li>http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/</li>
+<li>https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ý nghĩa của từ khóa volatile trong C]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/09/y-nghia-cua-tu-khoa-volatile-trong-c/"/>
+    <updated>2013-05-09T15:31:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/09/y-nghia-cua-tu-khoa-volatile-trong-c</id>
+    <content type="html"><![CDATA[<h1>Mở đầu</h1>
+
+<p>Trong lập trình nhúng (embedded system), ta rất thường hay gặp khai báo biến với từ khóa volatile. Việc khai báo biến volatile là rất cần thiết để tránh những lỗi sai khó phát hiện do tính năng optimization của compiler. Trong bài viết này, ta sẽ tìm hiểu ý nghĩa của từ khóa này, cách sử dụng nó và giải thích tại sao nó quan trọng trong một số trường hợp lập trình với hệ thống nhúng và lập trình ứng dụng đa luồng.</p>
+
+<h1>Tại sao cần phải có biến volatile</h1>
+
+<p>Cách khai báo biến với từ khóa volatile:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>volatile int foo;//both this way...
+</span><span class='line'>int volatile foo;//... and this way is OK! Define a volatile integer variable
+</span><span class='line'>
+</span><span class='line'>volatile uint8_t *pReg;//both this way...
+</span><span class='line'>uint8_t volatile *pReg;//... and this way is OK! Define a pointer to a volatile unsigned 8-bit integer</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Một biến cần được khai báo dưới dạng biến volatile khi nào? Khi mà giá trị của nó có thể thay đổi một cách không báo trước. Trong thực tế, có 3 loại biến mà giá trị có thể bị thay đổi như vậy:</p>
+
+<ul>
+<li>Memory-mapped peripheral registers (thanh ghi ngoại vi có ánh xạ đến ô nhớ)</li>
+<li>Biến toàn cục được truy xuất từ các tiến trình con xử lý ngắt (interrupt service routine)</li>
+<li>Biến toàn cục được truy xuất từ nhiều tác vụ trong một ứng dụng đa luồng.</li>
+</ul>
+
+
+<h2>Thanh ghi ngoại vi</h2>
+
+<p>Trong các hệ thống nhúng thường có các thiết bị ngoại vi (ví dụ như cổng vào ra đa chức năng GPIO, cổng UART, cổng SPI, &#8230;), và các thiết bị ngoại vi này chứa các thanh ghi mà giá trị của nó có thể thay đổi ngoài ý muốn của dòng chương trình (program flow). Ví dụ một thanh ghi trạng thái 8 bit được đánh địa chỉ 0xFEEF. Ta cần phải thực hiện polling thanh ghi trạng thái này đến khi nó khác 0</p>
+
+<figure class='code'><figcaption><span>mappedIO.c</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">uint8_t</span> <span class="o">*</span> <span class="n">pStatReg</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint8_t</span> <span class="o">*</span><span class="p">)</span> <span class="mh">0xFEEF</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//Wait for the status register to become non-zero</span>
+</span><span class='line'><span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pStatReg</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoạn code này có gì không ổn? Nó sẽ chạy sai khi ta bật chức năng tối ưu (optimization) của compiler. Compiler đã đọc được giá trị mà con trỏ pStatReg trỏ đến sau dòng thứ nhất. Tiếp theo, khi đến vòng lặp while, compiler nhận thấy không cần thiết phải đọc lại giá trị mà con trỏ pStatReg trỏ đến nữa, vì nó không thấy đoạn code nào ở giữa có thể thay đổi giá trị này được. Như vậy, *pStatReg luôn giữ nguyên một giá trị, và do đó vòng lặp while sẽ chạy vô tận, hoặc không chạy gì cả (tùy theo giá trị ban đầu mà pStatReg trỏ đến).</p>
+
+<p> Trong hệ thống nhúng, một thanh ghi có thể bị thay đổi giá trị do những điều kiện bên ngoài. Ví dụ như mức điện áp không vượt quá ngưỡng, làm cho giá trị 0 thành 1, 1 thành 0. Hoặc, khi cổng UART nhận được đầy buffer thì thanh ghi BUFFER_READY tự động chuyển 0 thành 1&#8230; Bằng cách sử dụng biến volatile, chương trình C được compiler biên dịch sẽ đảm bảo luôn luôn đọc lại giá trị của thanh ghi, tránh mọi assumption của compiler.</p>
+
+<h2>Tiến trình con xử lý ngắt (Interrupt Service Routine)##</h2>
+
+<p>Ngắt là một khái niệm quan trọng trong hệ thống nhúng. Có nhiều loại ngắt khác nhau như ngắt vào ra (I/O), ngắt SPI, ngắt UART&#8230; Mỗi khi xảy ra ngắt, stack pointer sẽ nhảy đến chương trình con xử lý ngắt (ISR). Thường thì các chương trình con xử lý ngắt này sẽ thay đổi giá trị của biến toàn cục và trong chương trình chính sẽ đọc những giá trị này để xử lý.</p>
+
+<p>Để dễ hiểu, lấy ví dụ ngắt cổng serial (UART) kiểm tra các kí tự nhận được xem có phải là 0xFF không. Nếu là kí tự 0xFF, ISR sẽ set một biến cờ toàn cục. Nếu không có volatile, code như sau:</p>
+
+<figure class='code'><figcaption><span>isr.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="n">etx_rcvd</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">ext_rcvd</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="c1">//Wait...</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">interrupt</span> <span class="kt">void</span> <span class="nf">rx_isr</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="mh">0xFF</span> <span class="o">==</span> <span class="n">rx_char</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="p">...</span>
+</span><span class='line'>      <span class="n">etx_rcvd</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ta để ý trong main(): compiler không thể biết được là biến ext_rcvd có thể bị thay đổi trong ISR. Compiler dò đoạn code, thấy rằng biểu thức !ext_rcvd luôn đúng, vì thế không thể thoát được vòng lặp while. Nếu compiler được bật optimization lên, tất cả đoạn code sau vòng lặp while sẽ bị loại bỏ. Nếu không có warning cẩn thận, chương trình của ta có thể bị lỗi mà phát hiện rất khó.</p>
+
+<p>Giải pháp là đặt biến ext_rcvd là biến volatile. compiler sẽ biết đó là biến có thể bị thay đổi theo một cách nào đó ngoài ý muốn (ở đây là do ISR). Compiler sẽ bị buộc phải check giá trị của biến ext_rcvd.</p>
+
+<h2>Ứng dụng đa luồng</h2>
+
+<p>Trong các ứng dụng đa luồng, thường xảy ra trường hợp các tác vụ trao đổi thông tin với nhau thông qua một biến toàn cục. Như vậy, một tác vụ thay đổi giá trị của biến toàn cục cũng sẽ giống như trường hợp ISR ở trên. Nếu compiler mà bật tính năng optimization thì sẽ xảy ra vấn đề.</p>
+
+<p>Ví dụ đoạn code</p>
+
+<figure class='code'><figcaption><span>multithreaded.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="n">cntr</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">task1</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">cntr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="n">cntr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="c1">//code follows...</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">task2</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="c1">//...code...</span>
+</span><span class='line'>  <span class="n">cntr</span> <span class="o">++</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//...code...</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cách khắc phục vấn như cũ: đặt biến cntr thành biến volatile !</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sử dụng mock với unittest trong Python]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/09/mock-with-unittest-in-python/"/>
+    <updated>2013-05-09T09:44:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/09/mock-with-unittest-in-python</id>
+    <content type="html"><![CDATA[<h1>Unittest là gì</h1>
+
+<p>Unit tes là các test dùng để test kiến trúc nội tại của chương trình, unit test gắn liền với
+thiết kế chương trình. Khi viết unit test, tôi thường kiểm tra xem các hàm có
+được gọi và gọi đúng với parameter cần thiết hay không. Mỗi một unit test chỉ
+nên test 1 thứ.</p>
+
+<p>Đặc điểm của unit test là rất ngắn, một test case chỉ nên được
+viết dưới 10 dòng. Nếu bạn cần viết hơn, hãy suy nghĩ lại về thiết kế của mình.
+Các developer nên viết unit test cho các phần code mình viết. Tôi thường setup
+môi trường phát triển, để bất cứ khi nào bạn commit một đoạn code, chương trình
+quản lý mã nguồn sẽ chạy test tự động liên quan đến đoạn code đó. Điều này giúp
+tôi kiểm tra ngay được code mình viết có gây ảnh hưởng tới các phần khác hay không.</p>
+
+<p>Chính vì thế, unit test cần được chạy rất nhanh. Mỗi một đoạn code chỉ nên được
+test một lần. Nếu bạn có 2 method A và B, B gọi đến A, code A đã được viết test,
+ thì code test cho B không nên test lại A lần nữa</p>
+
+<p>Unit test không nhất thiết phải cover hết code của bạn. Nếu cover được đầy đủ thì
+rất tốt, nhưng công sức bỏ ra sẽ rất lớn. Hãy viết unit test đủ để bạn thấy tự tin
+khi deploy code của mình.</p>
+
+<h1>Sử dụng mock với unittest</h1>
+
+<p>Tôi có một class sinh ra empty image với kích thước có sẵn, kèm theo barcode image
+ở vị trí đã được định trước</p>
+
+<figure class='code'><figcaption><span>generator/images.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">BackCoverImage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">BACK_COVER_IMAGE_PATH</span> <span class="o">=</span> <span class="s">&#39;assets/images/empty-barcode-image.jpg&#39;</span>
+</span><span class='line'>    <span class="n">BARCODE_IMAGE_SIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">650</span><span class="p">,</span> <span class="mi">195</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">BARCODE_IMAGE_POSITION</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1925</span><span class="p">,</span> <span class="mi">2300</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">barcode</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">barcode</span> <span class="o">=</span> <span class="n">barcode</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">,</span> <span class="s">&#39;-&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@lazy</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">barcode_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">params</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'>            <span class="p">(</span><span class="s">&#39;cpaint_function&#39;</span><span class="p">,</span> <span class="s">&#39;BuildBarcode&#39;</span><span class="p">),</span>
+</span><span class='line'>            <span class="p">(</span><span class="s">&#39;cpaint_argument[]&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">barcode</span><span class="p">),</span>
+</span><span class='line'>            <span class="p">(</span><span class="s">&#39;cpaint_argument[]&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span class='line'>            <span class="p">(</span><span class="s">&#39;cpaint_argument[]&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+</span><span class='line'>            <span class="p">(</span><span class="s">&#39;cpaint_response_type&#39;</span><span class="p">,</span> <span class="s">&#39;TEXT&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">BARCODE_GENERATE_SITE</span> <span class="o">=</span> <span class="s">&#39;http://www.barcoding.com&#39;</span>
+</span><span class='line'>        <span class="n">BARCODE_GENERATE_URL</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">/upc/buildbarcode.asp&#39;</span> <span class="o">%</span> <span class="n">BARCODE_GENERATE_SITE</span>
+</span><span class='line'>        <span class="n">url</span> <span class="o">=</span> <span class="n">BARCODE_GENERATE_URL</span> <span class="o">+</span> <span class="s">&quot;?&quot;</span> <span class="o">+</span> <span class="s">&quot;&amp;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">image</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_image_from_url</span><span class="p">(</span><span class="n">BARCODE_GENERATE_SITE</span> <span class="o">+</span> <span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BARCODE_IMAGE_SIZE</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">ANTIALIAS</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BACK_COVER_IMAGE_PATH</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">image</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">barcode_image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BARCODE_IMAGE_POSITION</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">image</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Để sinh ra barcode, tôi connect tới một webservice và lấy dữ liệu về. Hàm <code>utils.get_image_from_url</code> trả về Image object từ content của một URL.</p>
+
+<p>decorator <code>@lazy</code> biến một method của class thành property của class đó, và cached lại result, do đó nếu bạn gọi tới property lần thứ hai, bạn sẽ sự dụng lại giá trị từ trong cached</p>
+
+<p>Đây là code test cho class trên</p>
+
+<figure class='code'><figcaption><span>test_back_cover_image.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">hashlib</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">TestBackCoverImage</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">test_generate_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">generator</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">(</span><span class="s">&#39;124124&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">image</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'>        <span class="n">checksum</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&#39;efeae3cb498bbd57325991c2ac5346ad&#39;</span><span class="p">,</span> <span class="n">checksum</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoạn code trên generate BackCoverImage với một barcode xác định trước, và so sánh check sum của image được sinh ra, với image mà tôi đã sinh ra từ trước</p>
+
+<p>Tuy nhiên, có vấn đề ở đây. Đó là mỗi lần tôi chạy code test, tôi sẽ phải connect tới service của <code>http://www.barcoding.com</code>. Tức là tốc độ của code test sẽ bị ảnh hưởng bởi network, hơn nữa hàm <code>run()</code> của class BackCoverImage gọi tới <code>barcode_image</code>, nếu chúng ta test như trên, thì code test không phải là một unit test, mà là một integration test. Để giải quyết vấn đề này, chúng ta sử dụng thư viện <code>mock</code></p>
+
+<figure class='code'><figcaption><span>test_back_cover_image.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">mock</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">PropertyMock</span><span class="p">(</span><span class="n">mock</span><span class="o">.</span><span class="n">Mock</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">self</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">TestBackCoverImage</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">test_generate_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">mock_barcode</span> <span class="o">=</span> <span class="n">PropertyMock</span><span class="p">()</span>
+</span><span class='line'>        <span class="n">barcode_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;StoryTree/assets/images/barcode_image.png&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">mock_barcode</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">barcode_image</span>
+</span><span class='line'>        <span class="k">with</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">,</span> <span class="s">&#39;barcode_image&#39;</span><span class="p">,</span> <span class="n">mock_barcode</span><span class="p">):</span>
+</span><span class='line'>            <span class="n">generator</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">(</span><span class="s">&#39;storytree_124124&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">image</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'>            <span class="n">checksum</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&#39;efeae3cb498bbd57325991c2ac5346ad&#39;</span><span class="p">,</span> <span class="n">checksum</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Tôi đã mock thuộc tính barcode_image của class BackCoverImage với <code>PropertyMock</code>.
+Tốc độ của test được cải thiện đáng kể, từ 3-4s khi test không có mock, xuống &lt; 0.3s</p>
+
+<p>Xét tiếp ví dụ tiếp theo, tôi có một class Order, mỗi khi muốn order, tôi cần
+sinh ra một pdf file cho class Order. Pdf file này cần có một page được sinh ra từ class <code>BackCoverImage</code></p>
+
+<figure class='code'><figcaption><span>order.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Order</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">create_pdf_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">back_image</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'>        <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Để test hàm <code>create_pdf_file</code>, chúng ta sẽ mock <code>BackCoverImage.run</code> với một Image
+và kiểm tra xem hàm đó có được gọi hay không?</p>
+
+<figure class='code'><figcaption><span>test_order.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">mock</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">order</span> <span class="kn">import</span> <span class="n">Order</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">TestBackCoverImage</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">test_generate_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;StoryTree/assets/images/barcode_image.png&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">mock_backcover</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">with</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">,</span> <span class="s">&#39;run&#39;</span><span class="p">,</span> <span class="n">mock_backcover</span><span class="p">):</span>
+</span><span class='line'>            <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">212</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">order</span><span class="o">.</span><span class="n">create_pdf_file</span><span class="p">()</span>
+</span><span class='line'>            <span class="n">mock_backcover</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Kết luận</h1>
+
+<p>Bằng việc có một bộ test để đảm bảo hệ thống đang hoạt động đúng, bạn giúp các
+lập trình viên khác trong đội của bạn, hay chính bản thân bạn (sau một thời gian)
+tự tin khi viết thêm/thay đổi code, mà không sợ ảnh hướng tới logic của những
+chức năng khác. Điều này đặc biệt hữu ích khi bạn muốn refactor code.</p>
+
+<p>Tuy nhiên để làm điều đó, bộ test của bạn cần chạy trong một thời gian ngắn.
+Nếu bộ test của bọn tốn vài phút mới thực hiện xong, thì thật khó để yêu cầu các
+developer khác chạy nó mỗi lần họ commit code.</p>
+
+<p>Bằng cách sử dụng mock, bạn có thể isolate các unittest, đảm bảo mỗi một đoạn code
+chỉ cần test duy nhất một lần, qua đó tăng tốc độ của unittest lên rất nhiều.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Giới thiệu một số storage engine của Mysql]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/07/storageenginemysql/"/>
+    <updated>2013-05-07T16:53:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/07/storageenginemysql</id>
+    <content type="html"><![CDATA[<h1>Giới thiệu</h1>
+
+<p>MySQL là một trong những hệ thống cơ sở dữ liệu quan hệ phổ biến số một thế giới, được sử dụng bởi hầu hết các website lớn. Do vậy, việc nắm vững MySQL là yêu cầu không thể thiếu đối với một webmaster.</p>
+
+<p>Kiến trúc logic của MySQL nhìn tổng quan có thể được mô tả như hình dưới đây</p>
+
+<p><img src="http://ktmt.github.com/images/logical_mysql_architecture.jpeg"></p>
+
+<p>Ta có thể thấy MySQL có các component cơ bản như ở dưới đây</p>
+
+<ul>
+<li>Connection/thread handling</li>
+<li>Query cache</li>
+<li>Parser</li>
+<li>Optimizer</li>
+<li>Storage engine</li>
+</ul>
+
+
+<p>Việc nắm rõ từng chức năng và nhiệm vụ của từng thành phần là điều không thể thiếu trong việc sử dụng MySQL một cách hiệu quả. Bài viết sẽ tập trung giới thiệu về thành phần dưới cùng trong mô hình trên: Storage engine (Máy lưu trữ)</p>
+
+<h1>Storage Engine (Máy lưu trữ)</h1>
+
+<p>Storage Engine thực chất là cách MySQL lưu trữ dữ liệu trên đĩa cứng. MySQL lưu mỗi database như là một thư mục con nằm dưới thư mục data. Khi một table được tạo ra, MySQL sẽ lưu định nghĩa bảng ở file đuôi .frm và tên trùng với tên của bảng được tạo. Việc quản lý định nghĩa bảng là nhiệm vụ của MySQL server, dù rằng mỗi storage engine sẽ lưu trữ và đánh chỉ mục (index) dữ liệu khác nhau.</p>
+
+<p>Ví dụ: mình chỉ định &#8211;datadir là /usr/local/mysql/data và định nghĩa bảng users trong database tên là test như sau</p>
+
+<div>
+  <pre><code class='bash'>create table users (
+    id int not null auto_increment, 
+    name varchar(30), 
+    password varchar(20), 
+    primary key(id)
+);</code></pre>
+</div>
+
+
+<p>thì trong thư mục /usr/local/mysql/data sẽ có thư mục con là test, và dưới test sẽ có các file</p>
+
+<div>
+  <pre><code class='bash'>-rw-rw----  1 _mysql  wheel   8624  5  7 17:35 users.frm
+-rw-rw----  1 _mysql  wheel  98304  5  7 17:35 users.ibd</code></pre>
+</div>
+
+
+<p>Để xem loại storage engine của bảng hiện tại, bạn có thể dùng câu lệnh <em>SHOW DATABASE STATUS</em></p>
+
+<div>
+  <pre><code class='bash'>mysql&gt; show table status like 'users' \G
+*************************** 1. row ***************************
+           Name: users
+         Engine: InnoDB
+        Version: 10
+     Row_format: Compact
+           Rows: 2
+ Avg_row_length: 8192
+    Data_length: 16384
+Max_data_length: 0
+   Index_length: 0
+      Data_free: 0
+ Auto_increment: 3
+    Create_time: 2013-05-07 17:35:09
+    Update_time: NULL
+     Check_time: NULL
+      Collation: latin1_swedish_ci
+       Checksum: NULL
+ Create_options:
+        Comment:
+1 row in set (0.01 sec)</code></pre>
+</div>
+
+
+<p>Cụ thể trong trường hợp này:</p>
+
+<pre><code>storage engine          : innodb
+loại row                : compact
+Số lượng row dữ liệu    : 2
+giá trị auto increment tiếp theo: 3
+...
+</code></pre>
+
+<h2>Tổng quan các engine</h2>
+
+<h3>1. MyISAM engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>full-text indexing</li>
+<li>compression.</li>
+<li>spatial functions (GIS)</li>
+<li>Không hỗ trợ transactions</li>
+<li>Không hỗ trợ row-level lock.</li>
+</ul>
+
+
+<h5>Lưu trữ</h5>
+
+<p>MyISAM lưu mỗi bảng dữ liệu trên 2 file: .MYD cho dữ liệu và .MYI cho chỉ mục. Row có 2 loại: dynamic và static (tuỳ thuộc bạn có dữ liệu thay đổi độ dài hay không). Số lượng row tối đa có thể lưu trữ bị giới hạn bởi hệ điều hành, dung lượng đĩa cứng. MyISAM mặc định sử dụng con trỏ độ dài 6 bytes để trỏ tới bản ghi dữ liệu, do vậy giới hạn kích thước dữ liệu xuống 256TB.</p>
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>MyISAM lock toàn bộ table. User (MySQL server) chiếm shared-lock khi đọc và chiếm exclusive-lock khi ghi. Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!</li>
+<li>MyISAM có khả năng tự sửa chữa và phục hồi dữ liệu sau khi hệ thống crashed.</li>
+<li>Dùng command check table / repair table để kiểm tra lỗi và phục hồi sau khi bị lỗi.</li>
+<li>MyISAM có thể đánh chỉ mục full-text, hỗ trợ tìm kiếm full-text.</li>
+<li>MyISAM không ghi dữ liệu ngay vào ổ đĩa cứng, mà ghi vào 1 buffer trên memory (và chỉ ghi vào đĩa cứng sau 1 khoảng thời gian), do đó tăng tốc độ ghi. Tuy vậy, sau khi server crash, ta cần phải phục hồi dữ liệu bị hư hỏng bằng myisamchk.</li>
+<li>MyISAM hỗ trợ nén dữ liệu, hỗ trợ tăng tốc độ đọc dữ liệu. Mặc dù vậy dữ liệu sau khi nén không thể cập nhật được.</li>
+</ul>
+
+
+<h3>2. InnoDB engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Là engine phức tạp nhất trong các engine của MySQL</li>
+<li>Hỗ trợ transactions</li>
+<li>Hỗ trợ phục hồi, sửa chữa tốt</li>
+</ul>
+
+
+<h5>Lưu trữ</h5>
+
+<p>InnoDB lưu dữ liệu trên 1 file (thuật ngữ gọi là tablespace).</p>
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>InnoDB hỗ trợ MVCC (Multiversion Concurrency Control) để cải thiện việc truy cập đồng thời và hỗ trợ chiến thuật next-key locking.</li>
+<li>InnoDB được xây dựng dựa trên clustered index, do đó việc tìm kiếm theo primary key có hiệu năng rất cao. InnoDB không hỗ trợ sắp xếp index do vậy việc thay đổi cấu trúc bảng sẽ dẫn tới toàn bộ dữ liệu phải được đánh chỉ mục từ đầu (CHẬM với những bảng lớn).</li>
+</ul>
+
+
+<h3>3. Memory engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Còn được gọi là HEAP tables.</li>
+</ul>
+
+
+<h5>Lưu trữ</h5>
+
+<p>Tất cả dữ liệu đều nằm trên memory.</p>
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>Sau khi server restart, cấu trúc bảng được bảo toàn, dữ liệu bị mất hết.</li>
+<li>Memory engine sử dụng HASH index nên rất nhanh cho query lookup.</li>
+<li>Memory engine dùng table-level locking do vậy tính concurrency không cao.</li>
+</ul>
+
+
+<h3>4. Archive engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Chỉ hỗ trợ Insert và Select.</li>
+<li>Không đánh chỉ mục</li>
+<li>Dữ liệu được buffer và nén bằng zlib nên tốn ít I/O, tốc độ ghi do đó cao.</li>
+</ul>
+
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>Tốc độ ghi cao, phù hợp cho ứng dụng log.</li>
+</ul>
+
+
+<h3>5. CSV engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Coi file CSV như là 1 table.</li>
+<li>Không hỗ trợ đánh chỉ mục</li>
+</ul>
+
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>Nếu bài toán là trích xuất thông tin từ file CSV và ghi vào cơ sở dữ liệu, đồng thời cần kết quả CSV ngay từ DB, engine này có vẻ thích hợp.</li>
+</ul>
+
+
+<h3>6. Falcon engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Được thiết kế cho phần cứng hiện đại: server 64 bit, bộ nhớ &#8220;thênh thang&#8221;</li>
+<li>Vẫn còn khá mới, chưa có nhiều usercase</li>
+</ul>
+
+
+<h3>7. Maria engine (Cơ sở dữ liệu liên quan: <a href="https://mariadb.org/">MariaDB</a>)</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Được thiết kế bởi những chiến tướng dày dạn kinh nghiêm của MySQL, với mục đích thay thế MyISAM</li>
+<li>Hỗ trợ transactions theo lựa chọn</li>
+<li>Khôi phục lỗi</li>
+<li>Row-level locking và MVCC</li>
+<li>Hỗ trợ BLOB tốt hơn.</li>
+</ul>
+
+
+<h2>Tiêu chí lựa chọn engine</h2>
+
+<ul>
+<li>Transactions: Nếu ứng dụng yêu cầu transactions, InnoDB là lựa chọn duy nhất. Nếu không yêu cầu transactions, MyISAM là lựa chọn tốt.</li>
+<li>Concurrency: Nếu yêu cầu chịu tải cao và không cần thiết transactions, MyISAM là lựa chọn số 1.</li>
+<li>Sao lưu: Các engine đều phần nào hỗ trợ sao lưu. Ngoài ra ta cần hỗ trợ sao lưu trên cả quan điểm thiết kế hệ thống. Ví dụ: bạn thiết kế database server gồm master và slave, master yêu cần transaction nên dùng innodb, slave cần sao lưu và đọc nên có thể dùng MyISAM. Cơ chế đồng bộ master-slave sẽ giúp bạn quản lý sự khác nhau giữa các engine nhưng đảm bảo tính sao lưu. Tiêu chí này có trọng số nhỏ.</li>
+<li>Phục hồi sau crash: MyISAM có khả năng phục hồi sau crash kém hơn InnoDB.</li>
+<li>Tính năng theo yêu cầu hệ thống: Nếu yêu cầu là logging, MyISAM hoặc Archive là lựa chọn hợp lý. Nếu cần lưu trực tiếp CSV, CSV engine là lựa chọn đáng cân nhắc. Nếu ứng dụng không thay đổi dữ liệu mấy (ví dụ cơ sở dữ liệu sách), MyISAM và tính năng nén là lựa chọn phù hợp.</li>
+</ul>
+
+
+<h1>Kết luận</h1>
+
+<p>Bài viết này đã giới thiệu tổng quan về storage engine, một thành phần quan trọng của hệ thống cơ sở dữ liệu. Một số engine tiêu biểu và tính năng đặc điểm cũng được đưa ra. Tiêu chí chọn lựa mỗi loại engine cũng được giới thiệu.</p>
+
+<p>Hy vọng qua bài viết, bạn có cái nhìn tổng quan về database storate engine nói chung, và MySQL storage engine nói riêng, đồng thời hiểu được tầm quan trọng của việc chọn lựa storage engine.</p>
+
+<h1>Tham khảo</h1>
+
+<ol>
+<li><a href="http://shop.oreilly.com/product/9780596101718.do">High performance MySQL, 2ed</a></li>
+<li><a href="http://dev.mysql.com/doc/refman/5.7/en/storage-engines.html">Storage Engines</a></li>
+<li><a href="http://www.linux.org/article/view/an-introduction-to-mysql-storage-engines">Storage Engine Introduction</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Memoization and Decorator]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/06/memoization-and-decorator/"/>
+    <updated>2013-05-06T16:44:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/06/memoization-and-decorator</id>
+    <content type="html"><![CDATA[<h2>What is memoization</h2>
+
+<p>Trước hết chúng ta làm quen với khái niệm memoization. Ngôn ngữ ở đây là Python, bài toán là viết hàm tính giai thừa (n!)</p>
+
+<p>Hàm giai thừa thông thường sẽ được viết đệ quy như sau:</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">fac</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fac</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Có gì không ổn ở đoạn code này ? Cách giải quyết hoàn toàn không có vấn đề, nhưng nếu tinh ý bạn sẽ nhận thấy có 1 khối lượng tính toán bị lặp lại khá nhiều khi chạy nhiều hàm fac(n). VD, nếu tính fac(3), fac(4) và fac(10) lần lượt sẽ đòi hỏi 3 flow tính toán riêng rẽ mà không có reuse: fac(3) sẽ tính đệ quy từ fac(2) xuống fac(1), fac(4) tính đệ quy từ fac(3) xuống fac(1) và fac(10) tính đệ quy từ fac(9) xuống fac(1) !</p>
+
+<p>Áp dụng memoization dưới dạng dict, ta có thể viết hàm fac_m như sau:</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">memo</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">fac_m</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">n</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">memo</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">memo</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fac_m</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">memo</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đây memo đóng vài trò như 1 cache. fac(3) sẽ generate ra 3 record in cache, và fac(4) sẽ hit cache khi chạy đệ quy được 1 lần. Tương tự fac(10) sẽ hit cache khi đệ quy xuống đến fac(4)</p>
+
+<p>Như vậy memoization đơn giản chỉ là tìm cách nhớ những phần tử để giảm khối lượng tính toán</p>
+
+<p>Memoization có thể implement dưới dạng function&#8230;</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">memo</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">arg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">memo</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">memo</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">memo</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">fac_m_f</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">memoize</span><span class="p">(</span><span class="n">fac</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&#8230;hoặc class</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Memoize</span><span class="p">:</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">memo</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">memo</span><span class="p">:</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">memo</span><span class="p">[</span><span class="n">args</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">memo</span><span class="p">[</span><span class="n">args</span><span class="p">]</span>
+</span><span class='line'><span class="n">fac</span><span class="o">=</span> <span class="n">Memoize</span><span class="p">(</span><span class="n">fac</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Thêm 1 step nữa, thay vì &#8220;fac=Memoize(fac)&#8221; như ở trên, bạn có thể viết hàm mới theo kiểu decorator</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="nd">@Memoize</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">fac_m_d</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">n</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fac_m_d</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Decorator ở đây là từ khoá &#8220;@Memoize&#8221; trước định nghĩa của hàm fac_m_d</p>
+
+<p>Vậy decorator trong Python là gì và cách dùng ra sao ?</p>
+
+<h2>Python decorator</h2>
+
+<p>Trong số các design pattern, có 1 design pattern gọi là &#8220;decorator design pattern&#8221;. Python decorator chỉ là 1 cách implement của decorator design pattern. 2 khái niệm này không hoàn toàn giống nhau. Một điểm nữa cần nhớ là, memoization ở trên chỉ là 1 trong các ứng dụng của python decorator, python decorator còn có nhiều ứng dựng khác.</p>
+
+<p>Mọi function trong python đều là object, cho phép ta có thể assign funtion cho variable hoặc defince function trong chính 1 function khác. Dựa vào đó, decorator có thể dưới dạng decorator function như ví dụ dưới đây:</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">gotham</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">inside_gotham</span><span class="p">():</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;Gotham needs Batman&quot;</span>
+</span><span class='line'>        <span class="n">f</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">inside_gotham</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@gotham</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">batman</span><span class="p">():</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Batman Here! Gotham is saved! &quot;</span>
+</span><span class='line'><span class="n">batman</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoạn code sẽ cho output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Gotham needs Batman
+</span><span class='line'>Batman Here! Gotham is saved!</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cơ chế của decorator có thể hiểu đơn giản là, khi compiler đọc đến đoạn code đefine function với decorator, compiler sẽ compile function 1 cách bình thường và pass function object kết quả thẳng cho decorator(dưới dạng function hoặc class). Decorator(function hoăc class) lấy agrument là 1 function object và return kết quả là 1 function object khác.</p>
+
+<p>Function object kết quả nói trên gồm function object ban đầu đã được gói lại và &#8220;thêm thắt&#8221;, và từ nay về sau sẽ được gọi thay cho function object ban đầu mỗi khi có lệnh call.</p>
+
+<p>Ngoài memoization bên trên, bạn có thể dễ thấy rất nhiều ứng dụng của decorator trong các task liên quan đến wrap VD như:</p>
+
+<p>Timing, benchmark tính toán thời gian run code</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">time_cal</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</span><span class='line'>        <span class="n">res</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">print</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">res</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">wrapper</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@time_cal</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">fac</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fac</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>hay trong web application, nếu bạn đã dùng Flaskr, bạn có thể thấy đoạn code sau</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="nd">@mod.route</span><span class="p">(</span><span class="s">&#39;/me/&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="nd">@requires_login</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đây trang web của bạn ở sublink &#8220;&#8230;/me&#8221; sẽ được đảm bảo chỉ viewable với user đã login. Decorator &#8220;@requires_login&#8221; có thể viết ở 1 file độc lập và mọi hàm cần tính đảm bảo như trên chỉ cần thêm &#8220;@requires_login&#8221; đằng trước.</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">requires_login</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+</span><span class='line'>    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">decorated_function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">user</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">flash</span><span class="p">(</span><span class="s">u&#39;You need to be signed in for this page.&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;users.login&#39;</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">decorated_function</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Kết luận</h2>
+
+<ul>
+<li>Memoization: pattern dùng để nhớ các tính toán nhằm làm giảm workload khi gặp các bài toán đệ quy</li>
+<li>Decorator pattern: decorator design pattern</li>
+<li>Python Decorator: Python tools để implement decorator pattern</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Giới thiệu ngôn ngữ lập trình OCaml]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/06/gioi-thieu-ngon-ngu-ocaml/"/>
+    <updated>2013-05-06T12:16:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/06/gioi-thieu-ngon-ngu-ocaml</id>
+    <content type="html"><![CDATA[<blockquote><p>Sometimes, the elegant implementation is a function. Not a method. Not a class. Not a framework. Just a function. - John Carmack</p></blockquote>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[error when install therubyracer]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/03/error-when-install-therubyracer/"/>
+    <updated>2013-05-03T06:43:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/03/error-when-install-therubyracer</id>
+    <content type="html"><![CDATA[<p>Là ruby dev chắc bạn biết đến gem therubyracer (là gem dùng làm javascript interpreter trên ruby thông qua v8, gem này thường dùng làm javascript headless test hay để sử dụng một số module của nodejs trên ruby)
+Tuy nhiên khi cài đặt gem này trên mac os (kể cả từ 10.6 đến 10.8) thì rất hay bị gặp lỗi:</p>
+
+<figure class='code'><figcaption><span>error error.sh</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>gem install therubyracer
+</span><span class='line'>Building native extensions.  This could take a <span class="k">while</span>...
+</span><span class='line'>ERROR:  Error installing therubyracer:
+</span><span class='line'>    ERROR: Failed to build gem native extension.
+</span><span class='line'>
+</span><span class='line'>        /Users/david/.rvm/rubies/ruby-1.9.3-p194/bin/ruby extconf.rb
+</span><span class='line'>checking <span class="k">for </span>main<span class="o">()</span> in -lobjc... yes
+</span><span class='line'>*** extconf.rb failed ***
+</span><span class='line'>Could not create Makefile due to some reason, probably lack of
+</span><span class='line'>necessary libraries and/or headers.  Check the mkmf.log file <span class="k">for </span>more
+</span><span class='line'>details.  You may need configuration options.
+</span><span class='line'>
+</span><span class='line'>Provided configuration options:
+</span><span class='line'>    --with-opt-dir
+</span><span class='line'>    --with-opt-include
+</span><span class='line'>    --without-opt-include<span class="o">=</span><span class="k">${</span><span class="nv">opt</span><span class="p">-dir</span><span class="k">}</span>/include
+</span><span class='line'>    --with-opt-lib
+</span><span class='line'>    --without-opt-lib<span class="o">=</span><span class="k">${</span><span class="nv">opt</span><span class="p">-dir</span><span class="k">}</span>/lib
+</span><span class='line'>    --with-make-prog
+</span><span class='line'>    --without-make-prog
+</span><span class='line'>    --srcdir<span class="o">=</span>.
+</span><span class='line'>    --curdir
+</span><span class='line'>    --ruby<span class="o">=</span>/Users/david/.rvm/rubies/ruby-1.9.3-p194/bin/ruby
+</span><span class='line'>    --with-objclib
+</span><span class='line'>    --without-objclib
+</span><span class='line'>extconf.rb:15:in <span class="sb">`</span>&lt;main&gt;<span class="s1">&#39;: undefined method `include_path&#39;</span> <span class="k">for </span>Libv8:Module <span class="o">(</span>NoMethodError<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bị lỗi này hình như là do version của v8 đang cài trong máy bị conflict với version v8 therubyracer reference đến, để fix thì có 2 cách:
+Cách đầu tiên là uninstall bản gem libv8 đang có trong máy đi, rồi install lại therubyracer</p>
+
+<figure class='code'><figcaption><span>fix1 fix1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>gem uninstall libv8
+</span><span class='line'><span class="nv">$ </span>gem install therubyracer
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Khi install therubyracer thì gem sẽ tự động install lại bản v8 thích hợp vào đúng chỗ.</p>
+
+<p>Hoặc bạn có thể dùng cách thứ 2 là update lại bản libv8 mới nhất, rồi tiến hành cài đặt như bình thường</p>
+
+<figure class='code'><figcaption><span>fix1 fix1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>gem update libv8
+</span><span class='line'><span class="nv">$ </span>gem install therubyracer
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[blogging with github and octpress]]></title>
+    <link href="http://ktmt.github.com/blog/2013/04/30/huong-dan-su-dung-octopress-cho-blog-tren-github/"/>
+    <updated>2013-04-30T23:20:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/04/30/huong-dan-su-dung-octopress-cho-blog-tren-github</id>
+    <content type="html"><![CDATA[<h3>1. Tạo blog trên github</h3>
+
+<p>Hẳn là một github user, hẳn bạn biết github hỗ trợ cho user tạo một static blog trên domain của github (xxx.github.io).
+Để tạo blog cá nhân thì bạn có thể tham khảo chi tiết ở <a href="http://pages.github.com/">đây</a>. Hiện tại thì để tạo github page
+thì đã có giao diện rất dễ sử dụng nên mình sẽ không nói thêm ở đây. Về mặt bản chất thì github page chỉ là một <strong>repo</strong>
+trên github, trong đấy có chứa các static file, và được trỏ đến domain xxx.github.io.</p>
+
+<h3>2. Jekyll và github page</h3>
+
+<p>Khi bạn push bất kì thứ gì lên repo của github page, github sẽ chạy site generator sử dụng jekyll.
+Tại sao phải sử dụng site generator? Vì github không chỉ hỗ trợ html mà còn hộ trợ markdown, một markup language khá đơn giản và dễ sử dụng (
+bạn có thể tham khảo thêm ở [đây][http://en.wikipedia.org/wiki/Markdown]. Vậy bạn có thể đoán ra jekyll là gì: jekyll là
+một sản phẩm của Tom Preston-Werner, ceo của github. Jekyll sẽ nhận input là một template directory, chạy qua một cái converter
+engine để convert từ (Textile | Markdown | Liquid) sang html, tạo ra một static website.
+Như vậy bạn đã có thể hình dung ra cách để tạo ra một github page:</p>
+
+<p><img src="http://ktmt.github.com/images/OctopressGuide/octopress1.png"></p>
+
+<h3>3. Sử dụng octopress để gen blog trên github page</h3>
+
+<p>Octopress là một framework design cho jekyll. Gọi là framework nghe hơi lớn, nhưng nói một cách ngắn gọn, octopress là một bộ template/tools/
+plugin giúp cho việc generate static site đơn giản hơn. Những tính năng chính của octopress bao gồm:</p>
+
+<ul>
+<li>Responsive design template (gồm css, js, html)</li>
+<li>Build-in 3rd supports cho một số mạng xã hội (như like button của facebook, tweet button của twitter), và đặc biệt có comment của disqus khá tiện</li>
+<li>Build-in web server để review sau khi generate qua jekyll</li>
+<li>Hệ thống theming rất tốt với Compass và Sass</li>
+</ul>
+
+
+<p>Nói lý thuyết nhiều quá, giờ vào cụ thể về cách cài đặt và sử dụng:</p>
+
+<p>Prerequisite: máy bạn phải install git và ruby, cách install các bạn có thể google :D
+Sau đấy bạn clone octopress về máy, install bundler rồi install các dependencies như sau:</p>
+
+<figure class='code'><figcaption><span>install install.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>git clone git://github.com/imathis/octopress.git octopress
+</span><span class='line'><span class="nb">cd </span>octopress
+</span><span class='line'>gem install bundler
+</span><span class='line'>bundle install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ok, như vậy bạn đã có một môi trường đẹp đẽ để chuẩn bị viết blog rồi. Về mặt trình tự thì để có 1 blog trên github page bạn sẽ phải:
+Viết blog (dùng markdown/..) => generate qua jekyll => deploy lên github page</p>
+
+<p><img src="http://ktmt.github.com/images/OctopressGuide/octopress2.png"></p>
+
+<p>Octopress đã chuẩn bị sẵn cho bạn một Rakefile (bạn có thể tìm hiểu về rake ở [đây][http://rake.rubyforge.org/doc/rakefile_rdoc.html])
+.Trong đấy có rất nhiều task octopress đã chuẩn bị sẵn cho bạn để giúp cho việc cài theme, deploy lên github page trở nên đơn giản
+hơn bao giờ hết.</p>
+
+<p>Đầu tiên bạn sử dụng</p>
+
+<figure class='code'><figcaption><span>theme theme.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>để instal theme.</p>
+
+<p>Sau khi đã install xong theme, chúng ta sẽ viết blog. Bước đầu tiên là setup repository để cho việc deploy lên github pages thuận tiện hơn:</p>
+
+<figure class='code'><figcaption><span>theme theme.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake setup_github_pages
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Khi làm bước này thì octopress sẽ prompt ra một cái để hỏi về repo của github pages của bạn (repo của cái xxx.github.io mà mình đã nói ở trên)</p>
+
+<p><img src="http://ktmt.github.com/images/OctopressGuide/octopress3.png"></p>
+
+<p>Như hướng dẫn đã ghi, bạn sẽ phải điền repo của bạn với format git@github:your_username/your_username.github.com
+Ví dụ như trong trường hợp blog ktmt thì sẽ là git@github:ktmt/ktmt.github.com.git
+Bạn điền vào, press OK, như vậy là đã xong bước setup.
+Sau bước này thì thì octopress sẽ tạo ra một cái git repo trong octopress/<em>deploy/.git/ link đến git@github:ktmt/ktmt.github.com.git.
+Như vậy bạn có thể hình dung là sau này khi deploy thì octopress sẽ gen ra file vào trong </em>deploy và git push lên git@github:ktmt/ktmt.github.com.git
+.<br/>
+Một chú ý nữa là sau bước này octopress sẽ:
+*  Đổi tên remote branch hiện tại của bạn từ &#8216;origin&#8217; sang &#8216;octopress&#8217;
+*  Add git@github:your_username/your_username.github.com vào remote branch và đổi thành &#8216;origin&#8217;</p>
+
+<p><img src="http://ktmt.github.com/images/OctopressGuide/octopress4.png"></p>
+
+<p>Note là octopress branch của mình đang không phải là git://github.com/imathis/octopress.git như các bạn mà đang là https://github.com/ktmt/ktmtblog-octopress.git. Thực ra cái ktmtblog-octopress chỉ là một bản được fork về của octopress, và được tạo nên để giữ các bài viết trên github của bọn mình thôi.</p>
+
+<p>Vậy là setup xong, tiếp theo là việc quan trọng nhất, viết blog.
+Để viết blog thì đầu tiên bạn sẽ phải generate ra file markdown thông qua</p>
+
+<figure class='code'><figcaption><span>theme theme.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake new_post<span class="o">[</span><span class="s2">&quot;post_title&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Kết quả là một file markdown đã được tạo ra ở thư mục <em>source/</em>post</p>
+
+<p><img src="http://ktmt.github.com/images/OctopressGuide/octopress5.png"></p>
+
+<p>Sau khi đã hoàn thành việc viết blog, việc tiếp theo bạn phải làm là generate cái file markdown đó + đống template thành static page thông qua jekyll. Octopress đã chuẩn bị sẵn cho bạn một rake task là generate, nên việc bạn phải làm chỉ là</p>
+
+<figure class='code'><figcaption><span>theme theme.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake generate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Kết quả là</p>
+
+<p><img src="http://ktmt.github.com/images/OctopressGuide/octopress6.png"></p>
+
+<p>Để preview thành quả của mình, octopress cung cấp cho bạn cả httpserver để preview, bạn gõ</p>
+
+<figure class='code'><figcaption><span>theme theme.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake preview
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Và truy cập vào localhost:4000 thông qua browser là đã có thể preview thành quả của mình rồi.</p>
+
+<p>Cuối cùng, bạn sẽ deploy lên github page thông qua</p>
+
+<figure class='code'><figcaption><span>theme theme.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake deploy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Và như thế là bạn đã deploy thành công blog của bạn lên github page (với điều kiện là bạn không viết sai syntax markdown :D).
+Chú ý là khi bạn rake deploy thì octopress sẽ copy đè &#8220;toàn bộ&#8221; cái repo your_username/your_username.github.com của bạn thay bằng cái thư mục _deploy của nó, <strong>kể cả commit tree</strong>. Vậy nên để lưu giữ các bài viết của cá nhân thì các bạn nên làm như mình là: fork octopress về thành một repo cá nhân, và mỗi lần viết xong thì bạn push ngược lại vào <strong>octopress repo</strong> đó. Lưu ý là octopress repo nhé:</p>
+
+<figure class='code'><figcaption><span>theme theme.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>git push octopress master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cá nhân mình thì mình viết thêm 1 cái task vào Rakefile để cho đỡ bị nhầm lẫn repo:</p>
+
+<figure class='code'><figcaption><span>rake Rakefile.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">desc</span> <span class="s2">&quot;push to octopress also&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:push_octopress</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;pushing to octopress repo&quot;</span>
+</span><span class='line'>  <span class="nb">system</span> <span class="s2">&quot;git checkout master&quot;</span>
+</span><span class='line'>  <span class="nb">system</span> <span class="s2">&quot;git pull octopress master&quot;</span>
+</span><span class='line'>  <span class="nb">system</span> <span class="s2">&quot;git add .&quot;</span>
+</span><span class='line'>  <span class="nb">system</span> <span class="s2">&quot;git commit -m ¥&quot;</span><span class="no">Octopress</span> <span class="n">push</span> <span class="kp">new</span> <span class="n">post</span><span class="err">¥</span><span class="s2">&quot;&quot;</span>
+</span><span class='line'>  <span class="nb">system</span> <span class="s2">&quot;git push octopress master&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Và như vậy sau mỗi lần deploy bạn chỉ cần</p>
+
+<figure class='code'><figcaption><span>theme theme.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake push_octopress
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Là đã synchronize thành công.</p>
+
+<h3>Kết luận:</h3>
+
+<p>Như vậy sau lần đầu setting có vẻ loằng ngoằng, từ bây giờ khi muốn viet blog bạn chỉ cần:</p>
+
+<p><img src="http://ktmt.github.com/images/OctopressGuide/octopress7.png"></p>
+
+<p>Rất đơn giản đúng không :D. Happy blogging.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Python object model]]></title>
+    <link href="http://ktmt.github.com/blog/2013/04/29/python-object-model/"/>
+    <updated>2013-04-29T00:00:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/04/29/python-object-model</id>
+    <content type="html"><![CDATA[<h3>1. old-style và new-style class trong Python</h3>
+
+<p>Bạn đã nghe ở đâu đó &#8220;In python everything is object&#8221;.</p>
+
+<p>Điều đó có nghĩa là gì? Liệu nó có giống các ngôn ngữ lập trình khác,
+mọi thứ trong Python đều là instance của BaseClass? Tôi đã nghe về <strong>object</strong>
+class trong Python, liệu đó có phải là Base Class của Python</p>
+
+<p>Python có hai mô hình <strong>old-style</strong> và <strong>new-style</strong>. Thực tế trong các phiên bản cũ của Python, không có một class cụ thể nào cho mọi object cả. Nhưng từ Python 2.2, với sự giới thiệu của <strong>new-style</strong> class, chúng ta có thể biến mọi object là instance của <strong>object</strong></p>
+
+<p>Từ Python 2.1 trở về trước, <strong>old-style</strong> class là lựa chọn duy nhất cho các lập trình viên. Khái niệm <strong>old-style</strong> class là không liên quan tới khái niệm kiểu. Nếu x là một instance của old-style class, x.<strong>class</strong> sẽ trỏ tới class của x, nhưng type(x) thì không.</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># old-style class was define by statement:</span>
+</span><span class='line'><span class="c">#   class &lt;class-name&gt;: &lt;class definition body&gt;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">pass</span>
+</span><span class='line'><span class="c"># type of class A is &#39;type&#39; because &#39;type&#39; is base-class in Python</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># make an instance of A</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+</span><span class='line'><span class="c"># a.__class__ reference to class A</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">A</span> <span class="n">at</span> <span class="mh">0x10aea6ce8</span><span class="o">&gt;</span>
+</span><span class='line'><span class="c"># bute type of a is not A but &#39;instance&#39;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;instance&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="c"># &#39;instance&#39; still is &#39;type&#39; class</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>new-style</strong> class được giới thiệu với động lực tạo ra một mô hình object thống nhất cho Python. Mọi đối tượng sẽ được kế thừa từ <strong>object</strong></p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">object</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>new-style</strong> class được định nghĩa bằng cách kế thừa từ <strong>object</strong> class.
+Khác với <strong>old-style</strong> class, nếu x là một instance của <strong>new-style</strong> class, cả x.<strong>class</strong> và type(x) đều trỏ về class của x</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">A</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;A&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Để tương thích với các phiên bản của của Python, class mặc định vẫn được để ở <strong>old-style</strong>.
+Nếu chúng ta muốn sử dụng <strong>new-style</strong>, chúng ta bắt buộc phải định nghĩa class là subclass của <strong>object</strong></p>
+
+<h3>2. Điểm khác biệt giữa <strong>old-style</strong> và <strong>new-style</strong> class</h3>
+
+<p>Điểm khác biệt rõ nhất được nhìn thấy trong hệ thống kiểu.
+Hãy xem làm thế nào <strong>old-style</strong> class và <strong>new-style</strong> class thực hiện việc đa kế thừa. &#8220;Đa kế thừa&#8221; là khả năng một class có thể kế thừa từ nhiều class khác nhau. Nếu A kế thừa từ B, A là subclass(child class, derived class) của B, còn B là superclass (base class, parent class của A)</p>
+
+<p>Đa kế thừa cho phép một class A có thể có nhiều cha (theo tôi, đa kế thừa không thực sự tốt. có nhiều cách để giải quyết vấn đề đa kế thừa, hãy xem Ruby với mixins hay Java với interface thực hiện điều đó. tôi thực sự rất thích mô hình mixins của Ruby)</p>
+
+<p>Trong mô hình object của Python, mọi class đều có thuộc tình <strong><strong>bases</strong></strong> để lưu lại tất cả các class cha của nó, theo thứ tự xuất hiện của việc thừa kế.</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">C</span><span class="o">.</span><span class="n">__bases__</span>
+</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">A</span> <span class="n">at</span> <span class="mh">0x10aea6ce8</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">B</span> <span class="n">at</span> <span class="mh">0x10af8de20</span><span class="o">&gt;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Vấn đề của đa kế thừa đó là thự tự của các superclass.</p>
+
+<p>Khi một instance của một subclass truy cập vào một thuộc tính (hoặc một method),</p>
+
+<pre><code>đầu tiên, nó sẽ tìm kiếm các thuộc tính được định nghĩa trong không gian của nó.
+Nếu thuộc tình (hoặc method) không được tìm thấy, nó sẽ tìm đến không gian
+của class (thuộc tính của class, hàm của class). Nếu vẫn không tìm thấy, nó
+sẽ tìm kiếm tiếp trong không gian của các super class. Khi một class có nhiều
+super class, thứ tự của các super class chính là thứ tự khi tìm kiếm
+</code></pre>
+
+<p>Trong <strong>old-style</strong> class, thứ tự của các superclass là depth-first, left-to-right
+theo thứ tự xuất hiện trong bases list</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;A&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;B&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;C&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="c"># order of D.__bases__ is (B, C) so D.test =&gt; B.test</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">D</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;B&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">E</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="c"># order of E.__bases__ is (C, B) so E.test =&gt; C.test</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">E</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;C&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># so what if we make an class is inherited from D, E</span>
+</span><span class='line'><span class="c"># note that, D and E are inherited from 2 class B, C with reverse order</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="c"># in old-style class, it does not matter, the searching method</span>
+</span><span class='line'><span class="c"># only care about order of superclass in __bases__</span>
+</span><span class='line'><span class="c"># so now F.test =&gt; D.test =&gt; B.test</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">F</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;B&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># even if we make an class is inherited from A, D, E</span>
+</span><span class='line'><span class="c"># it still works and test() method will be test() method of A</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">G</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">G</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;A&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cách phân giải method của <strong>old-style</strong> khá đơn giản và dễ hiểu. Nhưng nếu chúng
+ta áp dụng quy luật này, đôi khi chúng ta sẽ phạm phải sai lầm khi kế thừa.
+Giả sử, một class G được kế thừa từ A, D và E, trong khi A là parent class của D và E.
+Rõ ràng, một lỗi nên được Python ném ra trong trường hợp này để bảo về việc kế thừa vòng tròn như vậy</p>
+
+<p><strong>new-stlye</strong> giải quyết vấn đề này. <strong>new-style</strong> sử dụng MRO (Method Resolution Order) được giới thiệu từ Python 2.3</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">mro</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Return ordering of superclass of cls</span>
+</span><span class='line'><span class="sd">    This ordering was used when we want to access class instance atrribute</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    `cls`: class type we want to resolve</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    @raise `TypeError` if cannot resolution superclass order</span>
+</span><span class='line'><span class="sd">    @return `list` of class</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="n">bases_cls</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__bases__</span>
+</span><span class='line'>    <span class="n">mro_base_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">mro</span><span class="p">(</span><span class="n">base_cls</span><span class="p">)</span> <span class="k">for</span> <span class="n">base_cls</span> <span class="ow">in</span> <span class="n">bases_cls</span><span class="p">]</span>
+</span><span class='line'>    <span class="n">mro_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">cls</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">while</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>        <span class="c"># find the good head</span>
+</span><span class='line'>        <span class="c"># good head is head of a list which is not is tail of any list in mro_base_lists</span>
+</span><span class='line'>        <span class="n">list_head</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">set_tails</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">set_tails</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">good_head</span> <span class="o">=</span> <span class="bp">None</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">head</span> <span class="ow">in</span> <span class="n">list_head</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">if</span> <span class="n">head</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">set_tails</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">good_head</span> <span class="o">=</span> <span class="n">head</span>
+</span><span class='line'>                <span class="k">break</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># if cannot find good_head, raise TypeError</span>
+</span><span class='line'>        <span class="k">if</span> <span class="ow">not</span> <span class="n">good_head</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">raise</span> <span class="ne">TypeError</span>
+</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>            <span class="c"># add to mro_list</span>
+</span><span class='line'>            <span class="n">mro_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">good_head</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c"># remove good_head in all list and add to mro_list</span>
+</span><span class='line'>            <span class="k">for</span> <span class="n">alist</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>                <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>                    <span class="n">alist</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">good_head</span><span class="p">)</span>
+</span><span class='line'>                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span class='line'>                    <span class="k">pass</span>
+</span><span class='line'>            <span class="n">mro_base_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">mro_list</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">E</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">test_mro</span><span class="p">():</span>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test1 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">B</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test2 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test 3 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">D</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test 4 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">E</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test 5 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">mro</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;Test 6 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">test_mro</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ý tướng của MRO là sắp xếp các super class với điều kiện:</p>
+
+<pre><code>+ Nếu B là cha của C, B luôn luôn đứng trước C trong list.
+</code></pre>
+
+<p>Với điều kiện đó, Python sẽ ném ra một lỗi nếu chúng ta cố gắng định nghĩa class
+D kế thừa từ (B, C), E kế thừa từ (C, B) và F kế thừa từ (D, E)</p>
+
+<p>Tham khảo
+<a href="http://www.python.org/download/releases/2.3/mro/">explaination in python docs</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[fun with unix command prompt]]></title>
-    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/28/make-fun-with-unix-command-prompt/"/>
+    <link href="http://ktmt.github.com/blog/2013/04/28/make-fun-with-unix-command-prompt/"/>
     <updated>2013-04-28T00:06:00+09:00</updated>
-    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/28/make-fun-with-unix-command-prompt</id>
-    <content type="html"><![CDATA[<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/unix.png"></p>
+    <id>http://ktmt.github.com/blog/2013/04/28/make-fun-with-unix-command-prompt</id>
+    <content type="html"><![CDATA[<p><img src="http://ktmt.github.com/images/UnixCommandPrompt/unix.png"></p>
 
 <p>Chắc hẳn là một unix user (có thể mac os hay linux), lại là một programmer, bạn sẽ phải hàng ngày sử dụng terminal cho việc lập trình, quản lý source, monitoring hệ thống&#8230;. Và đã là người sử dụng terminal hàng ngày thì cái bạn phải nhìn thấy nhiều nhất chính là cái gọi là &#8220;Command prompt&#8221;</p>
 
-<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/unix-terminal.png"></p>
+<p><img src="http://ktmt.github.com/images/UnixCommandPrompt/unix-terminal.png"></p>
 
 <p>Cái command prompt này thì tùy thuộc vào shell bạn đang dùng (bash hay zsh..) mà sẽ có những cách tùy chỉnh khác nhau. Mình thì đang dùng bash (chắc một ngày gần đây sẽ chuyển qua zsh), nên bài viết này sẽ áp dụng chủ yếu ở trên bash. Command prompt ở trên bash thì gồm có 4 biến môi trường (environment variable) chính: PS1, PS2, PS3, PS4 (Ngoài ra còn có COMMAND_PROMPT nữa nhưng thằng này na ná PS1 nên mình không đề cập đến). Để sử dụng các biến môi trường này thì bạn chỉ cần:</p>
 
@@ -48,7 +2081,7 @@
 
 <p>Trong 5 biến mình nói ở trên thì biến PS2 là thằng nhàm chán nhất. PS2 gọi là Continuation interactive prompt. Tại sao lại gọi như vậy thì: khi một câu lệnh unix quá dài thì bạn thường dùng kí hiệu &#8220;&#92;&#8221; ở cuối dòng để làm cho câu lệnh đấy thành multiple-line (gõ được ở nhiều dòng). Và PS2 là biến quyết định <strong>cái gì được in ở đầu mỗi dòng đó</strong></p>
 
-<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/PS2-1.png"></p>
+<p><img src="http://ktmt.github.com/images/UnixCommandPrompt/PS2-1.png"></p>
 
 <p>Cách sử dụng thì vô cùng đơn giản:</p>
 
@@ -60,7 +2093,7 @@
 
 <p>Và kết quả là:</p>
 
-<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/PS2-2.png"></p>
+<p><img src="http://ktmt.github.com/images/UnixCommandPrompt/PS2-2.png"></p>
 
 <p>Chắc bạn cũng đã hình dung ra cách dùng PS2 thế nào rồi nhỉ, và hẳn bạn đang nghĩ, biến này chả có gì thú vị lắm nhỉ, mình cũng nghĩ thế :D. Thế nên chúng ta qua thằng tiếp theo nhé: PS3</p>
 
@@ -235,7 +2268,7 @@ Và tiếp theo chúng ta sẽ đi đến bộ đôi thú vị nhất trong ngà
 
 <p>Đây chính là biến quyết định cái gì sẽ hiện lên ở command prompt, và là biến có nhiều cái để hack nhất trong các loại PSx</p>
 
-<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/PS1-1.png"></p>
+<p><img src="http://ktmt.github.com/images/UnixCommandPrompt/PS1-1.png"></p>
 
 <p>Đầu tiên chúng ta sẽ nói về PS1
 Giả sử chúng ta muốn command prompt hiện lên Username, Hostname và full-path đến directory hiện tại, đơn giản chúng ta chỉ cần</p>
@@ -302,7 +2335,7 @@ Hay hơn chút nữa, bạn muốn hiện thêm current time, lên prompt, rất
 
 <p>Đoạn code trên có nghĩa là gì:</p>
 
-<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/PS1-2.png"></p>
+<p><img src="http://ktmt.github.com/images/UnixCommandPrompt/PS1-2.png"></p>
 
 <p>Hacking thêm một chút nữa, bạn hiện là một developer đang sử dụng git với rất nhiều repo, rất nhiều branch. Mỗi lần vào một repo nào đấy bạn lại phải {git branch} để xem bạn đang ở branch nào, bất tiện vô cùng. Bạn muốn prompt của bạn sẽ hiện branch name mỗi khi bạn vào folder của một repo nào đấy? Thật đơn giản, với backquote để execute bash command và sự trợ giúp của sed, bạn làm điều đó thật đơn giản:</p>
 
@@ -323,7 +2356,7 @@ Hay hơn chút nữa, bạn muốn hiện thêm current time, lên prompt, rất
 </ul>
 
 
-<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/UnixCommandPrompt/PS1-3.png"></p>
+<p><img src="http://ktmt.github.com/images/UnixCommandPrompt/PS1-3.png"></p>
 
 <p>Looks so cool!!
 Ngoài ra bạn còn có rất nhiều thứ có thể hacking với PS1 như:</p>
@@ -345,9 +2378,9 @@ mà bạn có thể tham khảo ở đây: http://www.thegeekstuff.com/2008/09/b
   
   <entry>
     <title type="html"><![CDATA[Đếm bit]]></title>
-    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/25/dem-bit/"/>
+    <link href="http://ktmt.github.com/blog/2013/04/25/dem-bit/"/>
     <updated>2013-04-25T00:00:00+09:00</updated>
-    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/25/dem-bit</id>
+    <id>http://ktmt.github.com/blog/2013/04/25/dem-bit</id>
     <content type="html"><![CDATA[<h2>Mở đầu</h2>
 
 <p>Bạn đang say sưa hacking code và bắt gặp một hàm với những con số bí ẩn như ở dưới đây:</p>
@@ -521,9 +2554,9 @@ $ echo $?
   
   <entry>
     <title type="html"><![CDATA[happy programmer]]></title>
-    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/24/happy-programmer/"/>
+    <link href="http://ktmt.github.com/blog/2013/04/24/happy-programmer/"/>
     <updated>2013-04-24T23:33:00+09:00</updated>
-    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/24/happy-programmer</id>
+    <id>http://ktmt.github.com/blog/2013/04/24/happy-programmer</id>
     <content type="html"><![CDATA[<p>Happy programmer là gì nhỉ, chắc ai đọc xong title của bài post này cũng không hiểu ý mình định nói đến là gì :D. Đầu tiên với cá nhân mình thì happy programmer là những programmer(lập trình viên), có khả năng kiếm được tiền và sống tốt bằng việc lập trình, họ training liên tục để trở thành better programmer, và họ hạnh phúc với cuộc sống như vậy. Nếu bạn đã và đang là một programmer, có nhiều lý do để bạn nên happy với việc đấy. Lý do là:</p>
 
 <ul>
@@ -559,9 +2592,9 @@ $ echo $?
   
   <entry>
     <title type="html"><![CDATA[Selenium và Jenkins]]></title>
-    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/21/selenium/"/>
+    <link href="http://ktmt.github.com/blog/2013/04/21/selenium/"/>
     <updated>2013-04-21T23:56:00+09:00</updated>
-    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/21/selenium</id>
+    <id>http://ktmt.github.com/blog/2013/04/21/selenium</id>
     <content type="html"><![CDATA[<h2>Mở đầu</h2>
 
 <p>Trong quy trình phát triển một phần mềm, Test nói chung và UT nói riêng luôn là những process rất quan trọng. Tuy nhiên khi Application càng ngày càng lớn thì khối lượng Test càng phình to và cost sẽ vượt quá cost bỏ ra cho coding. Để giảm thiểu số công sức bỏ ra, developer thường hay dùng các test framework có sẵn và tìm cách automation quy trình test.</p>
@@ -693,7 +2726,7 @@ $ echo $?
 
 <p>Bạn phải test xem trong từ sublink đó có 1 file image tên là &#8220;myimage.png&#8221; với div=myimage hay không.</p>
 
-<p>Như vậy có 100 test case ở đây, tuy nhiên content khá giống nhau, bạn có thể nghĩ đến chuyện tạo 1 template</p>
+<p>Như vậy có 100 test case ở đây, tuy nhiên content khá giống nhau, bạn có thể nghĩ đến chuyện tạo template</p>
 
 <figure class='code'><figcaption><span>template.py</span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -844,13 +2877,13 @@ $ echo $?
 
 <p>VD về Jenkins jobs</p>
 
-<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/SeleniumAndJenkins/JenkinsJobs.png" title="image" alt="images">
+<p><img src="http://ktmt.github.com/images/SeleniumAndJenkins/JenkinsJobs.png" title="image" alt="images">
 Source Code Management</p>
 
-<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/SeleniumAndJenkins/ExecuteShell.png" title="image" alt="images">
+<p><img src="http://ktmt.github.com/images/SeleniumAndJenkins/ExecuteShell.png" title="image" alt="images">
 Execute Shell</p>
 
-<p><img src="http://ktmt.github.com/ktmtblog-octopress/images/SeleniumAndJenkins/BuildTriggers.png" title="image" alt="images">
+<p><img src="http://ktmt.github.com/images/SeleniumAndJenkins/BuildTriggers.png" title="image" alt="images">
 Build Trigger</p>
 
 <p>Đặt lịch, tương tự cron jobs</p>
@@ -871,9 +2904,9 @@ Build Trigger</p>
   
   <entry>
     <title type="html"><![CDATA[giới thiệu về script loader trong js]]></title>
-    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js/"/>
+    <link href="http://ktmt.github.com/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js/"/>
     <updated>2013-04-14T00:23:00+09:00</updated>
-    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js</id>
+    <id>http://ktmt.github.com/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js</id>
     <content type="html"><![CDATA[<h2>I.Script loader là gì và tại sao lại cần nó</h2>
 
 <p>Trong javascript, khi cần include một thư viện, hay một module từ ngoài vào, chắc hản mọi
@@ -944,9 +2977,9 @@ là request đến server chứa script cần load thông qua XHR, lấy kết q
 
 <ol>
 <li><p>Load script trực tiếp vào html tag
-<img src="http://ktmt.github.com/ktmtblog-octopress/images/script-loader-images/withoutloader.png" title="image" alt="images"></p></li>
+<img src="http://ktmt.github.com/images/script-loader-images/withoutloader.png" title="image" alt="images"></p></li>
 <li><p>Load script thông qua loader
-<img src="http://ktmt.github.com/ktmtblog-octopress/images/script-loader-images/withloader.png" title="image" alt="images"></p></li>
+<img src="http://ktmt.github.com/images/script-loader-images/withloader.png" title="image" alt="images"></p></li>
 </ol>
 
 
@@ -1149,9 +3182,9 @@ về điều này trong một thời gian gần.</p>
   
   <entry>
     <title type="html"><![CDATA[Ý nghĩa của từ khóa static trong C]]></title>
-    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/06/tu-khoa-static-trong-c/"/>
+    <link href="http://ktmt.github.com/blog/2013/04/06/tu-khoa-static-trong-c/"/>
     <updated>2013-04-06T00:00:00+09:00</updated>
-    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/06/tu-khoa-static-trong-c</id>
+    <id>http://ktmt.github.com/blog/2013/04/06/tu-khoa-static-trong-c</id>
     <content type="html"><![CDATA[<h2>Mở đầu</h2>
 
 <p>Khi học C cơ bản, chắc hẳn bạn sẽ gặp cách dùng từ khoá static như ví dụ dưới đây:</p>
@@ -1374,9 +3407,9 @@ về điều này trong một thời gian gần.</p>
   
   <entry>
     <title type="html"><![CDATA[Giới thiệu về Unix process]]></title>
-    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/01/gioi-thieu-ve-unix-process/"/>
+    <link href="http://ktmt.github.com/blog/2013/04/01/gioi-thieu-ve-unix-process/"/>
     <updated>2013-04-01T00:39:00+09:00</updated>
-    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/01/gioi-thieu-ve-unix-process</id>
+    <id>http://ktmt.github.com/blog/2013/04/01/gioi-thieu-ve-unix-process</id>
     <content type="html"><![CDATA[<p>Là một kỹ sư lập trình hệ thống, một server guy, hay là một sys admin, sys dev,
 sys ops,&#8230; phần lớn thời gian bạn sẽ phải làm việc trên hệ thống Unix.
 Để làm việc trên Unix, chúng ta tương tác với hệ điều hành thông qua các
@@ -1647,7 +3680,7 @@ thuật ban đầu với Process. Còn rất nhiều vấn đề chưa đề c�
 
 <p>Bản slide tôi trình bày tại công ty Framgia về UNIX Process</p>
 
-<script async class="speakerdeck-embed" data-id="ce0d6da05a2e0130b5ab22000a8f8802" data-ratio="1.33333333333333" src="http://ktmt.github.com/ktmtblog-octopress//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="ce0d6da05a2e0130b5ab22000a8f8802" data-ratio="1.33333333333333" src="http://ktmt.github.com//speakerdeck.com/assets/embed.js"></script>
 
 
 <p>Bài viết được lấy từ blog <a href="http://kiennt.com/blog/2013/01/20/introduction-to-unix-process.html">http://kiennt.com</a></p>

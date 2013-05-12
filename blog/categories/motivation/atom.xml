@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: motivation | Blog kỹ thuật máy tính]]></title>
-  <link href="http://ktmt.github.com/ktmtblog-octopress/blog/categories/motivation/atom.xml" rel="self"/>
-  <link href="http://ktmt.github.com/ktmtblog-octopress/"/>
-  <updated>2013-04-30T18:38:36+09:00</updated>
-  <id>http://ktmt.github.com/ktmtblog-octopress/</id>
+  <link href="http://ktmt.github.com/blog/categories/motivation/atom.xml" rel="self"/>
+  <link href="http://ktmt.github.com/"/>
+  <updated>2013-05-13T07:51:45+09:00</updated>
+  <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[happy programmer]]></title>
-    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/24/happy-programmer/"/>
+    <link href="http://ktmt.github.com/blog/2013/04/24/happy-programmer/"/>
     <updated>2013-04-24T23:33:00+09:00</updated>
-    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/24/happy-programmer</id>
+    <id>http://ktmt.github.com/blog/2013/04/24/happy-programmer</id>
     <content type="html"><![CDATA[<p>Happy programmer là gì nhỉ, chắc ai đọc xong title của bài post này cũng không hiểu ý mình định nói đến là gì :D. Đầu tiên với cá nhân mình thì happy programmer là những programmer(lập trình viên), có khả năng kiếm được tiền và sống tốt bằng việc lập trình, họ training liên tục để trở thành better programmer, và họ hạnh phúc với cuộc sống như vậy. Nếu bạn đã và đang là một programmer, có nhiều lý do để bạn nên happy với việc đấy. Lý do là:</p>
 
 <ul>

@@ -1,0 +1,931 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Blog kỹ thuật máy tính</title>
+	<meta name="author" content="kỹ thuật máy tính">
+
+	
+	<meta name="description" content="May 9th, 2013 programming, refactor, testing Comments Sử Dụng Mock Với Unittest Trong Python Unittest là gì Unit tes là các test dùng để test kiến &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Blog kỹ thuật máy tính" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://ktmt.github.com/blog/page/2/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<script src="/javascripts/md5.js"></script>
+	<img src='/images/logo.jpg' alt='Profile Picture' style='width: 160px;' />
+</div>
+<h1><a href="/">Blog kỹ thuật máy tính</a></h1>
+<p class="subtitle">kỹ thuật máy tính</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner">
+<div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-09T09:44:00+09:00" data-updated="true" itemprop="datePublished">May 9<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming/'>programming</a>, <a class='category' href='/blog/categories/refactor/'>refactor</a>, <a class='category' href='/blog/categories/testing/'>testing</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/05/09/mock-with-unittest-in-python/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/05/09/mock-with-unittest-in-python/" itemprop="url">Sử Dụng Mock Với Unittest Trong Python</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h1>Unittest là gì</h1>
+
+<p>Unit tes là các test dùng để test kiến trúc nội tại của chương trình, unit test gắn liền với
+thiết kế chương trình. Khi viết unit test, tôi thường kiểm tra xem các hàm có
+được gọi và gọi đúng với parameter cần thiết hay không. Mỗi một unit test chỉ
+nên test 1 thứ.</p>
+
+<p>Đặc điểm của unit test là rất ngắn, một test case chỉ nên được
+viết dưới 10 dòng. Nếu bạn cần viết hơn, hãy suy nghĩ lại về thiết kế của mình.
+Các developer nên viết unit test cho các phần code mình viết. Tôi thường setup
+môi trường phát triển, để bất cứ khi nào bạn commit một đoạn code, chương trình
+quản lý mã nguồn sẽ chạy test tự động liên quan đến đoạn code đó. Điều này giúp
+tôi kiểm tra ngay được code mình viết có gây ảnh hưởng tới các phần khác hay không.</p>
+
+<p>Chính vì thế, unit test cần được chạy rất nhanh. Mỗi một đoạn code chỉ nên được
+test một lần. Nếu bạn có 2 method A và B, B gọi đến A, code A đã được viết test,
+ thì code test cho B không nên test lại A lần nữa</p>
+
+<p>Unit test không nhất thiết phải cover hết code của bạn. Nếu cover được đầy đủ thì
+rất tốt, nhưng công sức bỏ ra sẽ rất lớn. Hãy viết unit test đủ để bạn thấy tự tin
+khi deploy code của mình.</p>
+
+<h1>Sử dụng mock với unittest</h1>
+
+<p>Tôi có một class sinh ra empty image với kích thước có sẵn, kèm theo barcode image
+ở vị trí đã được định trước</p>
+
+<figure class='code'><figcaption><span>generator/images.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">BackCoverImage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">BACK_COVER_IMAGE_PATH</span> <span class="o">=</span> <span class="s">&#39;assets/images/empty-barcode-image.jpg&#39;</span>
+</span><span class='line'>    <span class="n">BARCODE_IMAGE_SIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">650</span><span class="p">,</span> <span class="mi">195</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">BARCODE_IMAGE_POSITION</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1925</span><span class="p">,</span> <span class="mi">2300</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">barcode</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">barcode</span> <span class="o">=</span> <span class="n">barcode</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">,</span> <span class="s">&#39;-&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@lazy</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">barcode_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">params</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'>            <span class="p">(</span><span class="s">&#39;cpaint_function&#39;</span><span class="p">,</span> <span class="s">&#39;BuildBarcode&#39;</span><span class="p">),</span>
+</span><span class='line'>            <span class="p">(</span><span class="s">&#39;cpaint_argument[]&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">barcode</span><span class="p">),</span>
+</span><span class='line'>            <span class="p">(</span><span class="s">&#39;cpaint_argument[]&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span class='line'>            <span class="p">(</span><span class="s">&#39;cpaint_argument[]&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+</span><span class='line'>            <span class="p">(</span><span class="s">&#39;cpaint_response_type&#39;</span><span class="p">,</span> <span class="s">&#39;TEXT&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">BARCODE_GENERATE_SITE</span> <span class="o">=</span> <span class="s">&#39;http://www.barcoding.com&#39;</span>
+</span><span class='line'>        <span class="n">BARCODE_GENERATE_URL</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">/upc/buildbarcode.asp&#39;</span> <span class="o">%</span> <span class="n">BARCODE_GENERATE_SITE</span>
+</span><span class='line'>        <span class="n">url</span> <span class="o">=</span> <span class="n">BARCODE_GENERATE_URL</span> <span class="o">+</span> <span class="s">&quot;?&quot;</span> <span class="o">+</span> <span class="s">&quot;&amp;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">image</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_image_from_url</span><span class="p">(</span><span class="n">BARCODE_GENERATE_SITE</span> <span class="o">+</span> <span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BARCODE_IMAGE_SIZE</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">ANTIALIAS</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BACK_COVER_IMAGE_PATH</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">image</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">barcode_image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BARCODE_IMAGE_POSITION</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">image</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Để sinh ra barcode, tôi connect tới một webservice và lấy dữ liệu về. Hàm <code>utils.get_image_from_url</code> trả về Image object từ content của một URL.</p>
+
+<p>decorator <code>@lazy</code> biến một method của class thành property của class đó, và cached lại result, do đó nếu bạn gọi tới property lần thứ hai, bạn sẽ sự dụng lại giá trị từ trong cached</p>
+
+<p>Đây là code test cho class trên</p>
+
+<figure class='code'><figcaption><span>test_back_cover_image.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">hashlib</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">TestBackCoverImage</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">test_generate_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">generator</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">(</span><span class="s">&#39;124124&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">image</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'>        <span class="n">checksum</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&#39;efeae3cb498bbd57325991c2ac5346ad&#39;</span><span class="p">,</span> <span class="n">checksum</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoạn code trên generate BackCoverImage với một barcode xác định trước, và so sánh check sum của image được sinh ra, với image mà tôi đã sinh ra từ trước</p>
+
+<p>Tuy nhiên, có vấn đề ở đây. Đó là mỗi lần tôi chạy code test, tôi sẽ phải connect tới service của <code>http://www.barcoding.com</code>. Tức là tốc độ của code test sẽ bị ảnh hưởng bởi network, hơn nữa hàm <code>run()</code> của class BackCoverImage gọi tới <code>barcode_image</code>, nếu chúng ta test như trên, thì code test không phải là một unit test, mà là một integration test. Để giải quyết vấn đề này, chúng ta sử dụng thư viện <code>mock</code></p>
+
+<figure class='code'><figcaption><span>test_back_cover_image.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">mock</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">PropertyMock</span><span class="p">(</span><span class="n">mock</span><span class="o">.</span><span class="n">Mock</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">self</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">TestBackCoverImage</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">test_generate_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">mock_barcode</span> <span class="o">=</span> <span class="n">PropertyMock</span><span class="p">()</span>
+</span><span class='line'>        <span class="n">barcode_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;StoryTree/assets/images/barcode_image.png&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">mock_barcode</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">barcode_image</span>
+</span><span class='line'>        <span class="k">with</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">,</span> <span class="s">&#39;barcode_image&#39;</span><span class="p">,</span> <span class="n">mock_barcode</span><span class="p">):</span>
+</span><span class='line'>            <span class="n">generator</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">(</span><span class="s">&#39;storytree_124124&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">image</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'>            <span class="n">checksum</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&#39;efeae3cb498bbd57325991c2ac5346ad&#39;</span><span class="p">,</span> <span class="n">checksum</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Tôi đã mock thuộc tính barcode_image của class BackCoverImage với <code>PropertyMock</code>.
+Tốc độ của test được cải thiện đáng kể, từ 3-4s khi test không có mock, xuống &lt; 0.3s</p>
+
+<p>Xét tiếp ví dụ tiếp theo, tôi có một class Order, mỗi khi muốn order, tôi cần
+sinh ra một pdf file cho class Order. Pdf file này cần có một page được sinh ra từ class <code>BackCoverImage</code></p>
+
+<figure class='code'><figcaption><span>order.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Order</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">create_pdf_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">back_image</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'>        <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Để test hàm <code>create_pdf_file</code>, chúng ta sẽ mock <code>BackCoverImage.run</code> với một Image
+và kiểm tra xem hàm đó có được gọi hay không?</p>
+
+<figure class='code'><figcaption><span>test_order.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">mock</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">order</span> <span class="kn">import</span> <span class="n">Order</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">TestBackCoverImage</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">test_generate_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;StoryTree/assets/images/barcode_image.png&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">mock_backcover</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">with</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">,</span> <span class="s">&#39;run&#39;</span><span class="p">,</span> <span class="n">mock_backcover</span><span class="p">):</span>
+</span><span class='line'>            <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">212</span><span class="p">)</span>
+</span><span class='line'>            <span class="n">order</span><span class="o">.</span><span class="n">create_pdf_file</span><span class="p">()</span>
+</span><span class='line'>            <span class="n">mock_backcover</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Kết luận</h1>
+
+<p>Bằng việc có một bộ test để đảm bảo hệ thống đang hoạt động đúng, bạn giúp các
+lập trình viên khác trong đội của bạn, hay chính bản thân bạn (sau một thời gian)
+tự tin khi viết thêm/thay đổi code, mà không sợ ảnh hướng tới logic của những
+chức năng khác. Điều này đặc biệt hữu ích khi bạn muốn refactor code.</p>
+
+<p>Tuy nhiên để làm điều đó, bộ test của bạn cần chạy trong một thời gian ngắn.
+Nếu bộ test của bọn tốn vài phút mới thực hiện xong, thì thật khó để yêu cầu các
+developer khác chạy nó mỗi lần họ commit code.</p>
+
+<p>Bằng cách sử dụng mock, bạn có thể isolate các unittest, đảm bảo mỗi một đoạn code
+chỉ cần test duy nhất một lần, qua đó tăng tốc độ của unittest lên rất nhiều.</p>
+
+		
+		
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-07T16:53:00+09:00" data-updated="true" itemprop="datePublished">May 7<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/database/'>database,</a>, <a class='category' href='/blog/categories/engine/'>engine</a>, <a class='category' href='/blog/categories/mysql/'>mysql,</a>, <a class='category' href='/blog/categories/storage/'>storage</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/05/07/storageenginemysql/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/05/07/storageenginemysql/" itemprop="url">Giới Thiệu Một Số Storage Engine Của Mysql</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h1>Giới thiệu</h1>
+
+<p>MySQL là một trong những hệ thống cơ sở dữ liệu quan hệ phổ biến số một thế giới, được sử dụng bởi hầu hết các website lớn. Do vậy, việc nắm vững MySQL là yêu cầu không thể thiếu đối với một webmaster.</p>
+
+<p>Kiến trúc logic của MySQL nhìn tổng quan có thể được mô tả như hình dưới đây</p>
+
+<p><img src="/images/logical_mysql_architecture.jpeg"></p>
+
+<p>Ta có thể thấy MySQL có các component cơ bản như ở dưới đây</p>
+
+<ul>
+<li>Connection/thread handling</li>
+<li>Query cache</li>
+<li>Parser</li>
+<li>Optimizer</li>
+<li>Storage engine</li>
+</ul>
+
+
+<p>Việc nắm rõ từng chức năng và nhiệm vụ của từng thành phần là điều không thể thiếu trong việc sử dụng MySQL một cách hiệu quả. Bài viết sẽ tập trung giới thiệu về thành phần dưới cùng trong mô hình trên: Storage engine (Máy lưu trữ)</p>
+
+<h1>Storage Engine (Máy lưu trữ)</h1>
+
+<p>Storage Engine thực chất là cách MySQL lưu trữ dữ liệu trên đĩa cứng. MySQL lưu mỗi database như là một thư mục con nằm dưới thư mục data. Khi một table được tạo ra, MySQL sẽ lưu định nghĩa bảng ở file đuôi .frm và tên trùng với tên của bảng được tạo. Việc quản lý định nghĩa bảng là nhiệm vụ của MySQL server, dù rằng mỗi storage engine sẽ lưu trữ và đánh chỉ mục (index) dữ liệu khác nhau.</p>
+
+<p>Ví dụ: mình chỉ định &#8211;datadir là /usr/local/mysql/data và định nghĩa bảng users trong database tên là test như sau</p>
+
+<div>
+  <pre><code class='bash'>create table users (
+    id int not null auto_increment, 
+    name varchar(30), 
+    password varchar(20), 
+    primary key(id)
+);</code></pre>
+</div>
+
+
+<p>thì trong thư mục /usr/local/mysql/data sẽ có thư mục con là test, và dưới test sẽ có các file</p>
+
+<div>
+  <pre><code class='bash'>-rw-rw----  1 _mysql  wheel   8624  5  7 17:35 users.frm
+-rw-rw----  1 _mysql  wheel  98304  5  7 17:35 users.ibd</code></pre>
+</div>
+
+
+<p>Để xem loại storage engine của bảng hiện tại, bạn có thể dùng câu lệnh <em>SHOW DATABASE STATUS</em></p>
+
+<div>
+  <pre><code class='bash'>mysql&gt; show table status like 'users' \G
+*************************** 1. row ***************************
+           Name: users
+         Engine: InnoDB
+        Version: 10
+     Row_format: Compact
+           Rows: 2
+ Avg_row_length: 8192
+    Data_length: 16384
+Max_data_length: 0
+   Index_length: 0
+      Data_free: 0
+ Auto_increment: 3
+    Create_time: 2013-05-07 17:35:09
+    Update_time: NULL
+     Check_time: NULL
+      Collation: latin1_swedish_ci
+       Checksum: NULL
+ Create_options:
+        Comment:
+1 row in set (0.01 sec)</code></pre>
+</div>
+
+
+<p>Cụ thể trong trường hợp này:</p>
+
+<pre><code>storage engine          : innodb
+loại row                : compact
+Số lượng row dữ liệu    : 2
+giá trị auto increment tiếp theo: 3
+...
+</code></pre>
+
+<h2>Tổng quan các engine</h2>
+
+<h3>1. MyISAM engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>full-text indexing</li>
+<li>compression.</li>
+<li>spatial functions (GIS)</li>
+<li>Không hỗ trợ transactions</li>
+<li>Không hỗ trợ row-level lock.</li>
+</ul>
+
+
+<h5>Lưu trữ</h5>
+
+<p>MyISAM lưu mỗi bảng dữ liệu trên 2 file: .MYD cho dữ liệu và .MYI cho chỉ mục. Row có 2 loại: dynamic và static (tuỳ thuộc bạn có dữ liệu thay đổi độ dài hay không). Số lượng row tối đa có thể lưu trữ bị giới hạn bởi hệ điều hành, dung lượng đĩa cứng. MyISAM mặc định sử dụng con trỏ độ dài 6 bytes để trỏ tới bản ghi dữ liệu, do vậy giới hạn kích thước dữ liệu xuống 256TB.</p>
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>MyISAM lock toàn bộ table. User (MySQL server) chiếm shared-lock khi đọc và chiếm exclusive-lock khi ghi. Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!</li>
+<li>MyISAM có khả năng tự sửa chữa và phục hồi dữ liệu sau khi hệ thống crashed.</li>
+<li>Dùng command check table / repair table để kiểm tra lỗi và phục hồi sau khi bị lỗi.</li>
+<li>MyISAM có thể đánh chỉ mục full-text, hỗ trợ tìm kiếm full-text.</li>
+<li>MyISAM không ghi dữ liệu ngay vào ổ đĩa cứng, mà ghi vào 1 buffer trên memory (và chỉ ghi vào đĩa cứng sau 1 khoảng thời gian), do đó tăng tốc độ ghi. Tuy vậy, sau khi server crash, ta cần phải phục hồi dữ liệu bị hư hỏng bằng myisamchk.</li>
+<li>MyISAM hỗ trợ nén dữ liệu, hỗ trợ tăng tốc độ đọc dữ liệu. Mặc dù vậy dữ liệu sau khi nén không thể cập nhật được.</li>
+</ul>
+
+
+<h3>2. InnoDB engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Là engine phức tạp nhất trong các engine của MySQL</li>
+<li>Hỗ trợ transactions</li>
+<li>Hỗ trợ phục hồi, sửa chữa tốt</li>
+</ul>
+
+
+<h5>Lưu trữ</h5>
+
+<p>InnoDB lưu dữ liệu trên 1 file (thuật ngữ gọi là tablespace).</p>
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>InnoDB hỗ trợ MVCC (Multiversion Concurrency Control) để cải thiện việc truy cập đồng thời và hỗ trợ chiến thuật next-key locking.</li>
+<li>InnoDB được xây dựng dựa trên clustered index, do đó việc tìm kiếm theo primary key có hiệu năng rất cao. InnoDB không hỗ trợ sắp xếp index do vậy việc thay đổi cấu trúc bảng sẽ dẫn tới toàn bộ dữ liệu phải được đánh chỉ mục từ đầu (CHẬM với những bảng lớn).</li>
+</ul>
+
+
+<h3>3. Memory engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Còn được gọi là HEAP tables.</li>
+</ul>
+
+
+<h5>Lưu trữ</h5>
+
+<p>Tất cả dữ liệu đều nằm trên memory.</p>
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>Sau khi server restart, cấu trúc bảng được bảo toàn, dữ liệu bị mất hết.</li>
+<li>Memory engine sử dụng HASH index nên rất nhanh cho query lookup.</li>
+<li>Memory engine dùng table-level locking do vậy tính concurrency không cao.</li>
+</ul>
+
+
+<h3>4. Archive engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Chỉ hỗ trợ Insert và Select.</li>
+<li>Không đánh chỉ mục</li>
+<li>Dữ liệu được buffer và nén bằng zlib nên tốn ít I/O, tốc độ ghi do đó cao.</li>
+</ul>
+
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>Tốc độ ghi cao, phù hợp cho ứng dụng log.</li>
+</ul>
+
+
+<h3>5. CSV engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Coi file CSV như là 1 table.</li>
+<li>Không hỗ trợ đánh chỉ mục</li>
+</ul>
+
+
+<h5>Tính năng:</h5>
+
+<ul>
+<li>Nếu bài toán là trích xuất thông tin từ file CSV và ghi vào cơ sở dữ liệu, đồng thời cần kết quả CSV ngay từ DB, engine này có vẻ thích hợp.</li>
+</ul>
+
+
+<h3>6. Falcon engine</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Được thiết kế cho phần cứng hiện đại: server 64 bit, bộ nhớ &#8220;thênh thang&#8221;</li>
+<li>Vẫn còn khá mới, chưa có nhiều usercase</li>
+</ul>
+
+
+<h3>7. Maria engine (Cơ sở dữ liệu liên quan: <a href="https://mariadb.org/">MariaDB</a>)</h3>
+
+<h5>Đặc điểm</h5>
+
+<ul>
+<li>Được thiết kế bởi những chiến tướng dày dạn kinh nghiêm của MySQL, với mục đích thay thế MyISAM</li>
+<li>Hỗ trợ transactions theo lựa chọn</li>
+<li>Khôi phục lỗi</li>
+<li>Row-level locking và MVCC</li>
+<li>Hỗ trợ BLOB tốt hơn.</li>
+</ul>
+
+
+<h2>Tiêu chí lựa chọn engine</h2>
+
+<ul>
+<li>Transactions: Nếu ứng dụng yêu cầu transactions, InnoDB là lựa chọn duy nhất. Nếu không yêu cầu transactions, MyISAM là lựa chọn tốt.</li>
+<li>Concurrency: Nếu yêu cầu chịu tải cao và không cần thiết transactions, MyISAM là lựa chọn số 1.</li>
+<li>Sao lưu: Các engine đều phần nào hỗ trợ sao lưu. Ngoài ra ta cần hỗ trợ sao lưu trên cả quan điểm thiết kế hệ thống. Ví dụ: bạn thiết kế database server gồm master và slave, master yêu cần transaction nên dùng innodb, slave cần sao lưu và đọc nên có thể dùng MyISAM. Cơ chế đồng bộ master-slave sẽ giúp bạn quản lý sự khác nhau giữa các engine nhưng đảm bảo tính sao lưu. Tiêu chí này có trọng số nhỏ.</li>
+<li>Phục hồi sau crash: MyISAM có khả năng phục hồi sau crash kém hơn InnoDB.</li>
+<li>Tính năng theo yêu cầu hệ thống: Nếu yêu cầu là logging, MyISAM hoặc Archive là lựa chọn hợp lý. Nếu cần lưu trực tiếp CSV, CSV engine là lựa chọn đáng cân nhắc. Nếu ứng dụng không thay đổi dữ liệu mấy (ví dụ cơ sở dữ liệu sách), MyISAM và tính năng nén là lựa chọn phù hợp.</li>
+</ul>
+
+
+<h1>Kết luận</h1>
+
+<p>Bài viết này đã giới thiệu tổng quan về storage engine, một thành phần quan trọng của hệ thống cơ sở dữ liệu. Một số engine tiêu biểu và tính năng đặc điểm cũng được đưa ra. Tiêu chí chọn lựa mỗi loại engine cũng được giới thiệu.</p>
+
+<p>Hy vọng qua bài viết, bạn có cái nhìn tổng quan về database storate engine nói chung, và MySQL storage engine nói riêng, đồng thời hiểu được tầm quan trọng của việc chọn lựa storage engine.</p>
+
+<h1>Tham khảo</h1>
+
+<ol>
+<li><a href="http://shop.oreilly.com/product/9780596101718.do">High performance MySQL, 2ed</a></li>
+<li><a href="http://dev.mysql.com/doc/refman/5.7/en/storage-engines.html">Storage Engines</a></li>
+<li><a href="http://www.linux.org/article/view/an-introduction-to-mysql-storage-engines">Storage Engine Introduction</a></li>
+</ol>
+
+
+		
+		
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-06T16:44:00+09:00" data-updated="true" itemprop="datePublished">May 6<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming/'>programming</a>, <a class='category' href='/blog/categories/python/'>python</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/05/06/memoization-and-decorator/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/05/06/memoization-and-decorator/" itemprop="url">Memoization and Decorator</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h2>What is memoization</h2>
+
+<p>Trước hết chúng ta làm quen với khái niệm memoization. Ngôn ngữ ở đây là Python, bài toán là viết hàm tính giai thừa (n!)</p>
+
+<p>Hàm giai thừa thông thường sẽ được viết đệ quy như sau:</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">fac</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fac</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Có gì không ổn ở đoạn code này ? Cách giải quyết hoàn toàn không có vấn đề, nhưng nếu tinh ý bạn sẽ nhận thấy có 1 khối lượng tính toán bị lặp lại khá nhiều khi chạy nhiều hàm fac(n). VD, nếu tính fac(3), fac(4) và fac(10) lần lượt sẽ đòi hỏi 3 flow tính toán riêng rẽ mà không có reuse: fac(3) sẽ tính đệ quy từ fac(2) xuống fac(1), fac(4) tính đệ quy từ fac(3) xuống fac(1) và fac(10) tính đệ quy từ fac(9) xuống fac(1) !</p>
+
+<p>Áp dụng memoization dưới dạng dict, ta có thể viết hàm fac_m như sau:</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">memo</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">fac_m</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">n</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">memo</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">memo</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fac_m</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">memo</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đây memo đóng vài trò như 1 cache. fac(3) sẽ generate ra 3 record in cache, và fac(4) sẽ hit cache khi chạy đệ quy được 1 lần. Tương tự fac(10) sẽ hit cache khi đệ quy xuống đến fac(4)</p>
+
+<p>Như vậy memoization đơn giản chỉ là tìm cách nhớ những phần tử để giảm khối lượng tính toán</p>
+
+<p>Memoization có thể implement dưới dạng function&#8230;</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">memo</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">arg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">memo</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">memo</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">memo</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">fac_m_f</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">memoize</span><span class="p">(</span><span class="n">fac</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&#8230;hoặc class</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Memoize</span><span class="p">:</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">memo</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">memo</span><span class="p">:</span>
+</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">memo</span><span class="p">[</span><span class="n">args</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">memo</span><span class="p">[</span><span class="n">args</span><span class="p">]</span>
+</span><span class='line'><span class="n">fac</span><span class="o">=</span> <span class="n">Memoize</span><span class="p">(</span><span class="n">fac</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Thêm 1 step nữa, thay vì &#8220;fac=Memoize(fac)&#8221; như ở trên, bạn có thể viết hàm mới theo kiểu decorator</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="nd">@Memoize</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">fac_m_d</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">n</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fac_m_d</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Decorator ở đây là từ khoá &#8220;@Memoize&#8221; trước định nghĩa của hàm fac_m_d</p>
+
+<p>Vậy decorator trong Python là gì và cách dùng ra sao ?</p>
+
+<h2>Python decorator</h2>
+
+<p>Trong số các design pattern, có 1 design pattern gọi là &#8220;decorator design pattern&#8221;. Python decorator chỉ là 1 cách implement của decorator design pattern. 2 khái niệm này không hoàn toàn giống nhau. Một điểm nữa cần nhớ là, memoization ở trên chỉ là 1 trong các ứng dụng của python decorator, python decorator còn có nhiều ứng dựng khác.</p>
+
+<p>Mọi function trong python đều là object, cho phép ta có thể assign funtion cho variable hoặc defince function trong chính 1 function khác. Dựa vào đó, decorator có thể dưới dạng decorator function như ví dụ dưới đây:</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">gotham</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">inside_gotham</span><span class="p">():</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;Gotham needs Batman&quot;</span>
+</span><span class='line'>        <span class="n">f</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">inside_gotham</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@gotham</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">batman</span><span class="p">():</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Batman Here! Gotham is saved! &quot;</span>
+</span><span class='line'><span class="n">batman</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoạn code sẽ cho output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Gotham needs Batman
+</span><span class='line'>Batman Here! Gotham is saved!</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cơ chế của decorator có thể hiểu đơn giản là, khi compiler đọc đến đoạn code đefine function với decorator, compiler sẽ compile function 1 cách bình thường và pass function object kết quả thẳng cho decorator(dưới dạng function hoặc class). Decorator(function hoăc class) lấy agrument là 1 function object và return kết quả là 1 function object khác.</p>
+
+<p>Function object kết quả nói trên gồm function object ban đầu đã được gói lại và &#8220;thêm thắt&#8221;, và từ nay về sau sẽ được gọi thay cho function object ban đầu mỗi khi có lệnh call.</p>
+
+<p>Ngoài memoization bên trên, bạn có thể dễ thấy rất nhiều ứng dụng của decorator trong các task liên quan đến wrap VD như:</p>
+
+<p>Timing, benchmark tính toán thời gian run code</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">time_cal</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</span><span class='line'>        <span class="n">res</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">print</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">res</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">wrapper</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@time_cal</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">fac</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fac</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>hay trong web application, nếu bạn đã dùng Flaskr, bạn có thể thấy đoạn code sau</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="nd">@mod.route</span><span class="p">(</span><span class="s">&#39;/me/&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="nd">@requires_login</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đây trang web của bạn ở sublink &#8220;&#8230;/me&#8221; sẽ được đảm bảo chỉ viewable với user đã login. Decorator &#8220;@requires_login&#8221; có thể viết ở 1 file độc lập và mọi hàm cần tính đảm bảo như trên chỉ cần thêm &#8220;@requires_login&#8221; đằng trước.</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">requires_login</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+</span><span class='line'>    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">decorated_function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">user</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">flash</span><span class="p">(</span><span class="s">u&#39;You need to be signed in for this page.&#39;</span><span class="p">)</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;users.login&#39;</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">decorated_function</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Kết luận</h2>
+
+<ul>
+<li>Memoization: pattern dùng để nhớ các tính toán nhằm làm giảm workload khi gặp các bài toán đệ quy</li>
+<li>Decorator pattern: decorator design pattern</li>
+<li>Python Decorator: Python tools để implement decorator pattern</li>
+</ul>
+
+
+		
+		
+	</div>
+
+</article>
+
+</div>
+<nav id="pagenavi">
+    
+        <a href="/" class="prev">Prev</a>
+    
+    
+        <a href="/blog/page/3/" class="next">Next</a>
+    
+    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
+</nav></div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2013
+
+    kỹ thuật máy tính
+
+
+</footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'ktmt';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>

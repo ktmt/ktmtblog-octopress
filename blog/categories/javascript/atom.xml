@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: javascript | Blog kỹ thuật máy tính]]></title>
-  <link href="http://ktmt.github.com/ktmtblog-octopress/blog/categories/javascript/atom.xml" rel="self"/>
-  <link href="http://ktmt.github.com/ktmtblog-octopress/"/>
-  <updated>2013-04-30T18:38:36+09:00</updated>
-  <id>http://ktmt.github.com/ktmtblog-octopress/</id>
+  <link href="http://ktmt.github.com/blog/categories/javascript/atom.xml" rel="self"/>
+  <link href="http://ktmt.github.com/"/>
+  <updated>2013-05-13T07:51:45+09:00</updated>
+  <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
     
@@ -14,18 +14,244 @@
 
   
   <entry>
+    <title type="html"><![CDATA[closure và scope trong javascript]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/12/closure-va-scope-cua-javascript/"/>
+    <updated>2013-05-12T00:15:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/12/closure-va-scope-cua-javascript</id>
+    <content type="html"><![CDATA[<h1>Scope và closure là gì?</h1>
+
+<p>Là một programmer, chắc hẳn ít nhất bạn phải biết scope là gì :D, nhưng thôi mình cứ quote lại từ wikipedia đề phòng có người quên:</p>
+
+<blockquote><p>[Scope refers to where variables and functions are accessible, and in what context it is being executed]
+ => Dịch ra đại thể là scope là nơi mà <em>biến</em> hoặc <em>hàm</em> có thể truy cập vào và sử dụng/ tham chiếu được qua tên trực tiếp. Và ở ngoài scope đó thì <em>biến</em> hoặc <em>hàm</em> đó sẽ không thể <strong>nhìn</strong> được một cách trực tiếp nữa. (hơi khó hình dung nhỉ). Để phân loại scope thì có rất nhiều cách tùy thuộc vào từng góc nhìn , nhưng mình sẽ không đi sâu vào vấn đề này. Mỗi ngôn ngữ lại có đặc trưng về scope khác nhau. Trong bài viết này chúng ta sẽ chỉ tập trung vào javascript.</p></blockquote>
+
+<p> Khái niệm tiếp theo là về closure, khái niệm này thì không phải ai cũng biết, vì không phải ai cũng cần đến và từng động đến. Một số ngôn ngữ mainstream như C++ , java cũng không hỗ trợ closure, càng làm ít người để ý đến nó (java 8 expected sẽ cho closure vào). Hãy xem wiki nói về closure thế nào:</p>
+
+<blockquote><p>[a closure (also lexical closure or function closure) is a function or reference to a function together with a <strong>referencing environment</strong>]
+ => Dịch ra đại thể là closure là một hàm hoặc một tham chiếu đi kèm với cái môi trường mà nó tham chiếu đến (khá là xoắn). Cái cần nhấn mạnh ở đây là cái <strong>referencing environment</strong> mà các bạn sẽ hiểu hơn ở các ví dụ dưới đây.</p></blockquote>
+
+<h1>Scope và closure trong javascript</h1>
+
+<p>Javascript là một ngôn ngữ mainstream hiện nay và ngày càng trở nên phổ biến. Người biết về js thì nhiều, nhưng người hiểu rõ một số corner của js thì chắc không nhiều đến thế :D. Một trong các corner đấy chính là <strong>scope và closure</strong>. Js là một ngôn ngữ khá đặc biệt, đặc biệt ở chỗ js mang hơi hướng của lập trình hàm (functional programming), khi mà <strong>function ở js cũng là một first-class object</strong>, tức là function có thể được construct new tại run-time, được lưu ở trong data structure, được parse qua parameter, được return như một value. Chính vì đặc điểm đấy khiến cho scope và closure của js không giống như các ngôn ngữ phổ biến khác.</p>
+
+<p>Đầu tiên chúng ta sẽ nói về scope</p>
+
+<h2>1. <strong><em><u>Scope</u></em></strong></h2>
+
+<p>Như chúng ta vừa nói ở trên, scope là khái niệm qui định "visibility" và "lifetime" của variable. Thông thường, ví dụ như C thì scope sẽ là <strong>block scope</strong>, tức là những biến <strong>tạo ra</strong> trong block sẽ chỉ được nhìn thấy trong block đấy thôi, và khi ra ngoài block đấy thì những variable nằm trong block sẽ được giải phóng ( như trong C là các biến tạo ra trong stack sẽ được free khi ra khỏi block), và không nhìn thấy được nữa.</p>
+
+<p>Tuy nhiên rất buồn là javascript của chúng ta lại không có cái scope dễ hiểu đến thế, mà nó lại là <strong>function block</strong>.Function block ở đây là gì: tức là những gì bạn tạo ra trong một function sẽ available ở trong function đó. Vì javascript cũng là block syntax, nên sẽ hơi dễ confusing, chúng ta sẽ dùng ví dụ dễ hiểu này:
+{% codeblock function.js %}
+function scope() {
+  if (true) {</p>
+
+<pre><code>var test = 1;
+</code></pre>
+
+<p>  }
+  alert(test); #=> 1
+}
+scope();
+{% endcodeblock %}</p>
+
+<p>Nói đến đây chắc chắn có bạn sẽ nghĩ đến điều gì xảy ra khi chúng ta có <strong>nested function</strong>. Let's try
+{% codeblock function.js %}
+function outer() {
+  var outer_var = 2;
+  function inner() {</p>
+
+<pre><code>alert(outer_var);
+</code></pre>
+
+<p>  }
+  inner();
+}
+outer(); #=> 2
+{% endcodeblock %}
+Từ ví dụ trên ta có thể dễ dàng thấy là inner function có thể access được outer function variable. Từ ví dụ này chúng ta có thể thấy là <strong>inner function có thể inherit biến của outer function</strong>, hay nói cách khác, inner function <strong>chứa(contain)</strong> scope của outer function. Chính nhờ điều đặc biệt này mà chúng ta có cái gọi là <strong>Closure</strong> mà mình sắp sửa nói đến ngay dưới đây. Một điều chú ý là đối với nhiều ngôn ngữ thì các bạn hay được khuyên là declare biến muộn nhất có thể để tránh overhead, tuy nhiên với javascript là ngôn ngữ với <strong>function scope</strong> thì best practice lại là <strong>declare biến sớm nhất có thể </strong> để tránh nguy cơ xảy ra một số lỗi không mong muốn.</p>
+
+<h2>2. <strong><em><u>Closure</u></em></strong></h2>
+
+<p> Quote lại cái định nghĩa cho đỡ quên:</p>
+
+<blockquote><p>A closure is an expression (typically a function) that can have free variables <strong>together with an environment that binds those variables (that "closes" the expression).</strong></p></blockquote>
+
+<p>Chắc có bạn sẽ thắc mắc, <strong>environment</strong> ở đây là gì. Để hình dung một cách dễ hiểu, thì environment ở đây trong phần lớn các trường hợp chính là cái outer function mà chung ta vừa thử ở ví dụ về scope ở trên. Một đặc điểm rất hay của closure là <strong>closure sẽ keep reference đến các biến nằm bên trong nó, hoặc được reference bên trong nó</strong>. Điều này dẫn đến việc gì? Chắc sẽ có bạn nghĩ đến một case rất đặc biệt là khi bạn muốn context của một function được giữ lại sau khi hàm đó đã được execute xong :D. Hãy bắt đầu bằng một ví dụ:</p>
+
+<p>{% codeblock closure.js %}
+function outside(x) {
+  function inside(y) {</p>
+
+<pre><code>return x + y;
+</code></pre>
+
+<p>  }
+  return inside;
+}
+fn_inside = outside(3);
+result = fn_inside(5); // #=> 8</p>
+
+<p>result1 = outside(3)(5); // #=> 8
+{% endcodeblock %}</p>
+
+<p>Bạn có nhận thấy điều gì đặc biệt ở trên? Điều đặc biệt nằm ở hàm <strong>fn_inside</strong> : hàm fn_inside được tạo ra bởi kết quả return của hàm outside() với parameter là 3, và bạn có thể nhận thấy hàm fn_inside vẫn giữ tham chiếu đến cái parameter 3 đó <strong>ngay cả khi hàm outside() đã được execute xong</strong>. Chắc các bạn sẽ thấy mâu thuẫn với cái lý thuyết về function scope chúng ta đã nói đến ở trên, khi mà <em>mọi thứ được tạo ra trong function của js chỉ visible ở trong đó, và sẽ được free hoặc không nhìn thấy khi ra ngoài function đó</em>.
+Thực tế là không hề mâu thuẫn chút nào cả, chính vì cái gọi là closure của js :D. Nói một cách cụ thể hơn: <strong>fn_inside khi được tạo ra đã form một cái closure (bao đóng), trong cái bao đó, giá trị 3 được truyền vào, và cái bao của fn_inside sẽ vẫn giữ cái giá trị 3 đó cho dù outside() function có execute xong</strong>. Các bạn cứ hình dung trực quan closure như một cái bao chứa rất nhiều thứ trong nó là sẽ thấy dễ hiểu hơn:</p>
+
+<p>{% img /images/closurejs/closure.png %}</p>
+
+<p>Như vậy chúng ta có thể tóm gọn lại đoạn code ở trên như sau:</p>
+
+<ol>
+<li>Khi outside() được gọi, outside trả về một function</li>
+<li>function được outside trả lại (fn_inside) đó đóng lại cái context hiện tại và cái context đó <strong>chứa biến x tại thời điểm outside() được gọi</strong></li>
+<li>Khi fn_inside được gọi, nó vẫn nhớ x có giá trị là 3</li>
+<li>Khi invoke fn_inside(5) thì nó sẽ lấy giá trị biến y=5 + giá trị biến x=3 và kết quả sẽ là 8</li>
+</ol>
+
+
+<p>Như vậy chúng ta có thể rút ra một đặc điểm của closure là:</p>
+
+<blockquote><p> <strong><em>A closure must preserve the arguments and variables in all scopes it references</em></strong></p></blockquote>
+
+<ul>
+<li><p>Một câu hỏi được đặt ra là: Khi nào cái biến x được giải phóng?? Câu trả lời là khi mà cái context mà biến x được reference đến ( ở đây là fn_inside ) không còn accessible được nữa ( refer đến scope của js, chúng ta có thể hiểu là khi mà function chứa fn_inside được execute xong và không còn bất kì tham chiếu nào đến fn_inside nữa ).</p></li>
+<li><p>Một câu hỏi khác được đặt ra là với multi-nested function thì điều gì sẽ xảy ra?? Let's give a try:
+{% codeblock multinested.js %}
+function A(x) {
+function B(y) {
+  function C(z) {</p>
+
+<pre><code>alert(x + y + z);
+</code></pre>
+
+<p>  }
+  C(3);
+}
+B(2);
+}
+A(1); #=> 6
+{% endcodeblock %}</p></li>
+</ul>
+
+
+<p>Ở đoạn code trên thì điều gì đã xảy ra?</p>
+
+<ol>
+<li>B tạo ra một cái closure chữa context của A, do đó B có thể access vào A's variable, ở đây là x</li>
+<li>C tạo ra một cái closure chứa context của B</li>
+<li>Vì B chứa context của A nên C cũng sẽ chứa context của A, tức là C cũng access được vào biến x của A, và cả biến y của B.</li>
+</ol>
+
+
+<p>Do đó kết quả sẽ là 1+2+3=6, khá là obvious nhỉ. Đoạn code ở trên giúp chúng ta có thêm một khái niệm mới gọi là <strong><em>scope chaining</em></strong>. Tại sao gọi là chaining, vì khi context được include từ outer function vào inner function, thì chúng ta sẽ hiểu một cách đơn giản là context của inner function và context của outer function được nối với nhau, một cách có chiều (<strong>directed</strong>). Và độ ưu tiên khi access biến là từ trong ra ngoài.</p>
+
+<p>{% img /images/closurejs/closure2.png %}</p>
+
+<p>Do cái scope chaining là directed nên ở phía ngược lại, A lại không thể access được C, vì C nằm trong context của B, và chỉ visible <strong>inside B</strong>, hay nói cách khác là C sẽ là private của B, và không nhìn được từ A.</p>
+
+<ul>
+<li>Lại có một bạn nghĩ là khi outer function có biến tên là x, mà ta cũng truyền 1 biến tên là x vào inner function, tức là khi có name-conflict thì chuyện gì sẽ xảy ra. Let's take an example
+{% codeblock nameconflict.js %}
+function outside() {
+var x = 10;
+function inside(x) {
+  return x;
+}
+return inside;
+}
+result = outside()(20); #=> 20
+{% endcodeblock %}</li>
+</ul>
+
+
+<p>Bạn có thể thấy kết quả trả về biến x được trực tiếp truyền vào inner function thay vì biến x của outer function. Sử dụng khái niệm scope chaining ở trên thì chúng ta có thể thấy độ ưu tiên của context inside là cao hon context outside khi intepreter tìm giá trị của x, nên giá trị của x ở inside (ở đây là 20) sẽ được sử dụng.</p>
+
+<p>Hy vọng là với 3 ví dụ trên các bạn đã có cái nhìn rõ ràng hơn về closure.</p>
+
+<h2>3. <strong><em><u>Closure pitfalls</u></em></strong></h2>
+
+<p>Closure là một khái niệm khá dễ nhầm lẫn và khó nắm rõ với những người người ít quan tâm đến javascript. Một trong những ví dụ hay được dùng để minh họa cái sự dễ nhầm này được gọi là <strong>The Infamous Loop Problem</strong>. Ví dụ này được minh họa bằng đoạn code dưới đây:</p>
+
+<p>{% codeblock closurepitfall.js %}
+var add_the_handlers = function (nodes) {
+  var i;
+  for (i = 0; i &lt; nodes.length; i += 1) {</p>
+
+<pre><code>nodes[i].onclick = function (e) {
+  alert(i);
+};
+</code></pre>
+
+<p>  }
+};
+nodes = document.getElementById("click");
+add_the_handlers(nodes);
+{% endcodeblock %}</p>
+
+<p>Đoan code ở trên làm một việc là tìm tất cả các node có id là "click", add vào node đó một cái sự kiện là khi click vào node đó sẽ alert lên thứ tự của node đó. Giả sử bạn có một file html như sau:</p>
+
+<p>{% codeblock closurepitfall.html %}
+<li id="click">link 1 </li>
+<li id="click">link 2 </li>
+<li id="click">link 3 </li>
+<li id="click">link 4 </li>
+<li id="click">link 5 </li>
+{% endcodeblock %}</p>
+
+<p>Bạn expect là khi click vào link 1 sẽ alert 1, click vào link 2 sẽ alert ra 2.... đúng không. Tuy nhiên thực tế là <strong>bạn click vào link nào nó cũng alert ra 5 cả</strong>. Kì lạ nhỉ? Để giải thích cho hiện tượng này thì chúng ta hãy xem lại khái niệm về closure nào. Biến i được sử dụng trong anonymous function được gán cho onclick, được <strong>kế thừa từ context của add_the_handlers function</strong>. Tại thời điểm mà bạn gọi onclick, for loop đã được execute xong, và biến i <strong>của context của add_the_handlers</strong> lúc này có giá trị là 5. Do đó bạn có click vào link nào thì giá trị được alert ra cũng là 5 cả. Point của việc này chính là do bạn đang nhầm lẫn, hay chính xác là có sự khác biệt giữa <strong>scope/context của for-loop</strong> với <strong>scope/context của outer function là add_the_handlers </strong>.</p>
+
+<p>Để giải quyết vấn đề này thì bạn có thể làm như dưới đây:</p>
+
+<p>{% codeblock pitfall.js %}
+var add_the_handlers = function (nodes) {
+  var helper = function (i) {</p>
+
+<pre><code>return function (e) {
+  alert(i);
+};
+</code></pre>
+
+<p>  };
+  var i;
+  for (i = 0; i &lt; nodes.length; i += 1) {</p>
+
+<pre><code>modes[i].onclick = helper(i);
+</code></pre>
+
+<p>  }
+};
+{% endcodeblock %}</p>
+
+<p>Point của solution này chính là việc truyền được giá trị của (i) tại thời điểm hiện tại vào closure của function được bind vào onclick. Giúp cho hàm helper() luôn refer đến giá trị i đúng. Một best practice để tránh những pitfall như thế này là</p>
+
+<blockquote><p>Avoid creating functions within a loop. It can be wasteful computationally,and it can cause confusion</p></blockquote>
+
+<h1>Kết luận</h1>
+
+<p>Như vậy qua bài viết này chúng ta đã nắm được khái niệm về function scope và closure trong javascript, cũng như một số khái niệm liên quan về scope chaining, và một số best practices trong việc sử dụng closure và scope. Closure trong javascript hay sử dụng để tạo ra một cái bao mà các thứ trong đấy không được nhìn thấy bởi bên ngoài nhưng vẫn truy cập được từ bên trong, và thường được áp dụng cho một số design pattern trong js (tiêu biểu nhất là module pattern).Chi tiết hơn các bạn có thể tham khảo ở các tài liệu sau:</p>
+
+<ul>
+<li><a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742/ref=sr_1_1?ie=UTF8&amp;qid=1368334060&amp;sr=8-1&amp;keywords=javascript+the+good+part">Javascript the good part (by Douglas Crockford)</a></li>
+<li><a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm">Ecma-262 standard</a></li>
+<li>http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/</li>
+<li>https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[giới thiệu về script loader trong js]]></title>
-    <link href="http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js/"/>
+    <link href="http://ktmt.github.com/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js/"/>
     <updated>2013-04-14T00:23:00+09:00</updated>
-    <id>http://ktmt.github.com/ktmtblog-octopress/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js</id>
+    <id>http://ktmt.github.com/blog/2013/04/14/gioi-thieu-ve-script-loader-trong-js</id>
     <content type="html"><![CDATA[<h2>I.Script loader là gì và tại sao lại cần nó</h2>
 
 <p>Trong javascript, khi cần include một thư viện, hay một module từ ngoài vào, chắc hản mọi
 web developer đều nghĩ ngay đến việc include vào html:
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>include direct - include.html </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'> <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://yourhost/script.js&quot;</span> <span class="nt">&gt;&lt;/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock include direct - include.html %}
+ <script src="http://yourhost/script.js" ></script>
+{% endcodeblock %}</p>
 
 <p>Vậy include trực tiếp script tag vào html có gì không tốt?</p>
 
@@ -51,47 +277,31 @@ và insert vào dom. Việc này khác việc include script bằng html là nó
 là request đến server chứa script cần load thông qua XHR, lấy kết quả về, và eval đoạn script đó.</p>
 
 <p>Ví dụ về script loader:
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>script loader demo - loader.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">scList</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">();</span>
-</span><span class='line'>  <span class="nx">scList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://cdnjs.cloudflare.com/ajax/libs/ace/0.2.0/ace.js&#39;</span><span class="p">;</span>
-</span><span class='line'>  <span class="nx">scList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://cdnjs.cloudflare.com/ajax/libs/alloy-ui/1.0.1/aui-min.js&#39;</span><span class="p">;</span>
-</span><span class='line'>  <span class="nx">scList</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://cdnjs.cloudflare.com/ajax/libs/barman/0.2.2/barman.min.js&#39;</span><span class="p">;</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">scList</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">script</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;script&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">firstScript</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;script&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
-</span><span class='line'><span class="nx">script</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">scList</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-</span><span class='line'><span class="nx">firstScript</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">insertBefore</span><span class="p">(</span><span class="nx">script</span><span class="p">,</span> <span class="nx">firstScript</span><span class="p">);</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span> <span class="p">}</span>
-</span><span class='line'><span class="p">})()</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+{% codeblock script loader demo - loader.js %}
+(function(){
+  var scList = new Array();
+  scList[0] = 'http://cdnjs.cloudflare.com/ajax/libs/ace/0.2.0/ace.js';
+  scList[1] = 'http://cdnjs.cloudflare.com/ajax/libs/alloy-ui/1.0.1/aui-min.js';
+  scList[2] = 'http://cdnjs.cloudflare.com/ajax/libs/barman/0.2.2/barman.min.js';
+  var len = scList.length;
+  for (var i=0; i&lt;len; i++) {</p>
+
+<pre><code>var script = document.createElement('script');
+var firstScript = document.getElementsByTagName('script')[0];
+script.src = scList[i];
+firstScript.parentNode.insertBefore(script, firstScript);
+</code></pre>
+
+<p> }
+})()
+{% endcodeblock %}
 Và kết quả đạt được là:</p>
 
 <ol>
 <li><p>Load script trực tiếp vào html tag
-<img src="/images/script-loader-images/withoutloader.png" title="image" alt="images"></p></li>
+{% img /images/script-loader-images/withoutloader.png 'image' 'images' %}</p></li>
 <li><p>Load script thông qua loader
-<img src="/images/script-loader-images/withloader.png" title="image" alt="images"></p></li>
+{% img /images/script-loader-images/withloader.png 'image' 'images' %}</p></li>
 </ol>
 
 
@@ -111,10 +321,9 @@ các script/module và các dependency của chúng từ ngoài vào một cách
 
 <ul>
 <li>Interface cho hàm define()
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>define define.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">define</span><span class="p">(</span><span class="nx">id</span><span class="o">?</span><span class="p">,</span> <span class="nx">dependencies</span><span class="o">?</span><span class="p">,</span> <span class="nx">factory</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></li>
+{% codeblock define define.js %}
+define(id?, dependencies?, factory);
+{% endcodeblock %}</li>
 <li>param id: qui định id của module được load vào, [?] là do param này là optional, có thể bỏ qua</li>
 <li>param dependencies: là 1 <strong>array</strong> các module dependency của module được load vào, param này cũng là optional</li>
 <li>param factory: là đoạn script dùng để initialze cho module sẽ được load vào. factory() sẽ chỉ được execute một lần
@@ -124,28 +333,18 @@ script khác</li>
 
 
 <p>Một ví dụ đơn giản cho AMD interface:
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>amd if - amd.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">define</span><span class="p">([</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">alpha</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">return</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">verb</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nx">alpha</span><span class="p">.</span><span class="nx">verb</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="p">};</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock amd if - amd.js %}
+define(["alpha"], function (alpha) {
+  return {</p>
+
+<pre><code>verb: function(){
+  return alpha.verb() + 2;
+}
+</code></pre>
+
+<p>  };
+});
+{% endcodeblock %}</p>
 
 <ul>
 <li>Property amd cho hàm define:
@@ -153,14 +352,11 @@ Function define <strong>nên</strong> có property tên là amd. Việc này gi�
 là define, và trong property này sẽ định nghĩa là module của bạn có cho phép nhiều version trên cùng một document không
 ( khi module của bạn đã conform theo AMD, thì chắc chắn trong hàm require phải có đoạn check là đã có property
 này hay chưa  và check giá trị của nó).
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>amd - amd.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">define</span><span class="p">.</span><span class="nx">amd</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'><span class="nx">multiversion</span><span class="o">:</span> <span class="kc">true</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+{% codeblock amd - amd.js %}
+define.amd = {
+multiversion: true
+};
+{% endcodeblock %}
 Nói đến đây thì chấc sẽ có bạn thắc mắc, hoặc chưa hiểu rõ use case của cái AMD này như thế nào, nó được dùng ở đâu, ở script
 loader, ở module, hay ở dom. Câu trả lời là AMD sẽ được dùng ở script loader và ở module. Cụ thể hơn là trong module của bạn,
 nếu bạn muốn module đó được load async thông qua script loader, mà script loader đó lại load theo chuẩn AMD, thì đương nhiên
@@ -170,40 +366,26 @@ Còn script loader bản thân cũng là một module, thì tất nhiên cũng p
 
 
 <p>Một cách ngắn gọn, giả sử bạn có một module X
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>module - module.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">X</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">prop</span> <span class="o">=</span> <span class="p">{};</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nx">prop</span><span class="p">;</span><span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">})()</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+{% codeblock module - module.js %}
+X = (function() {
+  var prop = {};
+  return prop;<br/>
+})()
+{% endcodeblock %}
 Bạn muốn module đó nói với bên ngoài là: tao lã X, tao có các dependency là Y, Z, khi init tao thì mày làm thế này, thế này nhé
 thì bạn sẽ làm theo AMD api theo cách như sau:
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>module with amd module.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">X</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">prop</span> <span class="o">=</span> <span class="p">{};</span>
-</span><span class='line'>  <span class="nx">prop</span><span class="p">.</span><span class="nx">define</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">deps</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
-</span><span class='line'>  <span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="nx">callback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="c1">//do something to init here}</span>
-</span><span class='line'>  <span class="nx">prop</span><span class="p">.</span><span class="nx">define</span><span class="p">.</span><span class="nx">amd</span> <span class="o">=</span> <span class="p">{</span><span class="nx">multiversion</span><span class="o">:</span> <span class="kc">true</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span>  <span class="k">return</span> <span class="nx">prop</span><span class="p">;</span><span class="o">&lt;</span><span class="nx">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">})()</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock module with amd module.js %}
+X = (function() {
+  var prop = {};
+  prop.define = function(name, deps, callback) {<br/>
+  }</p>
+
+<p>  callback = function() {//do something to init here}
+  prop.define.amd = {multiversion: true}</p>
+
+<p>  return prop;<br/>
+})()
+{% endcodeblock %}</p>
 
 <p>Và khi script loader nhìn vào cái define của bạn, nó sẽ biêt nên làm thê nào. Rất đơn giản phải không.</p>
 
@@ -228,50 +410,29 @@ tại có jQuery là support AMD internally, còn lại thì phần nhiều các
 angular đểu không support AMD internally. Để sử dụng các module này với một script loader theo chuẩn AMD
 như require.js thì bạn đơn giản chỉ cần viết lại hàm define tại app của bạn, ví dụ như trong trường hợp của
 backbone:
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>backbone with amd - bbamd.js </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">require</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
-</span><span class='line'>  <span class="nx">paths</span><span class="o">:</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="nx">jquery</span><span class="o">:</span> <span class="s1">&#39;libs/jquery/jquery&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="nx">underscore</span><span class="o">:</span> <span class="s1">&#39;libs/underscore/underscore&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="nx">backbone</span><span class="o">:</span> <span class="s1">&#39;libs/backbone/backbone&#39;</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">});</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">require</span><span class="p">([</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="c1">// Load our app module and pass it to our definition function</span>
-</span><span class='line'><span class="s1">&#39;app&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">App</span><span class="p">){</span>
-</span><span class='line'>  <span class="c1">// The &quot;app&quot; dependency is passed in as &quot;App&quot;</span>
-</span><span class='line'>  <span class="nx">App</span><span class="p">.</span><span class="nx">initialize</span><span class="p">();</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+{% codeblock backbone with amd - bbamd.js %}
+require.config({
+  paths: {</p>
+
+<pre><code>jquery: 'libs/jquery/jquery',
+underscore: 'libs/underscore/underscore',
+backbone: 'libs/backbone/backbone'
+</code></pre>
+
+<p>});</p>
+
+<p>require([</p>
+
+<pre><code>// Load our app module and pass it to our definition function
+'app',
+], function(App){
+  // The "app" dependency is passed in as "App"
+  App.initialize();
+}
+</code></pre>
+
+<p>);
+{% endcodeblock %}</p>
 
 <p>Vậy tại sao AMD có rất nhiều merit như thê mà một số module nổi tiêng lại bỏ qua việc conform theo AMD, ví dụ
 tiêu biểu nhất là emberjs. Theo như Tom Dale, một trong những creator của emberjs thì AMD yêu cầu quá nhiều

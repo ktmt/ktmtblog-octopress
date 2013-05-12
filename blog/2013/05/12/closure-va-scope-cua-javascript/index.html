@@ -1,0 +1,416 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>closure và scope trong javascript - Blog kỹ thuật máy tính</title>
+	<meta name="author" content="kỹ thuật máy tính">
+
+	
+	<meta name="description" content="Closure và Scope Trong Javascript Scope và closure là gì? Là một programmer, chắc hẳn ít nhất bạn phải biết scope là gì :D, nhưng thôi mình cứ quote &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Blog kỹ thuật máy tính" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://ktmt.github.com/blog/2013/05/12/closure-va-scope-cua-javascript/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<script src="/javascripts/md5.js"></script>
+	<img src='/images/logo.jpg' alt='Profile Picture' style='width: 160px;' />
+</div>
+<h1><a href="/">Blog kỹ thuật máy tính</a></h1>
+<p class="subtitle">kỹ thuật máy tính</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Closure và Scope Trong Javascript</h1>
+	<div class="entry-content" itemprop="articleBody"><h1>Scope và closure là gì?</h1>
+
+<p>Là một programmer, chắc hẳn ít nhất bạn phải biết scope là gì :D, nhưng thôi mình cứ quote lại từ wikipedia đề phòng có người quên:</p>
+
+<blockquote><p>[Scope refers to where variables and functions are accessible, and in what context it is being executed]
+ => Dịch ra đại thể là scope là nơi mà <em>biến</em> hoặc <em>hàm</em> có thể truy cập vào và sử dụng/ tham chiếu được qua tên trực tiếp. Và ở ngoài scope đó thì <em>biến</em> hoặc <em>hàm</em> đó sẽ không thể <strong>nhìn</strong> được một cách trực tiếp nữa. (hơi khó hình dung nhỉ). Để phân loại scope thì có rất nhiều cách tùy thuộc vào từng góc nhìn , nhưng mình sẽ không đi sâu vào vấn đề này. Mỗi ngôn ngữ lại có đặc trưng về scope khác nhau. Trong bài viết này chúng ta sẽ chỉ tập trung vào javascript.</p></blockquote>
+
+<p> Khái niệm tiếp theo là về closure, khái niệm này thì không phải ai cũng biết, vì không phải ai cũng cần đến và từng động đến. Một số ngôn ngữ mainstream như C++ , java cũng không hỗ trợ closure, càng làm ít người để ý đến nó (java 8 expected sẽ cho closure vào). Hãy xem wiki nói về closure thế nào:</p>
+
+<blockquote><p>[a closure (also lexical closure or function closure) is a function or reference to a function together with a <strong>referencing environment</strong>]
+ => Dịch ra đại thể là closure là một hàm hoặc một tham chiếu đi kèm với cái môi trường mà nó tham chiếu đến (khá là xoắn). Cái cần nhấn mạnh ở đây là cái <strong>referencing environment</strong> mà các bạn sẽ hiểu hơn ở các ví dụ dưới đây.</p></blockquote>
+
+<h1>Scope và closure trong javascript</h1>
+
+<p>Javascript là một ngôn ngữ mainstream hiện nay và ngày càng trở nên phổ biến. Người biết về js thì nhiều, nhưng người hiểu rõ một số corner của js thì chắc không nhiều đến thế :D. Một trong các corner đấy chính là <strong>scope và closure</strong>. Js là một ngôn ngữ khá đặc biệt, đặc biệt ở chỗ js mang hơi hướng của lập trình hàm (functional programming), khi mà <strong>function ở js cũng là một first-class object</strong>, tức là function có thể được construct new tại run-time, được lưu ở trong data structure, được parse qua parameter, được return như một value. Chính vì đặc điểm đấy khiến cho scope và closure của js không giống như các ngôn ngữ phổ biến khác.</p>
+
+<p>Đầu tiên chúng ta sẽ nói về scope</p>
+
+<h2>1. <strong><em><u>Scope</u></em></strong></h2>
+
+<p>Như chúng ta vừa nói ở trên, scope là khái niệm qui định &#8220;visibility&#8221; và &#8220;lifetime&#8221; của variable. Thông thường, ví dụ như C thì scope sẽ là <strong>block scope</strong>, tức là những biến <strong>tạo ra</strong> trong block sẽ chỉ được nhìn thấy trong block đấy thôi, và khi ra ngoài block đấy thì những variable nằm trong block sẽ được giải phóng ( như trong C là các biến tạo ra trong stack sẽ được free khi ra khỏi block), và không nhìn thấy được nữa.</p>
+
+<p>Tuy nhiên rất buồn là javascript của chúng ta lại không có cái scope dễ hiểu đến thế, mà nó lại là <strong>function block</strong>.Function block ở đây là gì: tức là những gì bạn tạo ra trong một function sẽ available ở trong function đó. Vì javascript cũng là block syntax, nên sẽ hơi dễ confusing, chúng ta sẽ dùng ví dụ dễ hiểu này:</p>
+
+<figure class='code'><figcaption><span>function.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">scope</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">test</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">alert</span><span class="p">(</span><span class="nx">test</span><span class="p">);</span> <span class="err">#</span><span class="o">=&gt;</span> <span class="mi">1</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">scope</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Nói đến đây chắc chắn có bạn sẽ nghĩ đến điều gì xảy ra khi chúng ta có <strong>nested function</strong>. Let&#8217;s try</p>
+
+<figure class='code'><figcaption><span>function.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">outer</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">outer_var</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">inner</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">alert</span><span class="p">(</span><span class="nx">outer_var</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">inner</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">outer</span><span class="p">();</span> <span class="err">#</span><span class="o">=&gt;</span> <span class="mi">2</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Từ ví dụ trên ta có thể dễ dàng thấy là inner function có thể access được outer function variable. Từ ví dụ này chúng ta có thể thấy là <strong>inner function có thể inherit biến của outer function</strong>, hay nói cách khác, inner function <strong>chứa(contain)</strong> scope của outer function. Chính nhờ điều đặc biệt này mà chúng ta có cái gọi là <strong>Closure</strong> mà mình sắp sửa nói đến ngay dưới đây. Một điều chú ý là đối với nhiều ngôn ngữ thì các bạn hay được khuyên là declare biến muộn nhất có thể để tránh overhead, tuy nhiên với javascript là ngôn ngữ với <strong>function scope</strong> thì best practice lại là <strong>declare biến sớm nhất có thể </strong> để tránh nguy cơ xảy ra một số lỗi không mong muốn.</p>
+
+<h2>2. <strong><em><u>Closure</u></em></strong></h2>
+
+<p> Quote lại cái định nghĩa cho đỡ quên:</p>
+
+<blockquote><p>A closure is an expression (typically a function) that can have free variables <strong>together with an environment that binds those variables (that &#8220;closes&#8221; the expression).</strong></p></blockquote>
+
+<p>Chắc có bạn sẽ thắc mắc, <strong>environment</strong> ở đây là gì. Để hình dung một cách dễ hiểu, thì environment ở đây trong phần lớn các trường hợp chính là cái outer function mà chung ta vừa thử ở ví dụ về scope ở trên. Một đặc điểm rất hay của closure là <strong>closure sẽ keep reference đến các biến nằm bên trong nó, hoặc được reference bên trong nó</strong>. Điều này dẫn đến việc gì? Chắc sẽ có bạn nghĩ đến một case rất đặc biệt là khi bạn muốn context của một function được giữ lại sau khi hàm đó đã được execute xong :D. Hãy bắt đầu bằng một ví dụ:</p>
+
+<figure class='code'><figcaption><span>closure.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">outside</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">inside</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">inside</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">fn_inside</span> <span class="o">=</span> <span class="nx">outside</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'><span class="nx">result</span> <span class="o">=</span> <span class="nx">fn_inside</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">// #=&gt; 8</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">result1</span> <span class="o">=</span> <span class="nx">outside</span><span class="p">(</span><span class="mi">3</span><span class="p">)(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">// #=&gt; 8</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bạn có nhận thấy điều gì đặc biệt ở trên? Điều đặc biệt nằm ở hàm <strong>fn_inside</strong> : hàm fn_inside được tạo ra bởi kết quả return của hàm outside() với parameter là 3, và bạn có thể nhận thấy hàm fn_inside vẫn giữ tham chiếu đến cái parameter 3 đó <strong>ngay cả khi hàm outside() đã được execute xong</strong>. Chắc các bạn sẽ thấy mâu thuẫn với cái lý thuyết về function scope chúng ta đã nói đến ở trên, khi mà <em>mọi thứ được tạo ra trong function của js chỉ visible ở trong đó, và sẽ được free hoặc không nhìn thấy khi ra ngoài function đó</em>.
+Thực tế là không hề mâu thuẫn chút nào cả, chính vì cái gọi là closure của js :D. Nói một cách cụ thể hơn: <strong>fn_inside khi được tạo ra đã form một cái closure (bao đóng), trong cái bao đó, giá trị 3 được truyền vào, và cái bao của fn_inside sẽ vẫn giữ cái giá trị 3 đó cho dù outside() function có execute xong</strong>. Các bạn cứ hình dung trực quan closure như một cái bao chứa rất nhiều thứ trong nó là sẽ thấy dễ hiểu hơn:</p>
+
+<p><img src="/images/closurejs/closure.png"></p>
+
+<p>Như vậy chúng ta có thể tóm gọn lại đoạn code ở trên như sau:</p>
+
+<ol>
+<li>Khi outside() được gọi, outside trả về một function</li>
+<li>function được outside trả lại (fn_inside) đó đóng lại cái context hiện tại và cái context đó <strong>chứa biến x tại thời điểm outside() được gọi</strong></li>
+<li>Khi fn_inside được gọi, nó vẫn nhớ x có giá trị là 3</li>
+<li>Khi invoke fn_inside(5) thì nó sẽ lấy giá trị biến y=5 + giá trị biến x=3 và kết quả sẽ là 8</li>
+</ol>
+
+
+<p>Như vậy chúng ta có thể rút ra một đặc điểm của closure là:</p>
+
+<blockquote><p> <strong><em>A closure must preserve the arguments and variables in all scopes it references</em></strong></p></blockquote>
+
+<ul>
+<li><p>Một câu hỏi được đặt ra là: Khi nào cái biến x được giải phóng?? Câu trả lời là khi mà cái context mà biến x được reference đến ( ở đây là fn_inside ) không còn accessible được nữa ( refer đến scope của js, chúng ta có thể hiểu là khi mà function chứa fn_inside được execute xong và không còn bất kì tham chiếu nào đến fn_inside nữa ).</p></li>
+<li><p>Một câu hỏi khác được đặt ra là với multi-nested function thì điều gì sẽ xảy ra?? Let&#8217;s give a try:</p></li>
+</ul>
+
+
+<figure class='code'><figcaption><span>multinested.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">A</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">B</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">function</span> <span class="nx">C</span><span class="p">(</span><span class="nx">z</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">alert</span><span class="p">(</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">+</span> <span class="nx">z</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="nx">C</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">B</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">A</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="err">#</span><span class="o">=&gt;</span> <span class="mi">6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đoạn code trên thì điều gì đã xảy ra?</p>
+
+<ol>
+<li>B tạo ra một cái closure chữa context của A, do đó B có thể access vào A&#8217;s variable, ở đây là x</li>
+<li>C tạo ra một cái closure chứa context của B</li>
+<li>Vì B chứa context của A nên C cũng sẽ chứa context của A, tức là C cũng access được vào biến x của A, và cả biến y của B.</li>
+</ol>
+
+
+<p>Do đó kết quả sẽ là 1+2+3=6, khá là obvious nhỉ. Đoạn code ở trên giúp chúng ta có thêm một khái niệm mới gọi là <strong><em>scope chaining</em></strong>. Tại sao gọi là chaining, vì khi context được include từ outer function vào inner function, thì chúng ta sẽ hiểu một cách đơn giản là context của inner function và context của outer function được nối với nhau, một cách có chiều (<strong>directed</strong>). Và độ ưu tiên khi access biến là từ trong ra ngoài.</p>
+
+<p><img src="/images/closurejs/closure2.png"></p>
+
+<p>Do cái scope chaining là directed nên ở phía ngược lại, A lại không thể access được C, vì C nằm trong context của B, và chỉ visible <strong>inside B</strong>, hay nói cách khác là C sẽ là private của B, và không nhìn được từ A.</p>
+
+<ul>
+<li>Lại có một bạn nghĩ là khi outer function có biến tên là x, mà ta cũng truyền 1 biến tên là x vào inner function, tức là khi có name-conflict thì chuyện gì sẽ xảy ra. Let&#8217;s take an example</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>nameconflict.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">outside</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">inside</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">inside</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">result</span> <span class="o">=</span> <span class="nx">outside</span><span class="p">()(</span><span class="mi">20</span><span class="p">);</span> <span class="err">#</span><span class="o">=&gt;</span> <span class="mi">20</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bạn có thể thấy kết quả trả về biến x được trực tiếp truyền vào inner function thay vì biến x của outer function. Sử dụng khái niệm scope chaining ở trên thì chúng ta có thể thấy độ ưu tiên của context inside là cao hon context outside khi intepreter tìm giá trị của x, nên giá trị của x ở inside (ở đây là 20) sẽ được sử dụng.</p>
+
+<p>Hy vọng là với 3 ví dụ trên các bạn đã có cái nhìn rõ ràng hơn về closure.</p>
+
+<h2>3. <strong><em><u>Closure pitfalls</u></em></strong></h2>
+
+<p>Closure là một khái niệm khá dễ nhầm lẫn và khó nắm rõ với những người người ít quan tâm đến javascript. Một trong những ví dụ hay được dùng để minh họa cái sự dễ nhầm này được gọi là <strong>The Infamous Loop Problem</strong>. Ví dụ này được minh họa bằng đoạn code dưới đây:</p>
+
+<figure class='code'><figcaption><span>closurepitfall.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">add_the_handlers</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">nodes</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">i</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nodes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">nodes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">onclick</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">alert</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="nx">nodes</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">add_the_handlers</span><span class="p">(</span><span class="nx">nodes</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoan code ở trên làm một việc là tìm tất cả các node có id là &#8220;click&#8221;, add vào node đó một cái sự kiện là khi click vào node đó sẽ alert lên thứ tự của node đó. Giả sử bạn có một file html như sau:</p>
+
+<figure class='code'><figcaption><span>closurepitfall.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;click&quot;</span><span class="nt">&gt;</span>link 1 <span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;click&quot;</span><span class="nt">&gt;</span>link 2 <span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;click&quot;</span><span class="nt">&gt;</span>link 3 <span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;click&quot;</span><span class="nt">&gt;</span>link 4 <span class="nt">&lt;/li&gt;</span>
+</span><span class='line'><span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;click&quot;</span><span class="nt">&gt;</span>link 5 <span class="nt">&lt;/li&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bạn expect là khi click vào link 1 sẽ alert 1, click vào link 2 sẽ alert ra 2&#8230;. đúng không. Tuy nhiên thực tế là <strong>bạn click vào link nào nó cũng alert ra 5 cả</strong>. Kì lạ nhỉ? Để giải thích cho hiện tượng này thì chúng ta hãy xem lại khái niệm về closure nào. Biến i được sử dụng trong anonymous function được gán cho onclick, được <strong>kế thừa từ context của add_the_handlers function</strong>. Tại thời điểm mà bạn gọi onclick, for loop đã được execute xong, và biến i <strong>của context của add_the_handlers</strong> lúc này có giá trị là 5. Do đó bạn có click vào link nào thì giá trị được alert ra cũng là 5 cả. Point của việc này chính là do bạn đang nhầm lẫn, hay chính xác là có sự khác biệt giữa <strong>scope/context của for-loop</strong> với <strong>scope/context của outer function là add_the_handlers </strong>.</p>
+
+<p>Để giải quyết vấn đề này thì bạn có thể làm như dưới đây:</p>
+
+<figure class='code'><figcaption><span>pitfall.js </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">add_the_handlers</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">nodes</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">helper</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">alert</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">i</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">nodes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">modes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">onclick</span> <span class="o">=</span> <span class="nx">helper</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Point của solution này chính là việc truyền được giá trị của (i) tại thời điểm hiện tại vào closure của function được bind vào onclick. Giúp cho hàm helper() luôn refer đến giá trị i đúng. Một best practice để tránh những pitfall như thế này là</p>
+
+<blockquote><p>Avoid creating functions within a loop. It can be wasteful computationally,and it can cause confusion</p></blockquote>
+
+<h1>Kết luận</h1>
+
+<p>Như vậy qua bài viết này chúng ta đã nắm được khái niệm về function scope và closure trong javascript, cũng như một số khái niệm liên quan về scope chaining, và một số best practices trong việc sử dụng closure và scope. Closure trong javascript hay sử dụng để tạo ra một cái bao mà các thứ trong đấy không được nhìn thấy bởi bên ngoài nhưng vẫn truy cập được từ bên trong, và thường được áp dụng cho một số design pattern trong js (tiêu biểu nhất là module pattern).Chi tiết hơn các bạn có thể tham khảo ở các tài liệu sau:</p>
+
+<ul>
+<li><a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742/ref=sr_1_1?ie=UTF8&amp;qid=1368334060&amp;sr=8-1&amp;keywords=javascript+the+good+part">Javascript the good part (by Douglas Crockford)</a></li>
+<li><a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm">Ecma-262 standard</a></li>
+<li>http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/</li>
+<li>https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope</li>
+</ul>
+
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2013
+
+    kỹ thuật máy tính
+
+
+</footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'ktmt';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ktmt.github.com/blog/2013/05/12/closure-va-scope-cua-javascript/';
+        var disqus_url = 'http://ktmt.github.com/blog/2013/05/12/closure-va-scope-cua-javascript/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>
