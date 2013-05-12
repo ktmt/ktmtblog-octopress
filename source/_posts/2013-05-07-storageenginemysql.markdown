@@ -3,7 +3,7 @@ layout: post
 title: "Giới thiệu một số storage engine của Mysql"
 date: 2013-05-07 16:53
 comments: true
-categories: database, mysql, storage engine
+categories: database mysql storage engine
 ---
 
 # Giới thiệu
