@@ -9,18 +9,21 @@ categories:
 ---
 
 #Scope và closure là gì?
-Là một programmer, chắc hẳn ít nhất bạn phải biết scope là gì :D, nhưng thôi mình cứ quote lại từ wikipedia đề phòng có người quên:
+Scope và closure là 2 khái niệm cơ bản mà một programmer nên biết, vì hiểu rõ 2 khái niệm này vừa giúp cho programmer tránh được một số lỗi hay gặp, vừa giúp thiết kế chương trình tốt hơn. Đầu tiên chúng ta sẽ remind lại 2 khái niệm này một cách ngắn gọn.
+Đầu tiên là khái niệm về scope, khái niệm này quá cơ bản chắc hẳn mọi người đều biết, nhưng thôi mình cứ quote lại từ wikipedia đề phòng có người quên:
 > [Scope refers to where variables and functions are accessible, and in what context it is being executed]
+
  => Dịch ra đại thể là scope là nơi mà *biến* hoặc *hàm* có thể truy cập vào và sử dụng/ tham chiếu được qua tên trực tiếp. Và ở ngoài scope đó thì *biến* hoặc *hàm* đó sẽ không thể **nhìn** được một cách trực tiếp nữa. (hơi khó hình dung nhỉ). Để phân loại scope thì có rất nhiều cách tùy thuộc vào từng góc nhìn , nhưng mình sẽ không đi sâu vào vấn đề này. Mỗi ngôn ngữ lại có đặc trưng về scope khác nhau. Trong bài viết này chúng ta sẽ chỉ tập trung vào javascript.
 
  Khái niệm tiếp theo là về closure, khái niệm này thì không phải ai cũng biết, vì không phải ai cũng cần đến và từng động đến. Một số ngôn ngữ mainstream như C++ , java cũng không hỗ trợ closure, càng làm ít người để ý đến nó (java 8 expected sẽ cho closure vào). Hãy xem wiki nói về closure thế nào:
 
 > [a closure (also lexical closure or function closure) is a function or reference to a function together with a **referencing environment**]
- => Dịch ra đại thể là closure là một hàm hoặc một tham chiếu đi kèm với cái môi trường mà nó tham chiếu đến (khá là xoắn). Cái cần nhấn mạnh ở đây là cái **referencing environment** mà các bạn sẽ hiểu hơn ở các ví dụ dưới đây.
+
+ => Dịch ra đại thể là closure là một hàm hoặc một tham chiếu (hay còn gọi là một cái **bao đóng**) đi kèm với cái môi trường mà nó tham chiếu đến (khá là xoắn). Cái cần nhấn mạnh ở đây là cái **referencing environment** (môi trường tham chiếu) mà các bạn sẽ hiểu hơn ở các ví dụ dưới đây.
 
  
 #Scope và closure trong javascript
-Javascript là một ngôn ngữ mainstream hiện nay và ngày càng trở nên phổ biến. Người biết về js thì nhiều, nhưng người hiểu rõ một số corner của js thì chắc không nhiều đến thế :D. Một trong các corner đấy chính là **scope và closure**. Js là một ngôn ngữ khá đặc biệt, đặc biệt ở chỗ js mang hơi hướng của lập trình hàm (functional programming), khi mà **function ở js cũng là một first-class object**, tức là function có thể được construct new tại run-time, được lưu ở trong data structure, được parse qua parameter, được return như một value. Chính vì đặc điểm đấy khiến cho scope và closure của js không giống như các ngôn ngữ phổ biến khác.
+Javascript là một ngôn ngữ phổ biến hiện nay. Người biết về js thì nhiều, nhưng người hiểu rõ một số corner của js thì chắc không nhiều đến thế :D. Một trong các corner đấy chính là **scope và closure**. Js là một ngôn ngữ khá đặc biệt, đặc biệt ở chỗ js mang hơi hướng của lập trình hàm (functional programming), khi mà **function ở js cũng là một first-class object**, tức là function có thể được tạo mới (construct new) tại run-time, được lưu dưới dạng một cấu trúc dữ liệu (data structure), được truyền qua parameter, được dùng như một giá trị trả về (return value). Chính vì đặc điểm đấy khiến cho scope và closure của js không giống như các ngôn ngữ phổ biến khác.
 
 Đầu tiên chúng ta sẽ nói về scope
 
@@ -58,7 +61,7 @@ Từ ví dụ trên ta có thể dễ dàng thấy là inner function có thể 
 
  > A closure is an expression (typically a function) that can have free variables **together with an environment that binds those variables (that "closes" the expression).**
 
-Chắc có bạn sẽ thắc mắc, **environment** ở đây là gì. Để hình dung một cách dễ hiểu, thì environment ở đây trong phần lớn các trường hợp chính là cái outer function mà chung ta vừa thử ở ví dụ về scope ở trên. Một đặc điểm rất hay của closure là **closure sẽ keep reference đến các biến nằm bên trong nó, hoặc được reference bên trong nó**. Điều này dẫn đến việc gì? Chắc sẽ có bạn nghĩ đến một case rất đặc biệt là khi bạn muốn context của một function được giữ lại sau khi hàm đó đã được execute xong :D. Hãy bắt đầu bằng một ví dụ:
+Chắc có bạn sẽ thắc mắc, **environment** ở đây là gì. Để hình dung một cách dễ hiểu, thì environment ở đây trong phần lớn các trường hợp chính là cái outer function mà chung ta vừa thử ở ví dụ về scope ở trên. Một đặc điểm rất hay của closure là **closure sẽ giữ tham chiếu đến các biến nằm bên trong nó, hoặc được gọi đến bên trong nó**. Điều này dẫn đến việc gì? Chắc sẽ có bạn nghĩ đến một trường hợp rất đặc biệt là khi bạn muốn context của một function được giữ lại sau khi hàm đó đã được execute xong :D. Hãy bắt đầu bằng một ví dụ:
 
 {% codeblock closure.js %}
 function outside(x) {
@@ -73,8 +76,8 @@ result = fn_inside(5); // #=> 8
 result1 = outside(3)(5); // #=> 8
 {% endcodeblock %}
 
-Bạn có nhận thấy điều gì đặc biệt ở trên? Điều đặc biệt nằm ở hàm **fn_inside** : hàm fn_inside được tạo ra bởi kết quả return của hàm outside() với parameter là 3, và bạn có thể nhận thấy hàm fn_inside vẫn giữ tham chiếu đến cái parameter 3 đó **ngay cả khi hàm outside() đã được execute xong**. Chắc các bạn sẽ thấy mâu thuẫn với cái lý thuyết về function scope chúng ta đã nói đến ở trên, khi mà *mọi thứ được tạo ra trong function của js chỉ visible ở trong đó, và sẽ được free hoặc không nhìn thấy khi ra ngoài function đó*. 
-Thực tế là không hề mâu thuẫn chút nào cả, chính vì cái gọi là closure của js :D. Nói một cách cụ thể hơn: **fn_inside khi được tạo ra đã form một cái closure (bao đóng), trong cái bao đó, giá trị 3 được truyền vào, và cái bao của fn_inside sẽ vẫn giữ cái giá trị 3 đó cho dù outside() function có execute xong**. Các bạn cứ hình dung trực quan closure như một cái bao chứa rất nhiều thứ trong nó là sẽ thấy dễ hiểu hơn:
+Bạn có nhận thấy điều gì đặc biệt ở trên? Điều đặc biệt nằm ở hàm **fn_inside** : hàm fn_inside được tạo ra bởi kết quả trả về của hàm outside() với parameter là 3, và bạn có thể nhận thấy hàm fn_inside vẫn giữ tham chiếu đến cái parameter 3 đó **ngay cả khi hàm outside() đã được execute xong**. Chắc các bạn sẽ thấy mâu thuẫn với cái lý thuyết về function scope chúng ta đã nói đến ở trên, khi mà *mọi thứ được tạo ra trong function của js chỉ nhìn thấy và sử dụng được ở trong đó, và sẽ được giải phóng hoặc không nhìn thấy khi ra ngoài function đó*. 
+Thực tế là không hề mâu thuẫn chút nào cả, chính vì cái gọi là closure của js :D. Nói một cách cụ thể hơn: **fn_inside khi được tạo ra đã đồng thời cũng tạo ra một cái closure (bao đóng), trong cái bao đó, giá trị 3 được truyền vào, và cái bao của fn_inside sẽ vẫn giữ cái giá trị 3 đó cho dù outside() function có execute xong**. Các bạn cứ hình dung trực quan closure như một cái bao chứa rất nhiều thứ trong nó là sẽ thấy dễ hiểu hơn:
 
 {% img /images/closurejs/closure.png %}
 
@@ -158,7 +161,7 @@ add_the_handlers(nodes);
 <li id="click">link 5 </li>
 {% endcodeblock %}
 
-Bạn expect là khi click vào link 1 sẽ alert 1, click vào link 2 sẽ alert ra 2.... đúng không. Tuy nhiên thực tế là **bạn click vào link nào nó cũng alert ra 5 cả**. Kì lạ nhỉ? Để giải thích cho hiện tượng này thì chúng ta hãy xem lại khái niệm về closure nào. Biến i được sử dụng trong anonymous function được gán cho onclick, được **kế thừa từ context của add_the_handlers function**. Tại thời điểm mà bạn gọi onclick, for loop đã được execute xong, và biến i **của context của add_the_handlers** lúc này có giá trị là 5. Do đó bạn có click vào link nào thì giá trị được alert ra cũng là 5 cả. Point của việc này chính là do bạn đang nhầm lẫn, hay chính xác là có sự khác biệt giữa **scope/context của for-loop** với **scope/context của outer function là add_the_handlers **. 
+Bạn hy vọng là khi click vào link 1 sẽ alert 1, click vào link 2 sẽ alert ra 2.... đúng không. Tuy nhiên thực tế là **bạn click vào link nào nó cũng alert ra 5 cả**. Kì lạ nhỉ? Để giải thích cho hiện tượng này thì chúng ta hãy xem lại khái niệm về closure nào. Biến i được sử dụng trong anonymous function được gán cho onclick, được **kế thừa từ context của add_the_handlers function**. Tại thời điểm mà bạn gọi onclick, for loop đã được execute xong, và biến i **của context của add_the_handlers** lúc này có giá trị là 5. Do đó bạn có click vào link nào thì giá trị được alert ra cũng là 5 cả. Điểm chú ý của việc này chính là do bạn đang nhầm lẫn, hay chính xác là có sự khác biệt giữa **scope/context của for-loop** với **scope/context của outer function là add_the_handlers **. 
 
 Để giải quyết vấn đề này thì bạn có thể làm như dưới đây:
 
@@ -176,13 +179,13 @@ var add_the_handlers = function (nodes) {
 };
 {% endcodeblock %}
 
-Point của solution này chính là việc truyền được giá trị của (i) tại thời điểm hiện tại vào closure của function được bind vào onclick. Giúp cho hàm helper() luôn refer đến giá trị i đúng. Một best practice để tránh những pitfall như thế này là
-> Avoid creating functions within a loop. It can be wasteful computationally,and it can cause confusion
+Point của cách làm này chính là việc truyền được giá trị của (i) tại thời điểm hiện tại vào closure của function được bind (gán) vào onclick. Giúp cho hàm helper() luôn tham chiếu đến giá trị i đúng. Một best practice để tránh những sai lầm như thế này là
+> Avoid creating functions within a loop. It can be wasteful computationally,and it can cause confusion (tránh tạo mới function trong vòng loop, vì nó vừa làm tốn tài nguyên cpu, vừa dễ gây nhầm lẫn)
 
 #Kết luận
-Như vậy qua bài viết này chúng ta đã nắm được khái niệm về function scope và closure trong javascript, cũng như một số khái niệm liên quan về scope chaining, và một số best practices trong việc sử dụng closure và scope. Closure trong javascript hay sử dụng để tạo ra một cái bao mà các thứ trong đấy không được nhìn thấy bởi bên ngoài nhưng vẫn truy cập được từ bên trong, và thường được áp dụng cho một số design pattern trong js (tiêu biểu nhất là module pattern).Chi tiết hơn các bạn có thể tham khảo ở các tài liệu sau:
+Như vậy qua bài viết này chúng ta đã nắm được khái niệm về function scope và closure trong javascript, và một số best practices trong việc sử dụng closure và scope. Closure trong javascript hay sử dụng để tạo ra một cái bao mà các thứ trong đấy không được nhìn thấy bởi bên ngoài nhưng vẫn truy cập được từ bên trong, và thường được áp dụng cho một số design pattern trong js (tiêu biểu nhất là module pattern).Chi tiết hơn các bạn có thể tham khảo ở các tài liệu sau:
 
 - [Javascript the good part (by Douglas Crockford)](http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742/ref=sr_1_1?ie=UTF8&qid=1368334060&sr=8-1&keywords=javascript+the+good+part)
 - [Ecma-262 standard](http://www.ecma-international.org/publications/standards/Ecma-262.htm)
-- http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/
-- https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope
+- [http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/](http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/)
+- [https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope)
