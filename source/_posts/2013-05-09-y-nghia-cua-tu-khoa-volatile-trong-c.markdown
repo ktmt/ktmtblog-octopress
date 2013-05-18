@@ -30,17 +30,60 @@ Một biến cần được khai báo dưới dạng biến volatile khi nào? K
 
 ##Thanh ghi ngoại vi##
 
-Trong các hệ thống nhúng thường có các thiết bị ngoại vi (ví dụ như cổng vào ra đa chức năng GPIO, cổng UART, cổng SPI, ...), và các thiết bị ngoại vi này chứa các thanh ghi mà giá trị của nó có thể thay đổi ngoài ý muốn của dòng chương trình (program flow). Ví dụ một thanh ghi trạng thái 8 bit được đánh địa chỉ 0xFEEF. Ta cần phải thực hiện polling thanh ghi trạng thái này đến khi nó khác 0 
-{% codeblock mappedIO.c%}
-uint8_t * pStatReg = (uint8_t *) 0xFEEF;
+Trong các hệ thống nhúng thường có các thiết bị ngoại vi (ví dụ như cổng vào ra đa chức năng GPIO, cổng UART, cổng SPI, ...), và các thiết bị ngoại vi này chứa các thanh ghi mà giá trị của nó có thể thay đổi ngoài ý muốn của dòng chương trình (program flow). Ví dụ một thanh ghi trạng thái pStatReg, ta cần phải thực hiện polling thanh ghi trạng thái này đến khi nó khác 0 
+(Đoạn code minh họa với Keil ARM compiler, trên vi điều khiển ARM LPC2368)
 
+{% codeblock mappedIOi_nonvolatile.c%}
+unsigned long * pStatReg = (unsigned long*) 0xE002C004;
 //Wait for the status register to become non-zero
 while(*pStatReg == 0) { }
 {% endcodeblock %}
 
-Đoạn code này có gì không ổn? Nó sẽ chạy sai khi ta bật chức năng tối ưu (optimization) của compiler. Compiler đã đọc được giá trị mà con trỏ pStatReg trỏ đến sau dòng thứ nhất. Tiếp theo, khi đến vòng lặp while, compiler nhận thấy không cần thiết phải đọc lại giá trị mà con trỏ pStatReg trỏ đến nữa, vì nó không thấy đoạn code nào ở giữa có thể thay đổi giá trị này được. Như vậy, *pStatReg luôn giữ nguyên một giá trị, và do đó vòng lặp while sẽ chạy vô tận, hoặc không chạy gì cả (tùy theo giá trị ban đầu mà pStatReg trỏ đến).
+Đoạn code này có gì không ổn? Nó sẽ chạy sai khi ta bật chức năng tối ưu (optimization) của compiler. 
+Quan sát mã assembly mà compiler xuất ra của đoạn code trên như sau: 
+{% codeblock mappedIO_nonvolatile.s%}
+        LDR      r0,|L2.564|
+        SUB      sp,sp,#0x10
+        LDR      r0,[r0,#0]
+|L2.22|
+        CMP      r0,#0
+        BEQ      |L2.22|
+        LDR      r1,|L2.564|
+...
+|L2.564|
+        DCD      0xe002c004
+{% endcodeblock %}
 
- Trong hệ thống nhúng, một thanh ghi có thể bị thay đổi giá trị do những điều kiện bên ngoài. Ví dụ như mức điện áp không vượt quá ngưỡng, làm cho giá trị 0 thành 1, 1 thành 0. Hoặc, khi cổng UART nhận được đầy buffer thì thanh ghi BUFFER_READY tự động chuyển 0 thành 1... Bằng cách sử dụng biến volatile, chương trình C được compiler biên dịch sẽ đảm bảo luôn luôn đọc lại giá trị của thanh ghi, tránh mọi assumption của compiler.  
+Trước khi vào label |L2.22|, tương ứng với vòng lặp while, thanh ghi r0 được ghi vào giá trị được lưu trong ô nhớ 0xE002C004. Khi vào vòng lặp while, compiler thực hiện ngay việc so sánh giá trị của thanh ghi r0 với 0. Tại sao lại như vậy? Vì compiler nhận thấy biến pStatReg là một biến normal, giá trị của nó được hiểu là không thể thay đổi một cách bất thường. Do vậy, khi bật tối ưu, compiler sẽ chỉ thực hiện so sánh giá trị của r0 mà không load lại giá trị này từ ô nhớ 0xE002C004, vì theo flow của chương trình thì biến pStatReg không bị thay đổi ở bất cứ đâu. Do đó, vòng lặp while sẽ chạy vô tận, hoặc không chạy gì cả (tùy theo giá trị ban đầu mà pStatReg trỏ đến). 
+
+Điều gì sẽ xảy ra nếu ta đổi biến pStatReg sang volatile? 
+
+{% codeblock mappedIO_volatile.c%}
+volatile unsigned long * pStatReg = (unsigned long*) 0xE002C004;
+//Wait for the status register to become non-zero
+while(*pStatReg == 0) { }
+{% endcodeblock %}
+
+Mã assembly mà compiler xuất ra sẽ như sau: 
+
+{% codeblock mappedIO_volatile.s%}
+	SUB      sp,sp,#0x10
+        LDR      r0,|L3.544|
+|L3.4|
+        LDR      r1,[r0,#0]
+        CMP      r1,#0
+        BEQ      |L3.4|
+        LDR      r1,|L3.544|
+...
+|L3.544|
+        DCD      0xe002c004
+{% endcodeblock %}
+
+Điều gì khác biệt ở đây? Đầu tiên, ở dòng LDR trước label |L3.4|, compiler đã đặt địa chỉ 0xE002C004 vào thanh ghi r0. Ở dòng LDR đầu tiên ngay sau label |L3.4|, ta thấy compiler đã LOAD LẠI GIÁ TRỊ của ô nhớ 0xE002C004 vào ô nhớ r1! Sau đó nó mới thực hiện so sánh giá trị của ô nhớ r1 này với 0.  
+
+Lý do là gì? Vì ta đã đặt biến pStatReg là biến volatile, để báo hiệu là biến này có thể thay đổi một cách bất thường, ngoài flow của chương trình. Do vậy nên, để "đề phòng", compiler lúc nào cũng phải load lại giá trị mới của ô nhớ 0xE002C004, để đảm bảo mình có giá trị mới nhất! 
+
+Đến đây, bạn có thể hỏi là "giá trị bị thay đổi một cách bất thường" là như thế nào? Hiện tượng này đặc biệt hay xảy ra khi lập trình nhúng.  Trong hệ thống nhúng, một thanh ghi có thể bị thay đổi giá trị do những điều kiện bên ngoài. Ví dụ như mức điện áp không vượt quá ngưỡng, làm cho giá trị 0 thành 1, 1 thành 0. Hoặc, khi cổng UART nhận được đầy buffer thì thanh ghi BUFFER_READY tự động chuyển 0 thành 1... Bằng cách sử dụng biến volatile, chương trình C được compiler biên dịch sẽ đảm bảo luôn luôn đọc lại giá trị của thanh ghi, tránh mọi assumption của compiler.  
 
 ##Tiến trình con xử lý ngắt (Interrupt Service Routine)##  
 
