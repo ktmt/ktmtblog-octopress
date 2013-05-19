@@ -87,7 +87,7 @@ Nói 1 cách khác, nếu user chỉ visit site A và site N bằng cách gõ UR
 
 Implement cross-domain cookies sẽ hơi phức tạp hơn nhưng không phải là không làm được.
 
-* User visit siteA, site A vẫn tạo cookie với 1 sessionID như trên
+*  User visit siteA, site A vẫn tạo cookie với 1 sessionID như trên
 * User visit siteN/randompage, site N redirect lại siteA/cookieGetter.php với param callback_url="randompage"
 * Khi browser quay trờ lại siteA/cookieGetter.php, site A sẽ check cookie của mình và nếu tìm thấy sessionID sẽ gửi dưới dạng param ngược lại cho siteN/randompage ("randompage được lấy ra từ param callback_url")
 * User được redirect back lại siteN/randompage cùng với sessionID, lúc này site N sẽ tạo cookie của site mình với sessionID kể trên.
@@ -106,7 +106,6 @@ Tiếp theo, user đến site B cũng đặt ads banner của site N. Browser l�
 
 ## Kết luận
 * Web beacon: là 1 technique trong web programming, mục đích là phục vụ cho web data analytics
-* Web bug: web beacon
 * Cross-domain cookies: các cookie khác nhau trên các domain khác nhau, tuy nhiên identify được lẫn nhau thông qua unique ID
 * Third-party cookies: cookies của domain khác nhưng được set khi user visit webpage của server mình
 
