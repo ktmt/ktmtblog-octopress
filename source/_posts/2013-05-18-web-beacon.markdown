@@ -32,13 +32,13 @@ Vậy, **làm thế nào** để biết user cảm thấy interesting với cont
 1 cách mô hình hoá, Website của bạn - website A có link đến website N1, N2, N3, ... (các site có intersting content) 
 Bạn - site A webmaster muốn biết user của bạn click vào những link nào nhiều nhất trong số các N-site. 
 Dĩ nhiên là site nào ít attractive nhất thì muốn bỏ đi, site nào càng nhiều attractive thì tìm thêm các loại tương ứng. 
-Mặc dù khi user click vào các link thì đã ra khỏi site của bạn và đi đến site khác, nhưng bạn **có thể đặt web beacon ở từng link** để tracking user của bạn.
+Mặc dù khi user click vào các link thì đã ra khỏi site của bạn và đi đến site khác, nhưng bạn có thể **đặt web beacon ở từng link** để tracking user của bạn.
 
 Ngược lại, giả sử vì mục đích quảng cáo, site N của bạn đặt link (banner) ở các site A1, A2, A3,.... 
 Đổi lại bạn đang trả tiền cho tất cả. 
 Dĩ nhiên bạn muốn biết user visit site của mình đến từ nơi nào nhiều nhất. 
 Nơi nào user ko đến thì cắt bỏ để giảm chi phí v.v... 
-Bạn có thể đặt web beacon ở cổng vào site mình và record lại các information bạn cần. 
+Bạn có thể **đặt web beacon ở cổng vào site mình** và record lại các information bạn cần. 
 
 
 ## Implement Web Beacon ##
