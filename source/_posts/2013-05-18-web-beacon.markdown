@@ -15,7 +15,9 @@ Có thể bạn chưa từng nghe nói đến, hay đã nghe nhưng ko hiểu r�
 
 > A web bug is an object that is embedded in a web page or email and is usually invisible to the user but allows checking that a user has viewed the page or email. Common uses are email tracking and page tagging for Web analytics
 
-Như vậy, Web beacon là 1 technique trong web programming, mục đích là phục vụ cho web data analytics. Tại sao lại cần phải có web beacon ? Cách implement web beacon ra sao ? Bài viết này sẽ trả lời 2 câu hỏi trên và 2 khái niệm liên quan thông qua các ví dụ và hình dung cụ thể.
+Như vậy, Web beacon là 1 technique trong web programming, mục đích là phục vụ cho web data analytics. 
+
+Tại sao lại cần phải có web beacon ? Cách implement web beacon ra sao ? Bài viết này sẽ trả lời 2 câu hỏi trên và 2 khái niệm liên quan thông qua các ví dụ và hình dung cụ thể.
 
 
 ## Tại sao lại phải có web beacon ? ##
@@ -32,7 +34,7 @@ Bạn - site A webmaster muốn biết user của bạn click vào những link 
 Dĩ nhiên là site nào ít attractive nhất thì muốn bỏ đi, site nào càng nhiều attractive thì tìm thêm các loại tương ứng. 
 Mặc dù khi user click vào các link thì đã ra khỏi site của bạn và đi đến site khác, nhưng bạn **có thể đặt web beacon ở từng link** để tracking user của bạn.
 
-1 cách ngược lại, giả sử vì mục đích quảng cáo, site N của bạn đặt link (banner) ở các site A1, A2, A3,.... 
+Ngược lại, giả sử vì mục đích quảng cáo, site N của bạn đặt link (banner) ở các site A1, A2, A3,.... 
 Đổi lại bạn đang trả tiền cho tất cả. 
 Dĩ nhiên bạn muốn biết user visit site của mình đến từ nơi nào nhiều nhất. 
 Nơi nào user ko đến thì cắt bỏ để giảm chi phí v.v... 
@@ -75,18 +77,16 @@ Cái gì gọi là cross-domain cookie ? Chẳng phải là cookie chỉ readabl
 Bạn có thể hình dung đơn giản như sau: 
 
 * User visit site A, site A tạo 1 cookie với domain của mình, kèm theo 1 sessionID. Với sessionID này site A có thể tracking user trong phạm vi site của mình.
-
 * User click vào link (hoặc ads) đến site N, site A "gửi kèm" 1 param là sessionID kể trên . Site N đón nhận request với sessionID và cũng tạo 1 cookie trên domain của mình chứa sessionID dược nhận.
-
 * User click vào nút "Come back to previous site" trên site N, site N sẽ tổng hợp action flow trên site mình (dựa vào cookie tạo ở trên), send ngược trờ lại cùng với sessionID cho site A.
-
 * Site A sẽ welcome user trở lại, VD thêm đoạn chào hỏi: "Aha, bạn đến site N để mua abcxyz phải không, để tôi show cho bạn thêm vài site khác nữa cũng có thứ đồ abcxyz đó nữa, tốt lắm " etc :D
 
 
 Vậy vấn đề sẽ thế nào nếu như ko có nút "Come back to previous site" hay link hoặc ads trên site A ?
 Nói 1 cách khác, nếu user chỉ visit site A và site N bằng cách gõ URL trực tiếp trên thanh URL của browser ?
 
-Implement cross-domain cookies sẽ hơi phức tạp hơn nhưng không phải là không làm được
+Implement cross-domain cookies sẽ hơi phức tạp hơn nhưng không phải là không làm được.
+
 * User visit siteA, site A vẫn tạo cookie với 1 sessionID như trên
 * User visit siteN/randompage, site N redirect lại siteA/cookieGetter.php với param callback_url="randompage"
 * Khi browser quay trờ lại siteA/cookieGetter.php, site A sẽ check cookie của mình và nếu tìm thấy sessionID sẽ gửi dưới dạng param ngược lại cho siteN/randompage ("randompage được lấy ra từ param callback_url")
