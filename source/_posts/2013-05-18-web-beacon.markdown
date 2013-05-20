@@ -40,6 +40,7 @@ Dĩ nhiên bạn muốn biết user visit site của mình đến từ nơi nào
 Nơi nào user ko đến thì cắt bỏ để giảm chi phí v.v... 
 Bạn có thể **đặt web beacon ở cổng vào site mình** và record lại các information bạn cần. 
 
+Thử tưởng tượng 1 hệ thống web có n node X1, X2,... Xn , mỗi node đều đặt web beacon ở đầu vào và các đầu ra của mình, mỗi node sẽ có 1 action flow của user, được identify bằng 1 sessionID thống nhất. Đến giai đoạn user behavior analytics, chỉ cần dựa vào 1 sessionID đó có thể tổng hợp được flow tổng quát của từng user trên cả hệ thống !
 
 ## Implement Web Beacon ##
 
@@ -64,7 +65,9 @@ Như vậy user đi đến site N của bạn sẽ mang theo "callback_url". Ở
 <img src="/img/_.gif?from_=<?php $_GET["callback_url"];?>&_=<?php date("Y-m-d H:i:s");?>"> 
 {% endcodeblock %}
 
-Tại sao ở đây lại cần hàm date("Y-m-d H:i:s") ? Browser có cơ chế cache và thông thường sẽ cache lại các file image tại 1 website để lần sau quay lại load trang web nhanh hơn. Nếu Browser detect thấy file _.gif nằm trong cache thì sẽ **không mạke request đến server** và tracking sẽ thất bại :D với &_=<?php date("Y-m-d H:i:s");?> image sẽ vẫn đc request nhưng với đuôi có chưa curent time nên sẽ không bị cache.
+Tại sao ở đây lại cần hàm date("Y-m-d H:i:s") ? Browser có cơ chế cache và thông thường sẽ cache lại các file image tại 1 website để lần sau quay lại load trang web nhanh hơn. Nếu Browser detect thấy file _.gif nằm trong cache thì sẽ **không make request đến server** và tracking sẽ thất bại :D 
+
+Với &_=<?php date("Y-m-d H:i:s");?> image sẽ vẫn đc request nhưng với đuôi có chưa curent time nên sẽ không bị cache.
 
  
 ## Cross-domain cookies ##
@@ -87,7 +90,7 @@ Nói 1 cách khác, nếu user chỉ visit site A và site N bằng cách gõ UR
 
 Implement cross-domain cookies sẽ hơi phức tạp hơn nhưng không phải là không làm được.
 
-*  User visit siteA, site A vẫn tạo cookie với 1 sessionID như trên
+* User visit siteA, site A vẫn tạo cookie với 1 sessionID như trên
 * User visit siteN/randompage, site N redirect lại siteA/cookieGetter.php với param callback_url="randompage"
 * Khi browser quay trờ lại siteA/cookieGetter.php, site A sẽ check cookie của mình và nếu tìm thấy sessionID sẽ gửi dưới dạng param ngược lại cho siteN/randompage ("randompage được lấy ra từ param callback_url")
 * User được redirect back lại siteN/randompage cùng với sessionID, lúc này site N sẽ tạo cookie của site mình với sessionID kể trên.
@@ -99,10 +102,15 @@ Như vậy cross-domain cookie thực tế vẫn là các cookie khác nhau trê
  
 Third-party cookies lại là 1 khái niệm khác và dễ nhầm lẫn. Trong trường hợp site A và site N ở trên không cùng 1 công ty hay đơn vị quản lý, cookie của site A đối với site N gọi là third-party cookie và ngược lại.
 
-Giả sử trên site A đặt 1 ads banner của site N. Khi browser của user load webpage từ site A, nó đồng thời send request đến site N để load banner image. Site N có thể dựa vào request để tạo ra 1 cookie với 1 sessionID (anonymous profile) gửi lại đến browser. 
+Giả sử trên site A đặt 1 ads banner của site N. Khi browser của user load webpage từ site A, 1 đoạn JS có thể được khỏi động để load banner image từ site N. Site N có thể tạo ra 1 cookie của mình với 1 sessionID (anonymous profile) và **được phép set vào browser mặc dù user đang ở site A**. 
 
-Tiếp theo, user đến site B cũng đặt ads banner của site N. Browser lại request webpage từ site B **cùng với request đến site N để load banner image**. Lần này site N có thể check sessionID được gửi kèm tới trong cookie, và nhận biết được user đi từ site A đến site B :D
+Tiếp theo, user đến site B cũng đặt ads banner của site N. Mọi chuyện sẽ diễn ra tương tự và site N lại **được phép set vào browser 1 cookie mặc dù user đang ở site B** Tuy nhiên với khả năng đọc được cookie của chính mình, lần này site N sẽ detect được cookie đã từng được set và tìm thấy sessionID lần trước. Chuyện gì xảy ra ở đây ?
 
+Site N không hề biết user ở đâu, dùng browser gì, nhưng biết là **cùng 1 user** đã đi từ site A đến site B. Hay gọi là, site N có "anonymous profile" của user, identify bằng unique sessionID ở trên.
+
+Kết quả: Site N có thể build rất nhiều anonymous profile, và theo thời gian nắm bắt habit và interest, đưa ra các banner quảng cáo phù hợp nếu lần sau gặp lại user.
+
+Đây là một kỹ thuật phổ biến trong công nghệ quảng cáo. Tuy nhiên, các browser hiện đại đều có chức năng block third-party cookie. Vậy nếu bạn không thích bị track, có thể đơn giản disable third-party cookie trên browser của mình.
 
 ## Kết luận
 * Web beacon: là 1 technique trong web programming, mục đích là phục vụ cho web data analytics
