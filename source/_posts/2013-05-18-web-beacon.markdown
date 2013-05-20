@@ -108,7 +108,7 @@ Tiếp theo, user đến site B cũng đặt ads banner của site N. Mọi chuy
 
 Site N không hề biết user ở đâu, dùng browser gì, nhưng biết là **cùng 1 user** đã đi từ site A đến site B. Hay gọi là, site N có "anonymous profile" của user, identify bằng unique sessionID ở trên.
 
-Kết quả: Site N có thể build rất nhiều anonymous profile, và theo thời gian nắm bắt habit và interest, đưa ra các banner quảng cáo phù hợp nếu lần sau gặp lại user.
+Kết quả: Site N có thể build rất nhiều anonymous profile cho rất nhiều user, và theo thời gian nắm bắt habit và interest, đưa ra các banner quảng cáo phù hợp nếu lần sau gặp lại mỗi user.
 
 Đây là một kỹ thuật phổ biến trong công nghệ quảng cáo. Tuy nhiên, các browser hiện đại đều có chức năng block third-party cookie. Vậy nếu bạn không thích bị track, có thể đơn giản disable third-party cookie trên browser của mình.
 
