@@ -99,23 +99,91 @@
 
 <h2>Thanh ghi ngoại vi</h2>
 
-<p>Trong các hệ thống nhúng thường có các thiết bị ngoại vi (ví dụ như cổng vào ra đa chức năng GPIO, cổng UART, cổng SPI, &#8230;), và các thiết bị ngoại vi này chứa các thanh ghi mà giá trị của nó có thể thay đổi ngoài ý muốn của dòng chương trình (program flow). Ví dụ một thanh ghi trạng thái 8 bit được đánh địa chỉ 0xFEEF. Ta cần phải thực hiện polling thanh ghi trạng thái này đến khi nó khác 0</p>
+<p>Trong các hệ thống nhúng thường có các thiết bị ngoại vi (ví dụ như cổng vào ra đa chức năng GPIO, cổng UART, cổng SPI, &#8230;), và các thiết bị ngoại vi này chứa các thanh ghi mà giá trị của nó có thể thay đổi ngoài ý muốn của dòng chương trình (program flow). Ví dụ một thanh ghi trạng thái pStatReg, ta cần phải thực hiện polling thanh ghi trạng thái này đến khi nó khác 0
+(Đoạn code minh họa với Keil ARM compiler, trên vi điều khiển ARM LPC2368)</p>
 
-<figure class='code'><figcaption><span>mappedIO.c</span></figcaption>
+<figure class='code'><figcaption><span>mappedIOi_nonvolatile.c</span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">uint8_t</span> <span class="o">*</span> <span class="n">pStatReg</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint8_t</span> <span class="o">*</span><span class="p">)</span> <span class="mh">0xFEEF</span><span class="p">;</span>
-</span><span class='line'>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span> <span class="n">pStatReg</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="o">*</span><span class="p">)</span> <span class="mh">0xE002C004</span><span class="p">;</span>
 </span><span class='line'><span class="c1">//Wait for the status register to become non-zero</span>
 </span><span class='line'><span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pStatReg</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Đoạn code này có gì không ổn? Nó sẽ chạy sai khi ta bật chức năng tối ưu (optimization) của compiler. Compiler đã đọc được giá trị mà con trỏ pStatReg trỏ đến sau dòng thứ nhất. Tiếp theo, khi đến vòng lặp while, compiler nhận thấy không cần thiết phải đọc lại giá trị mà con trỏ pStatReg trỏ đến nữa, vì nó không thấy đoạn code nào ở giữa có thể thay đổi giá trị này được. Như vậy, *pStatReg luôn giữ nguyên một giá trị, và do đó vòng lặp while sẽ chạy vô tận, hoặc không chạy gì cả (tùy theo giá trị ban đầu mà pStatReg trỏ đến).</p>
+<p>Đoạn code này có gì không ổn? Nó sẽ chạy sai khi ta bật chức năng tối ưu (optimization) của compiler.
+Quan sát mã assembly mà compiler xuất ra của đoạn code trên như sau:</p>
 
-<p> Trong hệ thống nhúng, một thanh ghi có thể bị thay đổi giá trị do những điều kiện bên ngoài. Ví dụ như mức điện áp không vượt quá ngưỡng, làm cho giá trị 0 thành 1, 1 thành 0. Hoặc, khi cổng UART nhận được đầy buffer thì thanh ghi BUFFER_READY tự động chuyển 0 thành 1&#8230; Bằng cách sử dụng biến volatile, chương trình C được compiler biên dịch sẽ đảm bảo luôn luôn đọc lại giá trị của thanh ghi, tránh mọi assumption của compiler.</p>
+<figure class='code'><figcaption><span>mappedIO_nonvolatile.s</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='s'><span class='line'>        LDR      r0<span class="p">,</span><span class="o">|</span>L2.564<span class="o">|</span>
+</span><span class='line'>        SUB      sp<span class="p">,</span>sp<span class="p">,</span><span class="c1">#0x10</span>
+</span><span class='line'>        LDR      r0<span class="p">,[</span>r0<span class="p">,</span><span class="c1">#0]</span>
+</span><span class='line'><span class="o">|</span>L2.22<span class="o">|</span>
+</span><span class='line'>        CMP      r0<span class="p">,</span><span class="c1">#0</span>
+</span><span class='line'>        BEQ      <span class="o">|</span>L2.22<span class="o">|</span>
+</span><span class='line'>        LDR      r1<span class="p">,</span><span class="o">|</span>L2.564<span class="o">|</span>
+</span><span class='line'><span class="kc">...</span>
+</span><span class='line'><span class="o">|</span>L2.564<span class="o">|</span>
+</span><span class='line'>        DCD      <span class="mh">0xe002c004</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Trước khi vào label |L2.22|, tương ứng với vòng lặp while, thanh ghi r0 được ghi vào giá trị được lưu trong ô nhớ 0xE002C004. Khi vào vòng lặp while, compiler thực hiện ngay việc so sánh giá trị của thanh ghi r0 với 0. Tại sao lại như vậy? Vì compiler nhận thấy biến pStatReg là một biến normal, giá trị của nó được hiểu là không thể thay đổi một cách bất thường. Do vậy, khi bật tối ưu, compiler sẽ chỉ thực hiện so sánh giá trị của r0 mà không load lại giá trị này từ ô nhớ 0xE002C004, vì theo flow của chương trình thì biến pStatReg không bị thay đổi ở bất cứ đâu. Do đó, vòng lặp while sẽ chạy vô tận, hoặc không chạy gì cả (tùy theo giá trị ban đầu mà pStatReg trỏ đến).</p>
+
+<p>Điều gì sẽ xảy ra nếu ta đổi biến pStatReg sang volatile?</p>
+
+<figure class='code'><figcaption><span>mappedIO_volatile.c</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">volatile</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span> <span class="n">pStatReg</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="o">*</span><span class="p">)</span> <span class="mh">0xE002C004</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//Wait for the status register to become non-zero</span>
+</span><span class='line'><span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pStatReg</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Mã assembly mà compiler xuất ra sẽ như sau:</p>
+
+<figure class='code'><figcaption><span>mappedIO_volatile.s</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='s'><span class='line'>    SUB      sp<span class="p">,</span>sp<span class="p">,</span><span class="c1">#0x10</span>
+</span><span class='line'>        LDR      r0<span class="p">,</span><span class="o">|</span>L3.544<span class="o">|</span>
+</span><span class='line'><span class="o">|</span>L3.4<span class="o">|</span>
+</span><span class='line'>        LDR      r1<span class="p">,[</span>r0<span class="p">,</span><span class="c1">#0]</span>
+</span><span class='line'>        CMP      r1<span class="p">,</span><span class="c1">#0</span>
+</span><span class='line'>        BEQ      <span class="o">|</span>L3.4<span class="o">|</span>
+</span><span class='line'>        LDR      r1<span class="p">,</span><span class="o">|</span>L3.544<span class="o">|</span>
+</span><span class='line'><span class="kc">...</span>
+</span><span class='line'><span class="o">|</span>L3.544<span class="o">|</span>
+</span><span class='line'>        DCD      <span class="mh">0xe002c004</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Điều gì khác biệt ở đây? Đầu tiên, ở dòng LDR trước label |L3.4|, compiler đã đặt địa chỉ 0xE002C004 vào thanh ghi r0. Ở dòng LDR đầu tiên ngay sau label |L3.4|, ta thấy compiler đã LOAD LẠI GIÁ TRỊ của ô nhớ 0xE002C004 vào ô nhớ r1! Sau đó nó mới thực hiện so sánh giá trị của ô nhớ r1 này với 0.</p>
+
+<p>Lý do là gì? Vì ta đã đặt biến pStatReg là biến volatile, để báo hiệu là biến này có thể thay đổi một cách bất thường, ngoài flow của chương trình. Do vậy nên, để &#8220;đề phòng&#8221;, compiler lúc nào cũng phải load lại giá trị mới của ô nhớ 0xE002C004, để đảm bảo mình có giá trị mới nhất!</p>
+
+<p>Đến đây, bạn có thể hỏi là &#8220;giá trị bị thay đổi một cách bất thường&#8221; là như thế nào? Hiện tượng này đặc biệt hay xảy ra khi lập trình nhúng.  Trong hệ thống nhúng, một thanh ghi có thể bị thay đổi giá trị do những điều kiện bên ngoài. Ví dụ như mức điện áp không vượt quá ngưỡng, làm cho giá trị 0 thành 1, 1 thành 0. Hoặc, khi cổng UART nhận được đầy buffer thì thanh ghi BUFFER_READY tự động chuyển 0 thành 1&#8230; Bằng cách sử dụng biến volatile, chương trình C được compiler biên dịch sẽ đảm bảo luôn luôn đọc lại giá trị của thanh ghi, tránh mọi assumption của compiler.</p>
 
 <h2>Tiến trình con xử lý ngắt (Interrupt Service Routine)##</h2>
 

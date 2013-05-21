@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | Blog kỹ thuật máy tính]]></title>
   <link href="http://ktmt.github.com/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://ktmt.github.com/"/>
-  <updated>2013-05-13T07:51:45+09:00</updated>
+  <updated>2013-05-21T23:25:19+09:00</updated>
   <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
@@ -20,54 +20,90 @@
     <id>http://ktmt.github.com/blog/2013/05/03/error-when-install-therubyracer</id>
     <content type="html"><![CDATA[<p>Là ruby dev chắc bạn biết đến gem therubyracer (là gem dùng làm javascript interpreter trên ruby thông qua v8, gem này thường dùng làm javascript headless test hay để sử dụng một số module của nodejs trên ruby)
 Tuy nhiên khi cài đặt gem này trên mac os (kể cả từ 10.6 đến 10.8) thì rất hay bị gặp lỗi:
-{% codeblock error error.sh%}
-$ gem install therubyracer
-Building native extensions.  This could take a while...
-ERROR:  Error installing therubyracer:</p>
-
-<pre><code>ERROR: Failed to build gem native extension.
-
-    /Users/david/.rvm/rubies/ruby-1.9.3-p194/bin/ruby extconf.rb
-</code></pre>
-
-<p>checking for main() in -lobjc... yes
-<strong><em> extconf.rb failed </em></strong>
-Could not create Makefile due to some reason, probably lack of
-necessary libraries and/or headers.  Check the mkmf.log file for more
-details.  You may need configuration options.</p>
-
-<p>Provided configuration options:</p>
-
-<pre><code>--with-opt-dir
---with-opt-include
---without-opt-include=${opt-dir}/include
---with-opt-lib
---without-opt-lib=${opt-dir}/lib
---with-make-prog
---without-make-prog
---srcdir=.
---curdir
---ruby=/Users/david/.rvm/rubies/ruby-1.9.3-p194/bin/ruby
---with-objclib
---without-objclib
-</code></pre>
-
-<p>extconf.rb:15:in <code>&lt;main&gt;': undefined method</code>include_path' for Libv8:Module (NoMethodError)
-{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>error error.sh</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>gem install therubyracer
+</span><span class='line'>Building native extensions.  This could take a <span class="k">while</span>...
+</span><span class='line'>ERROR:  Error installing therubyracer:&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;ERROR: Failed to build gem native extension.
+</span><span class='line'>
+</span><span class='line'>    /Users/david/.rvm/rubies/ruby-1.9.3-p194/bin/ruby extconf.rb
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;checking <span class="k">for </span>main<span class="o">()</span> in -lobjc... yes
+</span><span class='line'>&lt;strong&gt;&lt;em&gt; extconf.rb failed &lt;/em&gt;&lt;/strong&gt;
+</span><span class='line'>Could not create Makefile due to some reason, probably lack of
+</span><span class='line'>necessary libraries and/or headers.  Check the mkmf.log file <span class="k">for </span>more
+</span><span class='line'>details.  You may need configuration options.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;Provided configuration options:&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;--with-opt-dir
+</span><span class='line'>--with-opt-include
+</span><span class='line'>--without-opt-include<span class="o">=</span><span class="k">${</span><span class="nv">opt</span><span class="p">-dir</span><span class="k">}</span>/include
+</span><span class='line'>--with-opt-lib
+</span><span class='line'>--without-opt-lib<span class="o">=</span><span class="k">${</span><span class="nv">opt</span><span class="p">-dir</span><span class="k">}</span>/lib
+</span><span class='line'>--with-make-prog
+</span><span class='line'>--without-make-prog
+</span><span class='line'>--srcdir<span class="o">=</span>.
+</span><span class='line'>--curdir
+</span><span class='line'>--ruby<span class="o">=</span>/Users/david/.rvm/rubies/ruby-1.9.3-p194/bin/ruby
+</span><span class='line'>--with-objclib
+</span><span class='line'>--without-objclib
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;extconf.rb:15:in &lt;code&gt;&amp;lt;main&amp;gt;<span class="s1">&#39;: undefined method&lt;/code&gt;include_path&#39;</span> <span class="k">for </span>Libv8:Module <span class="o">(</span>NoMethodError<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Bị lỗi này hình như là do version của v8 đang cài trong máy bị conflict với version v8 therubyracer reference đến, để fix thì có 2 cách:
 Cách đầu tiên là uninstall bản gem libv8 đang có trong máy đi, rồi install lại therubyracer
-{% codeblock fix1 fix1.sh %}
-$ gem uninstall libv8
-$ gem install therubyracer
-{% endcodeblock %}
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>fix1 fix1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>gem uninstall libv8
+</span><span class='line'><span class="nv">$ </span>gem install therubyracer
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 Khi install therubyracer thì gem sẽ tự động install lại bản v8 thích hợp vào đúng chỗ.</p>
 
 <p>Hoặc bạn có thể dùng cách thứ 2 là update lại bản libv8 mới nhất, rồi tiến hành cài đặt như bình thường
-{% codeblock fix1 fix1.sh %}
-$ gem update libv8
-$ gem install therubyracer
-{% endcodeblock %}</p>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>fix1 fix1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>gem update libv8
+</span><span class='line'><span class="nv">$ </span>gem install therubyracer
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

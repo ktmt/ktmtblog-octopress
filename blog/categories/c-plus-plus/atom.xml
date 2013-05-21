@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: c++ | Blog kỹ thuật máy tính]]></title>
+  <link href="http://ktmt.github.com/blog/categories/c-plus-plus/atom.xml" rel="self"/>
+  <link href="http://ktmt.github.com/"/>
+  <updated>2013-05-21T23:25:19+09:00</updated>
+  <id>http://ktmt.github.com/</id>
+  <author>
+    <name><![CDATA[kỹ thuật máy tính]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Quy tắc xoắn ốc]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/21/quy-tac-xoan-oc/"/>
+    <updated>2013-05-21T21:50:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/21/quy-tac-xoan-oc</id>
+    <content type="html"><![CDATA[<h3>Quy tắc xoắn ốc</h3>
+
+<p>Có một quy tắc gọi là "quy tắc xoắn ốc" cho phép lập trình viên C/C++ phân tích trong đầu bất cứ khai báo nào. Quy tắc này rất đơn giản như sau:</p>
+
+<ul>
+<li>Bắt đầu bằng tên biến và di chuyển <strong>xoắn ốc</strong> theo chiều kim đồng hồ.</li>
+<li>Nếu gặp từ khóa const thì đối tượng nằm trên đường xoắn ốc trước const không đổi.</li>
+<li>Nếu gập ký tự * thì đối tượng trước khi đến * là một con trỏ.</li>
+<li>Nếu gặp [] thì đối tượng trước [] là một mảng.</li>
+<li>Nếu gặp (kiểu dữ liệu 1, kiểu dữ liệu 2), đối tượng trước đó là một function.</li>
+</ul>
+
+
+<h3>Áp dụng</h3>
+
+<p>Ta tử áp dụng quy tắc trên để phân tích thử 1 số khai báo.</p>
+
+<h4>1. Khai báo đơn giản</h4>
+
+<pre><code>                 +-------+
+                 | +-+   |
+                 | ^ |   |
+            char *str[10];
+             ^   ^   |   |
+             |   +---+   |
+             +-----------+
+</code></pre>
+
+<p><strong>Ý nghĩa</strong>: str là một mảng (10 ký tự) con trỏ có kiểu dữ liệu ký tự (char).</p>
+
+<h4>2. Con trỏ hàm</h4>
+
+<pre><code>          +--------------------+
+          | +---+              |
+          | |+-+|              |                    
+          | |^ ||              |
+     char *(*fp)( int, float *);
+      ^   ^ ^  ||              |
+      |   | +--+|              |
+      |   +-----+              |
+      +------------------------+
+</code></pre>
+
+<p><strong>Ý nghĩa</strong>: fp là 1 con trỏ, trỏ đến 1 function (nhận 2 đối số là int, và con trỏ kiểu float), trả về 1 con trỏ  có kiểu dữ liệu ký tự (char).</p>
+
+<h4>3. Const</h4>
+
+<ul>
+<li><p>Ví dụ 1</p>
+
+<pre><code>  char greeting[] = "Hello";
+         +-----------------+
+         |   +-----------+ |
+         |   | +-------+ | |
+         |   ^ ^       v | | 
+  const char * p = greeting;
+     ^   ^   ^         | | |
+     |   |   |         | | |
+     |   |   +---------+ | |
+     |   +---------------+ |   
+     +---------------------+
+</code></pre></li>
+</ul>
+
+
+<p><strong>Ý nghĩa</strong>: p có giá trị giống greeting, và là 1 con trỏ, trỏ đến dữ liệu kiểu char, giá trị này là hằng số (không thay đổi).</p>
+
+<ul>
+<li><p>Ví dụ 2</p>
+
+<pre><code>  char greeting[] = "Hello";
+           +------------------------+   
+           | +-------------------+  |
+           | |     +-----------+ |  |
+           | |     | +-------+ | |  |
+           | |     ^ ^       v | |  |
+  const char * const p = greeting;  |
+     ^     ^ ^     ^         | | |  |
+     |     | |     |         | | |  |
+     |     | |     +---------+ | |  |
+     |     | +-----------------+ |  |
+     |     +---------------------+  |
+     +------------------------------+
+</code></pre></li>
+</ul>
+
+
+<p><strong>Ý nghĩa</strong>: p có giá trị giống greeting, giá trị của p không đổi, và nó là 1 con trỏ, trỏ đến dữ liệu kiểu chả, và dữ liệu của là hằng số.</p>
+
+<h3>Cuối cùng</h3>
+
+<p>Quy tắc <strong>xoắc ốc</strong> giúp ta hiểu ý nghĩa khai báo C/C++ một cách dễ dàng. Bây giờ với quy tắc này, bạn chắc chắn khai báo dưới đây dễ hiểu như ăn kẹo rồi phải không?</p>
+
+<pre><code>void (*signal(int, void (*fp)(int)))(int);
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

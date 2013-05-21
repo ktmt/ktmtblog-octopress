@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programming, bit twiddling | Blog kỹ thuật máy tính]]></title>
   <link href="http://ktmt.github.com/blog/categories/programming-bit-twiddling/atom.xml" rel="self"/>
   <link href="http://ktmt.github.com/"/>
-  <updated>2013-05-13T07:51:45+09:00</updated>
+  <updated>2013-05-21T23:25:19+09:00</updated>
   <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
@@ -22,66 +22,111 @@
 
 <p>Bạn đang say sưa hacking code và bắt gặp một hàm với những con số bí ẩn như ở dưới đây:</p>
 
-<p>{% codeblock fbc.c %}
-int fbc(unsigned int data)
-{</p>
-
-<pre><code>    data = (data &amp; 0x55555555) + ((data &gt;&gt; 1) &amp; 0x55555555);
-    data = (data &amp; 0x33333333) + ((data &gt;&gt; 2) &amp; 0x33333333);
-    data = (data &amp; 0x0F0F0F0F) + ((data &gt;&gt; 4) &amp; 0x0F0F0F0F);
-    data = (data &amp; 0x00FF00FF) + ((data &gt;&gt; 8) &amp; 0x00FF00FF);
-    data = (data &amp; 0x0000FFFF) + ((data &gt;&gt; 8) &amp; 0x0000FFFF);
-    return data;
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>fbc.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">fbc</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">data</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x55555555</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x55555555</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x33333333</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x33333333</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x0F0F0F0F</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x0F0F0F0F</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x00FF00FF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x00FF00FF</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x0000FFFF</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Chắc hẳn bạn sẽ không khỏi hét lên: "what the fuck! Không hiểu gì hết" khi nhìn đoạn code này. Bạn hoàn toàn không hiểu mục đích của nó. Tên hàm không cho bạn một thông tin nào hữu ích. Những con số bí ẩn cùng phép toán >>, &amp;, + làm bạn rối.</p>
 
 <p>Nếu tôi nói với bạn fcb có nghĩa là "fast bit count" và hàm trên trả về số bit 1 của 1 số 32 bit (unsigned int trong C), tôi cá chắc chắn bạn sẽ không khỏi hoài nghi. Vậy chúng ta hãy thử  biên dịch chương trình và test thử hàm này. Tôi viết chương trình như dưới đây để test hàm fbc.</p>
 
-<p>{% codeblock test.c %}</p>
-
-<h1>include &lt;stdio.h></h1>
-
-<h1>include &lt;assert.h></h1>
-
-<p>int fbc(unsigned int data)
-{</p>
-
-<pre><code>    data = (data &amp; 0x55555555) + ((data &gt;&gt; 1) &amp; 0x55555555);
-    data = (data &amp; 0x33333333) + ((data &gt;&gt; 2) &amp; 0x33333333);
-    data = (data &amp; 0x0F0F0F0F) + ((data &gt;&gt; 4) &amp; 0x0F0F0F0F);
-    data = (data &amp; 0x00FF00FF) + ((data &gt;&gt; 8) &amp; 0x00FF00FF);
-    data = (data &amp; 0x0000FFFF) + ((data &gt;&gt; 16) &amp; 0x0000FFFF);
-    return data;
-</code></pre>
-
-<p>}</p>
-
-<p>int main()
-{</p>
-
-<pre><code>    int ans;
-    ans = fbc(5);
-    assert(ans == 2);  // 5 = 101b
-    ans = fbc(198123);
-    assert(ans == 10); // 198123 = 110000010111101011b
-    return 0;
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">stdio</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">assert</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">fbc</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">data</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x55555555</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x55555555</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x33333333</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x33333333</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x0F0F0F0F</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x0F0F0F0F</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x00FF00FF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x00FF00FF</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="mh">0x0000FFFF</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="kt">int</span> <span class="n">ans</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">ans</span> <span class="o">=</span> <span class="n">fbc</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">assert</span><span class="p">(</span><span class="n">ans</span> <span class="o">==</span> <span class="mi">2</span><span class="p">);</span>  <span class="c1">// 5 = 101b</span>
+</span><span class='line'>    <span class="n">ans</span> <span class="o">=</span> <span class="n">fbc</span><span class="p">(</span><span class="mi">198123</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">assert</span><span class="p">(</span><span class="n">ans</span> <span class="o">==</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// 198123 = 110000010111101011b</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Kết quả chạy:</p>
 
-<p>{% highlight bash %}
-$ gcc -o test test.c
+<p><div>
+  <pre><code class='bash'>$ gcc -o test test.c
 $ ./test
 $ echo $?
-0
-{% endhighlight %}</p>
+0</code></pre>
+</div>
+</p>
 
 <p>Chương trình chạy bình thường, cho kết quả bằng 0 chứng tỏ hàm fbc trả về giá trị như ta mong muốn.</p>
 

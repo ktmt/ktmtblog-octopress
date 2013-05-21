@@ -4,7 +4,7 @@
   <title><![CDATA[Category: refactor | Blog kỹ thuật máy tính]]></title>
   <link href="http://ktmt.github.com/blog/categories/refactor/atom.xml" rel="self"/>
   <link href="http://ktmt.github.com/"/>
-  <updated>2013-05-13T07:51:45+09:00</updated>
+  <updated>2013-05-21T23:25:19+09:00</updated>
   <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
@@ -45,40 +45,74 @@ khi deploy code của mình.</p>
 <p>Tôi có một class sinh ra empty image với kích thước có sẵn, kèm theo barcode image
 ở vị trí đã được định trước</p>
 
-<p>{% codeblock generator/images.py %}
-class BackCoverImage(object):</p>
-
-<pre><code>BACK_COVER_IMAGE_PATH = 'assets/images/empty-barcode-image.jpg'
-BARCODE_IMAGE_SIZE = (650, 195)
-BARCODE_IMAGE_POSITION = (1925, 2300)
-
-def __init__(self, barcode):
-    self.barcode = barcode.upper().replace('_', '-')
-
-@lazy
-def barcode_image(self):
-    params = (
-        ('cpaint_function', 'BuildBarcode'),
-        ('cpaint_argument[]', self.barcode),
-        ('cpaint_argument[]', 0),
-        ('cpaint_argument[]', 5),
-        ('cpaint_response_type', 'TEXT')
-    )
-
-    BARCODE_GENERATE_SITE = 'http://www.barcoding.com'
-    BARCODE_GENERATE_URL = '%s/upc/buildbarcode.asp' % BARCODE_GENERATE_SITE
-    url = BARCODE_GENERATE_URL + "?" + "&amp;".join("%s=%s" % (k, v) for k, v in params)
-    res = requests.get(url)
-    image = utils.get_image_from_url(BARCODE_GENERATE_SITE + res.content)
-    return image.resize(self.BARCODE_IMAGE_SIZE, Image.ANTIALIAS)
-
-def run(self):
-    image = Image.open(self.BACK_COVER_IMAGE_PATH)
-    image.paste(self.barcode_image, self.BARCODE_IMAGE_POSITION)
-    return image
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>generator/images.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">BackCoverImage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">BACK_COVER_IMAGE_PATH</span> <span class="o">=</span> <span class="s">&#39;assets/images/empty-barcode-image.jpg&#39;</span>
+</span><span class='line'><span class="n">BARCODE_IMAGE_SIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">650</span><span class="p">,</span> <span class="mi">195</span><span class="p">)</span>
+</span><span class='line'><span class="n">BARCODE_IMAGE_POSITION</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1925</span><span class="p">,</span> <span class="mi">2300</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">barcode</span><span class="p">):</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">barcode</span> <span class="o">=</span> <span class="n">barcode</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">,</span> <span class="s">&#39;-&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@lazy</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">barcode_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">params</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'>        <span class="p">(</span><span class="s">&#39;cpaint_function&#39;</span><span class="p">,</span> <span class="s">&#39;BuildBarcode&#39;</span><span class="p">),</span>
+</span><span class='line'>        <span class="p">(</span><span class="s">&#39;cpaint_argument[]&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">barcode</span><span class="p">),</span>
+</span><span class='line'>        <span class="p">(</span><span class="s">&#39;cpaint_argument[]&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span class='line'>        <span class="p">(</span><span class="s">&#39;cpaint_argument[]&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+</span><span class='line'>        <span class="p">(</span><span class="s">&#39;cpaint_response_type&#39;</span><span class="p">,</span> <span class="s">&#39;TEXT&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">BARCODE_GENERATE_SITE</span> <span class="o">=</span> <span class="s">&#39;http://www.barcoding.com&#39;</span>
+</span><span class='line'>    <span class="n">BARCODE_GENERATE_URL</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">/upc/buildbarcode.asp&#39;</span> <span class="o">%</span> <span class="n">BARCODE_GENERATE_SITE</span>
+</span><span class='line'>    <span class="n">url</span> <span class="o">=</span> <span class="n">BARCODE_GENERATE_URL</span> <span class="o">+</span> <span class="s">&quot;?&quot;</span> <span class="o">+</span> <span class="s">&quot;&amp;amp;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">image</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_image_from_url</span><span class="p">(</span><span class="n">BARCODE_GENERATE_SITE</span> <span class="o">+</span> <span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BARCODE_IMAGE_SIZE</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">ANTIALIAS</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BACK_COVER_IMAGE_PATH</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">image</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">barcode_image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BARCODE_IMAGE_POSITION</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">image</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Để sinh ra barcode, tôi connect tới một webservice và lấy dữ liệu về. Hàm <code>utils.get_image_from_url</code> trả về Image object từ content của một URL.</p>
 
@@ -86,51 +120,91 @@ def run(self):
 
 <p>Đây là code test cho class trên</p>
 
-<p>{% codeblock test_back_cover_image.py %}
-import hashlib
-from PIL import Image
-from generator import images</p>
-
-<p>class TestBackCoverImage(unittest.TestCase):</p>
-
-<pre><code>def test_generate_image(self):
-    generator = images.BackCoverImage('124124')
-    image = generator.run()
-    checksum = hashlib.md5(image.tostring()).hexdigest()
-    self.assertEquals('efeae3cb498bbd57325991c2ac5346ad', checksum)
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test_back_cover_image.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">hashlib</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">TestBackCoverImage</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">test_generate_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">generator</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">(</span><span class="s">&#39;124124&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">image</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">checksum</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&#39;efeae3cb498bbd57325991c2ac5346ad&#39;</span><span class="p">,</span> <span class="n">checksum</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Đoạn code trên generate BackCoverImage với một barcode xác định trước, và so sánh check sum của image được sinh ra, với image mà tôi đã sinh ra từ trước</p>
 
 <p>Tuy nhiên, có vấn đề ở đây. Đó là mỗi lần tôi chạy code test, tôi sẽ phải connect tới service của <code>http://www.barcoding.com</code>. Tức là tốc độ của code test sẽ bị ảnh hưởng bởi network, hơn nữa hàm <code>run()</code> của class BackCoverImage gọi tới <code>barcode_image</code>, nếu chúng ta test như trên, thì code test không phải là một unit test, mà là một integration test. Để giải quyết vấn đề này, chúng ta sử dụng thư viện <code>mock</code></p>
 
-<p>{% codeblock test_back_cover_image.py %}
-import mock
-from PIL import Image
-from generator import images</p>
-
-<p>class PropertyMock(mock.Mock):</p>
-
-<pre><code>def __get__(self, instance, owner):
-    return self()
-</code></pre>
-
-<p>class TestBackCoverImage(unittest.TestCase):</p>
-
-<pre><code>def test_generate_image(self):
-    mock_barcode = PropertyMock()
-    barcode_image = Image.open('StoryTree/assets/images/barcode_image.png')
-    mock_barcode.return_value = barcode_image
-    with mock.patch.object(images.BackCoverImage, 'barcode_image', mock_barcode):
-        generator = images.BackCoverImage('storytree_124124')
-        image = generator.run()
-        checksum = hashlib.md5(image.tostring()).hexdigest()
-        self.assertEquals('efeae3cb498bbd57325991c2ac5346ad', checksum)
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test_back_cover_image.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">mock</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">PropertyMock</span><span class="p">(</span><span class="n">mock</span><span class="o">.</span><span class="n">Mock</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="bp">self</span><span class="p">()</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">TestBackCoverImage</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">test_generate_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">mock_barcode</span> <span class="o">=</span> <span class="n">PropertyMock</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">barcode_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;StoryTree/assets/images/barcode_image.png&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">mock_barcode</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">barcode_image</span>
+</span><span class='line'>    <span class="k">with</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">,</span> <span class="s">&#39;barcode_image&#39;</span><span class="p">,</span> <span class="n">mock_barcode</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">generator</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">(</span><span class="s">&#39;storytree_124124&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">image</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'>        <span class="n">checksum</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&#39;efeae3cb498bbd57325991c2ac5346ad&#39;</span><span class="p">,</span> <span class="n">checksum</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Tôi đã mock thuộc tính barcode_image của class BackCoverImage với <code>PropertyMock</code>.
 Tốc độ của test được cải thiện đáng kể, từ 3-4s khi test không có mock, xuống &lt; 0.3s</p>
@@ -138,44 +212,80 @@ Tốc độ của test được cải thiện đáng kể, từ 3-4s khi test kh
 <p>Xét tiếp ví dụ tiếp theo, tôi có một class Order, mỗi khi muốn order, tôi cần
 sinh ra một pdf file cho class Order. Pdf file này cần có một page được sinh ra từ class <code>BackCoverImage</code></p>
 
-<p>{% codeblock order.py %}
-from django.db import models
-from generator import images</p>
-
-<p>class Order(models.Model):</p>
-
-<pre><code>key = models.AutoField(primary_key=True)
-...
-
-def create_pdf_file(self):
-    back_image = images.BackCoverImage(self.pk).run()
-    ...
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>order.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">Order</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">key</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">create_pdf_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">back_image</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Để test hàm <code>create_pdf_file</code>, chúng ta sẽ mock <code>BackCoverImage.run</code> với một Image
 và kiểm tra xem hàm đó có được gọi hay không?</p>
 
-<p>{% codeblock test_order.py %}</p>
-
-<p>import mock
-from PIL import Image
-from generator import images
-from order import Order</p>
-
-<p>class TestBackCoverImage(unittest.TestCase):</p>
-
-<pre><code>def test_generate_image(self):
-    image = Image.open('StoryTree/assets/images/barcode_image.png')
-    mock_backcover = mock.Mock(return_value=image)
-    with mock.patch.object(images.BackCoverImage, 'run', mock_backcover):
-        order = Order(pk=212)
-        order.create_pdf_file()
-        mock_backcover.assert_called_once_with(212)
-</code></pre>
-
-<p>{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>test_order.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">mock</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">generator</span> <span class="kn">import</span> <span class="n">images</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">order</span> <span class="kn">import</span> <span class="n">Order</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">TestBackCoverImage</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">test_generate_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;StoryTree/assets/images/barcode_image.png&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">mock_backcover</span> <span class="o">=</span> <span class="n">mock</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">with</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">BackCoverImage</span><span class="p">,</span> <span class="s">&#39;run&#39;</span><span class="p">,</span> <span class="n">mock_backcover</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">212</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">order</span><span class="o">.</span><span class="n">create_pdf_file</span><span class="p">()</span>
+</span><span class='line'>        <span class="n">mock_backcover</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h1>Kết luận</h1>
 

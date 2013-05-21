@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: mysql, | Blog kỹ thuật máy tính]]></title>
+  <title><![CDATA[Category: mysql | Blog kỹ thuật máy tính]]></title>
   <link href="http://ktmt.github.com/blog/categories/mysql/atom.xml" rel="self"/>
   <link href="http://ktmt.github.com/"/>
-  <updated>2013-05-13T07:51:45+09:00</updated>
+  <updated>2013-05-21T23:25:19+09:00</updated>
   <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
@@ -24,7 +24,7 @@
 
 <p>Kiến trúc logic của MySQL nhìn tổng quan có thể được mô tả như hình dưới đây</p>
 
-<p>{% img /images/logical_mysql_architecture.jpeg %}</p>
+<p><img src="/images/logical_mysql_architecture.jpeg"></p>
 
 <p>Ta có thể thấy MySQL có các component cơ bản như ở dưới đây</p>
 
@@ -45,65 +45,68 @@
 
 <p>Ví dụ: mình chỉ định --datadir là /usr/local/mysql/data và định nghĩa bảng users trong database tên là test như sau</p>
 
-<p>{% highlight bash %}
-create table users (</p>
+<p><div>
+  <pre><code class='bash'>create table users (&lt;/p&gt;
 
-<pre><code>id int not null auto_increment, 
+&lt;pre&gt;&lt;code&gt;id int not null auto_increment, 
 name varchar(30), 
 password varchar(20), 
 primary key(id)
-</code></pre>
+&lt;/code&gt;&lt;/pre&gt;
 
-<p>);
-{% endhighlight %}</p>
+&lt;p&gt;);</code></pre>
+</div>
+</p>
 
 <p>thì trong thư mục /usr/local/mysql/data sẽ có thư mục con là test, và dưới test sẽ có các file</p>
 
-<p>{% highlight bash %}
--rw-rw----  1 <em>mysql  wheel   8624  5  7 17:35 users.frm
--rw-rw----  1 </em>mysql  wheel  98304  5  7 17:35 users.ibd
-{% endhighlight %}</p>
+<p><div>
+  <pre><code class='bash'>-rw-rw----  1 &lt;em&gt;mysql  wheel   8624  5  7 17:35 users.frm
+-rw-rw----  1 &lt;/em&gt;mysql  wheel  98304  5  7 17:35 users.ibd</code></pre>
+</div>
+</p>
 
 <p>Để xem loại storage engine của bảng hiện tại, bạn có thể dùng câu lệnh <em>SHOW DATABASE STATUS</em></p>
 
-<p>{% highlight bash %}
-mysql> show table status like 'users' \G
-<strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em> 1. row </em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></p>
+<p><div>
+  <pre><code class='bash'>mysql&gt; show table status like 'users' \G
+&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;strong&gt;&lt;em&gt; 1. row &lt;/em&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/strong&gt;&lt;/p&gt;
 
-<pre><code>       Name: users
+&lt;pre&gt;&lt;code&gt;       Name: users
      Engine: InnoDB
     Version: 10
  Row_format: Compact
        Rows: 2
-</code></pre>
+&lt;/code&gt;&lt;/pre&gt;
 
-<p> Avg_row_length: 8192</p>
+&lt;p&gt; Avg_row_length: 8192&lt;/p&gt;
 
-<pre><code>Data_length: 16384
-</code></pre>
+&lt;pre&gt;&lt;code&gt;Data_length: 16384
+&lt;/code&gt;&lt;/pre&gt;
 
-<p>Max_data_length: 0
-   Index_length: 0</p>
+&lt;p&gt;Max_data_length: 0
+   Index_length: 0&lt;/p&gt;
 
-<pre><code>  Data_free: 0
-</code></pre>
+&lt;pre&gt;&lt;code&gt;  Data_free: 0
+&lt;/code&gt;&lt;/pre&gt;
 
-<p> Auto_increment: 3</p>
+&lt;p&gt; Auto_increment: 3&lt;/p&gt;
 
-<pre><code>Create_time: 2013-05-07 17:35:09
+&lt;pre&gt;&lt;code&gt;Create_time: 2013-05-07 17:35:09
 Update_time: NULL
  Check_time: NULL
   Collation: latin1_swedish_ci
    Checksum: NULL
-</code></pre>
+&lt;/code&gt;&lt;/pre&gt;
 
-<p> Create_options:</p>
+&lt;p&gt; Create_options:&lt;/p&gt;
 
-<pre><code>    Comment:
-</code></pre>
+&lt;pre&gt;&lt;code&gt;    Comment:
+&lt;/code&gt;&lt;/pre&gt;
 
-<p>1 row in set (0.01 sec)
-{% endhighlight %}</p>
+&lt;p&gt;1 row in set (0.01 sec)</code></pre>
+</div>
+</p>
 
 <p>Cụ thể trong trường hợp này:</p>
 

@@ -22,7 +22,7 @@
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/04/25/dem-bit/</loc>
-        <lastmod>2013-05-06T12:11:21+09:00</lastmod>
+        <lastmod>2013-05-21T23:25:10+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/04/28/make-fun-with-unix-command-prompt/</loc>
@@ -43,16 +43,12 @@
         <lastmod>2013-05-06T12:11:21+09:00</lastmod>
     </url>
     <url>
-        <loc>http://ktmt.github.com/blog/2013/05/06/gioi-thieu-ngon-ngu-ocaml/</loc>
-        <lastmod>2013-05-07T21:51:26+09:00</lastmod>
-    </url>
-    <url>
         <loc>http://ktmt.github.com/blog/2013/05/06/memoization-and-decorator/</loc>
         <lastmod>2013-05-07T21:51:57+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/05/07/storageenginemysql/</loc>
-        <lastmod>2013-05-07T21:51:57+09:00</lastmod>
+        <lastmod>2013-05-13T07:53:11+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/05/09/mock-with-unittest-in-python/</loc>
@@ -60,23 +56,31 @@
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/05/09/y-nghia-cua-tu-khoa-volatile-trong-c/</loc>
-        <lastmod>2013-05-13T04:51:18+09:00</lastmod>
+        <lastmod>2013-05-19T22:48:25+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/05/12/closure-va-scope-cua-javascript/</loc>
-        <lastmod>2013-05-13T04:51:18+09:00</lastmod>
+        <lastmod>2013-05-19T22:48:25+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/05/13/exclusivelock-sharedlock/</loc>
         <lastmod>2013-05-13T07:51:04+09:00</lastmod>
     </url>
     <url>
+        <loc>http://ktmt.github.com/blog/2013/05/15/su-dung-ssl-voi-rails-va-mot-so-chu-y/</loc>
+        <lastmod>2013-05-19T22:48:25+09:00</lastmod>
+    </url>
+    <url>
+        <loc>http://ktmt.github.com/blog/2013/05/21/quy-tac-xoan-oc/</loc>
+        <lastmod>2013-05-21T23:18:14+09:00</lastmod>
+    </url>
+    <url>
         <loc>http://ktmt.github.com/blog/archives/</loc>
-        <lastmod>2013-05-13T07:51:04+09:00</lastmod>
+        <lastmod>2013-05-21T23:25:10+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/</loc>
-        <lastmod>2013-05-13T07:51:04+09:00</lastmod>
+        <lastmod>2013-05-21T23:25:10+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/robots.txt</loc>

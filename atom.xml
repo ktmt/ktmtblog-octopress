@@ -4,7 +4,7 @@
   <title><![CDATA[Blog kỹ thuật máy tính]]></title>
   <link href="http://ktmt.github.com/atom.xml" rel="self"/>
   <link href="http://ktmt.github.com/"/>
-  <updated>2013-05-13T07:51:12+09:00</updated>
+  <updated>2013-05-21T23:25:19+09:00</updated>
   <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
@@ -12,6 +12,381 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Quy tắc xoắn ốc]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/21/quy-tac-xoan-oc/"/>
+    <updated>2013-05-21T21:50:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/21/quy-tac-xoan-oc</id>
+    <content type="html"><![CDATA[<h3>Quy tắc xoắn ốc</h3>
+
+<p>Có một quy tắc gọi là &#8220;quy tắc xoắn ốc&#8221; cho phép lập trình viên C/C++ phân tích trong đầu bất cứ khai báo nào. Quy tắc này rất đơn giản như sau:</p>
+
+<ul>
+<li>Bắt đầu bằng tên biến và di chuyển <strong>xoắn ốc</strong> theo chiều kim đồng hồ.</li>
+<li>Nếu gặp từ khóa const thì đối tượng nằm trên đường xoắn ốc trước const không đổi.</li>
+<li>Nếu gập ký tự * thì đối tượng trước khi đến * là một con trỏ.</li>
+<li>Nếu gặp [] thì đối tượng trước [] là một mảng.</li>
+<li>Nếu gặp (kiểu dữ liệu 1, kiểu dữ liệu 2), đối tượng trước đó là một function.</li>
+</ul>
+
+
+<h3>Áp dụng</h3>
+
+<p>Ta tử áp dụng quy tắc trên để phân tích thử 1 số khai báo.</p>
+
+<h4>1. Khai báo đơn giản</h4>
+
+<pre><code>                 +-------+
+                 | +-+   |
+                 | ^ |   |
+            char *str[10];
+             ^   ^   |   |
+             |   +---+   |
+             +-----------+
+</code></pre>
+
+<p><strong>Ý nghĩa</strong>: str là một mảng (10 ký tự) con trỏ có kiểu dữ liệu ký tự (char).</p>
+
+<h4>2. Con trỏ hàm</h4>
+
+<pre><code>          +--------------------+
+          | +---+              |
+          | |+-+|              |                    
+          | |^ ||              |
+     char *(*fp)( int, float *);
+      ^   ^ ^  ||              |
+      |   | +--+|              |
+      |   +-----+              |
+      +------------------------+
+</code></pre>
+
+<p><strong>Ý nghĩa</strong>: fp là 1 con trỏ, trỏ đến 1 function (nhận 2 đối số là int, và con trỏ kiểu float), trả về 1 con trỏ  có kiểu dữ liệu ký tự (char).</p>
+
+<h4>3. Const</h4>
+
+<ul>
+<li><p>Ví dụ 1</p>
+
+<pre><code>  char greeting[] = "Hello";
+         +-----------------+
+         |   +-----------+ |
+         |   | +-------+ | |
+         |   ^ ^       v | | 
+  const char * p = greeting;
+     ^   ^   ^         | | |
+     |   |   |         | | |
+     |   |   +---------+ | |
+     |   +---------------+ |   
+     +---------------------+
+</code></pre></li>
+</ul>
+
+
+<p><strong>Ý nghĩa</strong>: p có giá trị giống greeting, và là 1 con trỏ, trỏ đến dữ liệu kiểu char, giá trị này là hằng số (không thay đổi).</p>
+
+<ul>
+<li><p>Ví dụ 2</p>
+
+<pre><code>  char greeting[] = "Hello";
+           +------------------------+   
+           | +-------------------+  |
+           | |     +-----------+ |  |
+           | |     | +-------+ | |  |
+           | |     ^ ^       v | |  |
+  const char * const p = greeting;  |
+     ^     ^ ^     ^         | | |  |
+     |     | |     |         | | |  |
+     |     | |     +---------+ | |  |
+     |     | +-----------------+ |  |
+     |     +---------------------+  |
+     +------------------------------+
+</code></pre></li>
+</ul>
+
+
+<p><strong>Ý nghĩa</strong>: p có giá trị giống greeting, giá trị của p không đổi, và nó là 1 con trỏ, trỏ đến dữ liệu kiểu chả, và dữ liệu của là hằng số.</p>
+
+<h3>Cuối cùng</h3>
+
+<p>Quy tắc <strong>xoắc ốc</strong> giúp ta hiểu ý nghĩa khai báo C/C++ một cách dễ dàng. Bây giờ với quy tắc này, bạn chắc chắn khai báo dưới đây dễ hiểu như ăn kẹo rồi phải không?</p>
+
+<pre><code>void (*signal(int, void (*fp)(int)))(int);
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sử dụng ssl trên rubyonrails]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/15/su-dung-ssl-voi-rails-va-mot-so-chu-y/"/>
+    <updated>2013-05-15T23:03:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/15/su-dung-ssl-voi-rails-va-mot-so-chu-y</id>
+    <content type="html"><![CDATA[<h1>HTTPS trên rails</h1>
+
+<p>Là RoR developer, khi phải làm việc với một số thông tin quan trọng như: thông tin cá nhân user, thông tin về thanh toán trực tuyến thì thường bạn phải dùng kết nối có bảo mật (secure connection), và điển hình ở đây là sử dụng HTTPS. Để setup HTTPS trên rails, thì trước hết mình phải nhắc lại là các web server phổ biến trên rails như là webrick, unicorn hay thin đều không hỗ trợ HTTPS từ đầu.  Để sử dụng SSL thì có 2 cách:</p>
+
+<ol>
+<li>Add thêm plugin: ví dụ như với webrick thì bạn sử dụng &#8220;webrick/https&#8221;, nhưng cách này có một bất lợi là bạn phải setting từ đầu, và server đó sẽ luôn và chỉ phục vụ các request ssl:</li>
+</ol>
+
+
+<figure class='code'><figcaption><span>webrickssl.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">module</span> <span class="nn">Rails</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Server</span> <span class="o">&lt;</span> <span class="o">::</span><span class="ss">Rack</span><span class="p">:</span><span class="ss">:Server</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">default_options</span>
+</span><span class='line'>      <span class="k">super</span><span class="o">.</span><span class="n">merge</span><span class="p">({</span>
+</span><span class='line'>        <span class="ss">:Port</span> <span class="o">=&gt;</span> <span class="mi">3000</span><span class="p">,</span>
+</span><span class='line'>        <span class="ss">:environment</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;RAILS_ENV&#39;</span><span class="o">]</span> <span class="o">||</span> <span class="s2">&quot;development&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dup</span><span class="p">,</span>
+</span><span class='line'>        <span class="ss">:daemonize</span> <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span>
+</span><span class='line'>        <span class="ss">:debugger</span> <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span>
+</span><span class='line'>        <span class="ss">:pid</span> <span class="o">=&gt;</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;tmp/pids/server.pid&quot;</span><span class="p">),</span>
+</span><span class='line'>        <span class="ss">:config</span> <span class="o">=&gt;</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;config.ru&quot;</span><span class="p">),</span>
+</span><span class='line'>        <span class="ss">:SSLEnable</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
+</span><span class='line'>        <span class="ss">:SSLVerifyClient</span> <span class="o">=&gt;</span> <span class="ss">OpenSSL</span><span class="p">:</span><span class="ss">:SSL</span><span class="o">::</span><span class="no">VERIFY_NONE</span><span class="p">,</span>
+</span><span class='line'>        <span class="ss">:SSLPrivateKey</span> <span class="o">=&gt;</span> <span class="ss">OpenSSL</span><span class="p">:</span><span class="ss">:PKey</span><span class="o">::</span><span class="no">RSA</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+</span><span class='line'>        <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;vendor/ssl/gs.key&quot;</span><span class="p">))),</span>
+</span><span class='line'>        <span class="ss">:SSLCertificate</span> <span class="o">=&gt;</span> <span class="ss">OpenSSL</span><span class="p">:</span><span class="ss">:X509</span><span class="o">::</span><span class="no">Certificate</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+</span><span class='line'>        <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;vendor/ssl/gs.crt&quot;</span><span class="p">))),</span>
+</span><span class='line'>        <span class="ss">:SSLCertName</span> <span class="o">=&gt;</span> <span class="o">[[</span><span class="s2">&quot;CN&quot;</span><span class="p">,</span> <span class="ss">WEBrick</span><span class="p">:</span><span class="ss">:Utils</span><span class="o">::</span><span class="n">getservername</span><span class="o">]]</span>
+</span><span class='line'>      <span class="p">})</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Để switch được giữa ssl và non-ssl thì thường bạn sẽ phải chạy song song 2 bản webrick, một bản hỗ trợ ssl và một bản không</p>
+
+<ol>
+<li>Bạn sử dụng <strong>Nginx</strong> như một ssl proxy, sau khi xử lý ssl request thì Nginx sẽ forward lại request cho rails-server. Ở bài viết này mình sẽ nói về thiết lập môi trường ssl ở dưới môi trường development sử dụng <strong>Pow</strong> và <strong>Nginx</strong></li>
+</ol>
+
+
+<h1>Pow + Nginx</h1>
+
+<p>Tại sao lại sử dụng Pow? Pow là một rails-server rất hay được sử dụng trong công đoạn <strong>development</strong>. Lý do vì: dễ cài đặt, không phải config, và pow cho mỗi webapp của chúng ta một cái domain đẹp đẽ trên local. Để cài đặt pow thì vô cùng đơn giản:</p>
+
+<figure class='code'><figcaption><span>install.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$curl</span> get.pow.cx | sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pow không đi kèm một bộ tool dòng lệnh tốt lắm (command line tool), tuy nhiên rất may đã có người làm hộ chúng ta 1 cái gem tên là <strong>powder</strong>, có nó thì chúng ta sẽ sử dụng pow dễ dàng hơn:</p>
+
+<figure class='code'><figcaption><span>install.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$sudo</span> gem install powder
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sau khi install xong powder, chúng ta đi đến folder chứa rails app và chỉ cần [powder link appname] là đã xong phần cài đặt</p>
+
+<figure class='code'><figcaption><span>install.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> ~/yourapp
+</span><span class='line'><span class="nv">$powder</span> link app-name
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sau khi làm thao tác này thì một symlink với tên là app-name sẽ được tạo ra ở trong thư mục <strong>~/.pow</strong>
+Kết thúc thao tác này, powder đã tự động được khởi động, và chúng ta chỉ cần truy cập vào url [app-name.dev] là đã sử dụng được như bình thường :)</p>
+
+<p>OK vậy là xong pow, giờ đến lượt nginx, để cài đặt nginx thì khá đơn giản trên mac, mình sử dụng brew:</p>
+
+<figure class='code'><figcaption><span>install.sh</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>brew install nginx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Thường thì nginx sau khi được cài đặt xong sẽ nằm ở :[/usr/local/etc/nginx]</p>
+
+<p>Bạn đang muốn sử dụng HTTPS, nên công đoạn tiếp theo sẽ là setup để nginx nhận request HTTPS và forward lại cho pow. Đầu tiên là phải generate ra một cặp <strong>private key</strong> và <strong>certificate sign</strong>, tại sao lại cần cặp này thì các bạn có thể tự tìm hiểu về giao thức HTTPS.</p>
+
+<figure class='code'><figcaption><span>install.sh</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$openssl</span> req -new -nodes -keyout server.key -out server.csr
+</span><span class='line'><span class="nv">$openssl</span> x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sau khi có cặp key và sign, rồi bạn copy cặp đó vào thư mục [/usr/local/etc/nginx/ssl] cho dễ config. Tiếp đến bạn mở config của nginx ra và config lại như dưới đây</p>
+
+<figure class='code'><figcaption><span>nginx </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>worker_processes  1;
+</span><span class='line'>
+</span><span class='line'>events {
+</span><span class='line'>      worker_connections  1024;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>http {
+</span><span class='line'>      include       mime.types;
+</span><span class='line'>      default_type  application/octet-stream;
+</span><span class='line'>
+</span><span class='line'>      sendfile        on;
+</span><span class='line'>      keepalive_timeout  65;
+</span><span class='line'>
+</span><span class='line'>      server {
+</span><span class='line'>        ### server port and name ###
+</span><span class='line'>        listen          443 ssl;
+</span><span class='line'>        server_name     app-name.dev;
+</span><span class='line'>
+</span><span class='line'>        ### SSL log files ###
+</span><span class='line'>        access_log      logs/ssl-access.log;
+</span><span class='line'>        error_log       logs/ssl-error.log;
+</span><span class='line'>
+</span><span class='line'>        ### SSL cert files ###
+</span><span class='line'>        ssl_certificate      ssl/app-name.crt;
+</span><span class='line'>        ssl_certificate_key  ssl/app-name.key;
+</span><span class='line'>        ### Add SSL specific settings here ###
+</span><span class='line'>        keepalive_timeout    60;
+</span><span class='line'>        ### We want full access to SSL via backend ###
+</span><span class='line'>        location / {
+</span><span class='line'>          proxy_pass  http://app-name.dev/;
+</span><span class='line'>          ### force timeouts if one of backend is died ##
+</span><span class='line'>          proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;
+</span><span class='line'>
+</span><span class='line'>          ### Set headers ####
+</span><span class='line'>          proxy_set_header Host $host;
+</span><span class='line'>          proxy_set_header X-Real-IP $remote_addr;
+</span><span class='line'>          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+</span><span class='line'>
+</span><span class='line'>          ### Most PHP, Python, Rails, Java App can use this header ###
+</span><span class='line'>          proxy_set_header X-Forwarded-Proto https;
+</span><span class='line'>          ### By default we don't want to redirect it ####
+</span><span class='line'>          proxy_redirect     off;
+</span><span class='line'>        }
+</span><span class='line'>     }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Công việc cuối cùng chỉ là chạy nginx, bạn khởi động nginx với option -t để test config file có đúng và không có warning nào không:</p>
+
+<figure class='code'><figcaption><span>runnginx.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo nginx -t
+</span><span class='line'>nginx: the configuration file /usr/local/etc/nginx/nginx.conf syntax is ok
+</span><span class='line'>nginx: configuration file /usr/local/etc/nginx/nginx.conf <span class="nb">test </span>is successful
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như vậy là mọi thứ đã OK, giờ chỉ việc dev thôi :D</p>
+
+<p>Để switch một cách đơn giản nhất giữa HTTPS và HTTP thì mình tạo 2 hàm sau trong application_controller:</p>
+
+<figure class='code'><figcaption><span>switch.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">def</span> <span class="nf">redirect_to_https</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">protocol</span> <span class="o">==</span> <span class="s1">&#39;http://&#39;</span>
+</span><span class='line'>    <span class="n">redirect_to</span> <span class="ss">action</span><span class="p">:</span> <span class="n">action_name</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">params</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">query_parameters</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">protocol</span><span class="p">:</span> <span class="s1">&#39;https://&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">redirect_to_http</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">protocol</span> <span class="o">==</span> <span class="s1">&#39;https://&#39;</span>
+</span><span class='line'>    <span class="n">redirect_to</span> <span class="ss">action</span><span class="p">:</span> <span class="n">action_name</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">params</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">query_parameters</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">protocol</span><span class="p">:</span> <span class="s1">&#39;http://&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Và với nhứng method nào cần sử dụng https thì mình chỉ cần gọi đến hàm redirect_to_https là ok :D.</p>
+
+<p>Các bạn có thể thấy bộ đôi pow và nginx rất dễ sử dụng đúng không.
+Gần đây mình có gặp phải một problem với bộ đôi này là mình sử dụng oauth2 để login với google account. Và google api <strong>không chấp nhận callback uri có domain có đuôi là .dev nhưng lại chấp nhận domain là localhost</strong>. Khi cài đặt powder thì default cái 127.0.0.1 sẽ không được trỏ đến app-name.dev của bạn, để làm việc này thì bạn chỉ cần vào ~/.pow, tạo một symlink với tên là <strong>default</strong> trỏ đến rails app của bạn là OK :D.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Exclusive Lock - Shared Lock]]></title>
@@ -210,19 +585,22 @@ Kết quả mong chờ: (a=0, b=0)
     <id>http://ktmt.github.com/blog/2013/05/12/closure-va-scope-cua-javascript</id>
     <content type="html"><![CDATA[<h1>Scope và closure là gì?</h1>
 
-<p>Là một programmer, chắc hẳn ít nhất bạn phải biết scope là gì :D, nhưng thôi mình cứ quote lại từ wikipedia đề phòng có người quên:</p>
+<p>Scope và closure là 2 khái niệm cơ bản mà một programmer nên biết, vì hiểu rõ 2 khái niệm này vừa giúp cho programmer tránh được một số lỗi hay gặp, vừa giúp thiết kế chương trình tốt hơn. Đầu tiên chúng ta sẽ remind lại 2 khái niệm này một cách ngắn gọn.
+Đầu tiên là khái niệm về scope, khái niệm này quá cơ bản chắc hẳn mọi người đều biết, nhưng thôi mình cứ quote lại từ wikipedia đề phòng có người quên:</p>
 
-<blockquote><p>[Scope refers to where variables and functions are accessible, and in what context it is being executed]
- => Dịch ra đại thể là scope là nơi mà <em>biến</em> hoặc <em>hàm</em> có thể truy cập vào và sử dụng/ tham chiếu được qua tên trực tiếp. Và ở ngoài scope đó thì <em>biến</em> hoặc <em>hàm</em> đó sẽ không thể <strong>nhìn</strong> được một cách trực tiếp nữa. (hơi khó hình dung nhỉ). Để phân loại scope thì có rất nhiều cách tùy thuộc vào từng góc nhìn , nhưng mình sẽ không đi sâu vào vấn đề này. Mỗi ngôn ngữ lại có đặc trưng về scope khác nhau. Trong bài viết này chúng ta sẽ chỉ tập trung vào javascript.</p></blockquote>
+<blockquote><p>[Scope refers to where variables and functions are accessible, and in what context it is being executed]</p></blockquote>
+
+<p> => Dịch ra đại thể là scope là nơi mà <em>biến</em> hoặc <em>hàm</em> có thể truy cập vào và sử dụng/ tham chiếu được qua tên trực tiếp. Và ở ngoài scope đó thì <em>biến</em> hoặc <em>hàm</em> đó sẽ không thể <strong>nhìn</strong> được một cách trực tiếp nữa. (hơi khó hình dung nhỉ). Để phân loại scope thì có rất nhiều cách tùy thuộc vào từng góc nhìn , nhưng mình sẽ không đi sâu vào vấn đề này. Mỗi ngôn ngữ lại có đặc trưng về scope khác nhau. Trong bài viết này chúng ta sẽ chỉ tập trung vào javascript.</p>
 
 <p> Khái niệm tiếp theo là về closure, khái niệm này thì không phải ai cũng biết, vì không phải ai cũng cần đến và từng động đến. Một số ngôn ngữ mainstream như C++ , java cũng không hỗ trợ closure, càng làm ít người để ý đến nó (java 8 expected sẽ cho closure vào). Hãy xem wiki nói về closure thế nào:</p>
 
-<blockquote><p>[a closure (also lexical closure or function closure) is a function or reference to a function together with a <strong>referencing environment</strong>]
- => Dịch ra đại thể là closure là một hàm hoặc một tham chiếu đi kèm với cái môi trường mà nó tham chiếu đến (khá là xoắn). Cái cần nhấn mạnh ở đây là cái <strong>referencing environment</strong> mà các bạn sẽ hiểu hơn ở các ví dụ dưới đây.</p></blockquote>
+<blockquote><p>[a closure (also lexical closure or function closure) is a function or reference to a function together with a <strong>referencing environment</strong>]</p></blockquote>
+
+<p> => Dịch ra đại thể là closure là một hàm hoặc một tham chiếu (hay còn gọi là một cái <strong>bao đóng</strong>) đi kèm với cái môi trường mà nó tham chiếu đến (khá là xoắn). Cái cần nhấn mạnh ở đây là cái <strong>referencing environment</strong> (môi trường tham chiếu) mà các bạn sẽ hiểu hơn ở các ví dụ dưới đây.</p>
 
 <h1>Scope và closure trong javascript</h1>
 
-<p>Javascript là một ngôn ngữ mainstream hiện nay và ngày càng trở nên phổ biến. Người biết về js thì nhiều, nhưng người hiểu rõ một số corner của js thì chắc không nhiều đến thế :D. Một trong các corner đấy chính là <strong>scope và closure</strong>. Js là một ngôn ngữ khá đặc biệt, đặc biệt ở chỗ js mang hơi hướng của lập trình hàm (functional programming), khi mà <strong>function ở js cũng là một first-class object</strong>, tức là function có thể được construct new tại run-time, được lưu ở trong data structure, được parse qua parameter, được return như một value. Chính vì đặc điểm đấy khiến cho scope và closure của js không giống như các ngôn ngữ phổ biến khác.</p>
+<p>Javascript là một ngôn ngữ phổ biến hiện nay. Người biết về js thì nhiều, nhưng người hiểu rõ một số corner của js thì chắc không nhiều đến thế :D. Một trong các corner đấy chính là <strong>scope và closure</strong>. Js là một ngôn ngữ khá đặc biệt, đặc biệt ở chỗ js mang hơi hướng của lập trình hàm (functional programming), khi mà <strong>function ở js cũng là một first-class object</strong>, tức là function có thể được tạo mới (construct new) tại run-time, được lưu dưới dạng một cấu trúc dữ liệu (data structure), được truyền qua parameter, được dùng như một giá trị trả về (return value). Chính vì đặc điểm đấy khiến cho scope và closure của js không giống như các ngôn ngữ phổ biến khác.</p>
 
 <p>Đầu tiên chúng ta sẽ nói về scope</p>
 
@@ -280,7 +658,7 @@ Kết quả mong chờ: (a=0, b=0)
 
 <blockquote><p>A closure is an expression (typically a function) that can have free variables <strong>together with an environment that binds those variables (that &#8220;closes&#8221; the expression).</strong></p></blockquote>
 
-<p>Chắc có bạn sẽ thắc mắc, <strong>environment</strong> ở đây là gì. Để hình dung một cách dễ hiểu, thì environment ở đây trong phần lớn các trường hợp chính là cái outer function mà chung ta vừa thử ở ví dụ về scope ở trên. Một đặc điểm rất hay của closure là <strong>closure sẽ keep reference đến các biến nằm bên trong nó, hoặc được reference bên trong nó</strong>. Điều này dẫn đến việc gì? Chắc sẽ có bạn nghĩ đến một case rất đặc biệt là khi bạn muốn context của một function được giữ lại sau khi hàm đó đã được execute xong :D. Hãy bắt đầu bằng một ví dụ:</p>
+<p>Chắc có bạn sẽ thắc mắc, <strong>environment</strong> ở đây là gì. Để hình dung một cách dễ hiểu, thì environment ở đây trong phần lớn các trường hợp chính là cái outer function mà chung ta vừa thử ở ví dụ về scope ở trên. Một đặc điểm rất hay của closure là <strong>closure sẽ giữ tham chiếu đến các biến nằm bên trong nó, hoặc được gọi đến bên trong nó</strong>. Điều này dẫn đến việc gì? Chắc sẽ có bạn nghĩ đến một trường hợp rất đặc biệt là khi bạn muốn context của một function được giữ lại sau khi hàm đó đã được execute xong :D. Hãy bắt đầu bằng một ví dụ:</p>
 
 <figure class='code'><figcaption><span>closure.js </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -306,8 +684,8 @@ Kết quả mong chờ: (a=0, b=0)
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Bạn có nhận thấy điều gì đặc biệt ở trên? Điều đặc biệt nằm ở hàm <strong>fn_inside</strong> : hàm fn_inside được tạo ra bởi kết quả return của hàm outside() với parameter là 3, và bạn có thể nhận thấy hàm fn_inside vẫn giữ tham chiếu đến cái parameter 3 đó <strong>ngay cả khi hàm outside() đã được execute xong</strong>. Chắc các bạn sẽ thấy mâu thuẫn với cái lý thuyết về function scope chúng ta đã nói đến ở trên, khi mà <em>mọi thứ được tạo ra trong function của js chỉ visible ở trong đó, và sẽ được free hoặc không nhìn thấy khi ra ngoài function đó</em>.
-Thực tế là không hề mâu thuẫn chút nào cả, chính vì cái gọi là closure của js :D. Nói một cách cụ thể hơn: <strong>fn_inside khi được tạo ra đã form một cái closure (bao đóng), trong cái bao đó, giá trị 3 được truyền vào, và cái bao của fn_inside sẽ vẫn giữ cái giá trị 3 đó cho dù outside() function có execute xong</strong>. Các bạn cứ hình dung trực quan closure như một cái bao chứa rất nhiều thứ trong nó là sẽ thấy dễ hiểu hơn:</p>
+<p>Bạn có nhận thấy điều gì đặc biệt ở trên? Điều đặc biệt nằm ở hàm <strong>fn_inside</strong> : hàm fn_inside được tạo ra bởi kết quả trả về của hàm outside() với parameter là 3, và bạn có thể nhận thấy hàm fn_inside vẫn giữ tham chiếu đến cái parameter 3 đó <strong>ngay cả khi hàm outside() đã được execute xong</strong>. Chắc các bạn sẽ thấy mâu thuẫn với cái lý thuyết về function scope chúng ta đã nói đến ở trên, khi mà <em>mọi thứ được tạo ra trong function của js chỉ nhìn thấy và sử dụng được ở trong đó, và sẽ được giải phóng hoặc không nhìn thấy khi ra ngoài function đó</em>.
+Thực tế là không hề mâu thuẫn chút nào cả, chính vì cái gọi là closure của js :D. Nói một cách cụ thể hơn: <strong>fn_inside khi được tạo ra đã đồng thời cũng tạo ra một cái closure (bao đóng), trong cái bao đó, giá trị 3 được truyền vào, và cái bao của fn_inside sẽ vẫn giữ cái giá trị 3 đó cho dù outside() function có execute xong</strong>. Các bạn cứ hình dung trực quan closure như một cái bao chứa rất nhiều thứ trong nó là sẽ thấy dễ hiểu hơn:</p>
 
 <p><img src="http://ktmt.github.com/images/closurejs/closure.png"></p>
 
@@ -443,7 +821,7 @@ Thực tế là không hề mâu thuẫn chút nào cả, chính vì cái gọi 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Bạn expect là khi click vào link 1 sẽ alert 1, click vào link 2 sẽ alert ra 2&#8230;. đúng không. Tuy nhiên thực tế là <strong>bạn click vào link nào nó cũng alert ra 5 cả</strong>. Kì lạ nhỉ? Để giải thích cho hiện tượng này thì chúng ta hãy xem lại khái niệm về closure nào. Biến i được sử dụng trong anonymous function được gán cho onclick, được <strong>kế thừa từ context của add_the_handlers function</strong>. Tại thời điểm mà bạn gọi onclick, for loop đã được execute xong, và biến i <strong>của context của add_the_handlers</strong> lúc này có giá trị là 5. Do đó bạn có click vào link nào thì giá trị được alert ra cũng là 5 cả. Point của việc này chính là do bạn đang nhầm lẫn, hay chính xác là có sự khác biệt giữa <strong>scope/context của for-loop</strong> với <strong>scope/context của outer function là add_the_handlers </strong>.</p>
+<p>Bạn hy vọng là khi click vào link 1 sẽ alert 1, click vào link 2 sẽ alert ra 2&#8230;. đúng không. Tuy nhiên thực tế là <strong>bạn click vào link nào nó cũng alert ra 5 cả</strong>. Kì lạ nhỉ? Để giải thích cho hiện tượng này thì chúng ta hãy xem lại khái niệm về closure nào. Biến i được sử dụng trong anonymous function được gán cho onclick, được <strong>kế thừa từ context của add_the_handlers function</strong>. Tại thời điểm mà bạn gọi onclick, for loop đã được execute xong, và biến i <strong>của context của add_the_handlers</strong> lúc này có giá trị là 5. Do đó bạn có click vào link nào thì giá trị được alert ra cũng là 5 cả. Điểm chú ý của việc này chính là do bạn đang nhầm lẫn, hay chính xác là có sự khác biệt giữa <strong>scope/context của for-loop</strong> với <strong>scope/context của outer function là add_the_handlers </strong>.</p>
 
 <p>Để giải quyết vấn đề này thì bạn có thể làm như dưới đây:</p>
 
@@ -473,19 +851,19 @@ Thực tế là không hề mâu thuẫn chút nào cả, chính vì cái gọi 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Point của solution này chính là việc truyền được giá trị của (i) tại thời điểm hiện tại vào closure của function được bind vào onclick. Giúp cho hàm helper() luôn refer đến giá trị i đúng. Một best practice để tránh những pitfall như thế này là</p>
+<p>Point của cách làm này chính là việc truyền được giá trị của (i) tại thời điểm hiện tại vào closure của function được bind (gán) vào onclick. Giúp cho hàm helper() luôn tham chiếu đến giá trị i đúng. Một best practice để tránh những sai lầm như thế này là</p>
 
-<blockquote><p>Avoid creating functions within a loop. It can be wasteful computationally,and it can cause confusion</p></blockquote>
+<blockquote><p>Avoid creating functions within a loop. It can be wasteful computationally,and it can cause confusion (tránh tạo mới function trong vòng loop, vì nó vừa làm tốn tài nguyên cpu, vừa dễ gây nhầm lẫn)</p></blockquote>
 
 <h1>Kết luận</h1>
 
-<p>Như vậy qua bài viết này chúng ta đã nắm được khái niệm về function scope và closure trong javascript, cũng như một số khái niệm liên quan về scope chaining, và một số best practices trong việc sử dụng closure và scope. Closure trong javascript hay sử dụng để tạo ra một cái bao mà các thứ trong đấy không được nhìn thấy bởi bên ngoài nhưng vẫn truy cập được từ bên trong, và thường được áp dụng cho một số design pattern trong js (tiêu biểu nhất là module pattern).Chi tiết hơn các bạn có thể tham khảo ở các tài liệu sau:</p>
+<p>Như vậy qua bài viết này chúng ta đã nắm được khái niệm về function scope và closure trong javascript, và một số best practices trong việc sử dụng closure và scope. Closure trong javascript hay sử dụng để tạo ra một cái bao mà các thứ trong đấy không được nhìn thấy bởi bên ngoài nhưng vẫn truy cập được từ bên trong, và thường được áp dụng cho một số design pattern trong js (tiêu biểu nhất là module pattern).Chi tiết hơn các bạn có thể tham khảo ở các tài liệu sau:</p>
 
 <ul>
 <li><a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742/ref=sr_1_1?ie=UTF8&amp;qid=1368334060&amp;sr=8-1&amp;keywords=javascript+the+good+part">Javascript the good part (by Douglas Crockford)</a></li>
 <li><a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm">Ecma-262 standard</a></li>
-<li>http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/</li>
-<li>https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope</li>
+<li><a href="http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/">http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope">https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Functions_and_function_scope</a></li>
 </ul>
 
 ]]></content>
@@ -527,23 +905,91 @@ Thực tế là không hề mâu thuẫn chút nào cả, chính vì cái gọi 
 
 <h2>Thanh ghi ngoại vi</h2>
 
-<p>Trong các hệ thống nhúng thường có các thiết bị ngoại vi (ví dụ như cổng vào ra đa chức năng GPIO, cổng UART, cổng SPI, &#8230;), và các thiết bị ngoại vi này chứa các thanh ghi mà giá trị của nó có thể thay đổi ngoài ý muốn của dòng chương trình (program flow). Ví dụ một thanh ghi trạng thái 8 bit được đánh địa chỉ 0xFEEF. Ta cần phải thực hiện polling thanh ghi trạng thái này đến khi nó khác 0</p>
+<p>Trong các hệ thống nhúng thường có các thiết bị ngoại vi (ví dụ như cổng vào ra đa chức năng GPIO, cổng UART, cổng SPI, &#8230;), và các thiết bị ngoại vi này chứa các thanh ghi mà giá trị của nó có thể thay đổi ngoài ý muốn của dòng chương trình (program flow). Ví dụ một thanh ghi trạng thái pStatReg, ta cần phải thực hiện polling thanh ghi trạng thái này đến khi nó khác 0
+(Đoạn code minh họa với Keil ARM compiler, trên vi điều khiển ARM LPC2368)</p>
 
-<figure class='code'><figcaption><span>mappedIO.c</span></figcaption>
+<figure class='code'><figcaption><span>mappedIOi_nonvolatile.c</span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">uint8_t</span> <span class="o">*</span> <span class="n">pStatReg</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint8_t</span> <span class="o">*</span><span class="p">)</span> <span class="mh">0xFEEF</span><span class="p">;</span>
-</span><span class='line'>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span> <span class="n">pStatReg</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="o">*</span><span class="p">)</span> <span class="mh">0xE002C004</span><span class="p">;</span>
 </span><span class='line'><span class="c1">//Wait for the status register to become non-zero</span>
 </span><span class='line'><span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pStatReg</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Đoạn code này có gì không ổn? Nó sẽ chạy sai khi ta bật chức năng tối ưu (optimization) của compiler. Compiler đã đọc được giá trị mà con trỏ pStatReg trỏ đến sau dòng thứ nhất. Tiếp theo, khi đến vòng lặp while, compiler nhận thấy không cần thiết phải đọc lại giá trị mà con trỏ pStatReg trỏ đến nữa, vì nó không thấy đoạn code nào ở giữa có thể thay đổi giá trị này được. Như vậy, *pStatReg luôn giữ nguyên một giá trị, và do đó vòng lặp while sẽ chạy vô tận, hoặc không chạy gì cả (tùy theo giá trị ban đầu mà pStatReg trỏ đến).</p>
+<p>Đoạn code này có gì không ổn? Nó sẽ chạy sai khi ta bật chức năng tối ưu (optimization) của compiler.
+Quan sát mã assembly mà compiler xuất ra của đoạn code trên như sau:</p>
 
-<p> Trong hệ thống nhúng, một thanh ghi có thể bị thay đổi giá trị do những điều kiện bên ngoài. Ví dụ như mức điện áp không vượt quá ngưỡng, làm cho giá trị 0 thành 1, 1 thành 0. Hoặc, khi cổng UART nhận được đầy buffer thì thanh ghi BUFFER_READY tự động chuyển 0 thành 1&#8230; Bằng cách sử dụng biến volatile, chương trình C được compiler biên dịch sẽ đảm bảo luôn luôn đọc lại giá trị của thanh ghi, tránh mọi assumption của compiler.</p>
+<figure class='code'><figcaption><span>mappedIO_nonvolatile.s</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='s'><span class='line'>        LDR      r0<span class="p">,</span><span class="o">|</span>L2.564<span class="o">|</span>
+</span><span class='line'>        SUB      sp<span class="p">,</span>sp<span class="p">,</span><span class="c1">#0x10</span>
+</span><span class='line'>        LDR      r0<span class="p">,[</span>r0<span class="p">,</span><span class="c1">#0]</span>
+</span><span class='line'><span class="o">|</span>L2.22<span class="o">|</span>
+</span><span class='line'>        CMP      r0<span class="p">,</span><span class="c1">#0</span>
+</span><span class='line'>        BEQ      <span class="o">|</span>L2.22<span class="o">|</span>
+</span><span class='line'>        LDR      r1<span class="p">,</span><span class="o">|</span>L2.564<span class="o">|</span>
+</span><span class='line'><span class="kc">...</span>
+</span><span class='line'><span class="o">|</span>L2.564<span class="o">|</span>
+</span><span class='line'>        DCD      <span class="mh">0xe002c004</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Trước khi vào label |L2.22|, tương ứng với vòng lặp while, thanh ghi r0 được ghi vào giá trị được lưu trong ô nhớ 0xE002C004. Khi vào vòng lặp while, compiler thực hiện ngay việc so sánh giá trị của thanh ghi r0 với 0. Tại sao lại như vậy? Vì compiler nhận thấy biến pStatReg là một biến normal, giá trị của nó được hiểu là không thể thay đổi một cách bất thường. Do vậy, khi bật tối ưu, compiler sẽ chỉ thực hiện so sánh giá trị của r0 mà không load lại giá trị này từ ô nhớ 0xE002C004, vì theo flow của chương trình thì biến pStatReg không bị thay đổi ở bất cứ đâu. Do đó, vòng lặp while sẽ chạy vô tận, hoặc không chạy gì cả (tùy theo giá trị ban đầu mà pStatReg trỏ đến).</p>
+
+<p>Điều gì sẽ xảy ra nếu ta đổi biến pStatReg sang volatile?</p>
+
+<figure class='code'><figcaption><span>mappedIO_volatile.c</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">volatile</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span> <span class="n">pStatReg</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="o">*</span><span class="p">)</span> <span class="mh">0xE002C004</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//Wait for the status register to become non-zero</span>
+</span><span class='line'><span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">pStatReg</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Mã assembly mà compiler xuất ra sẽ như sau:</p>
+
+<figure class='code'><figcaption><span>mappedIO_volatile.s</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='s'><span class='line'>    SUB      sp<span class="p">,</span>sp<span class="p">,</span><span class="c1">#0x10</span>
+</span><span class='line'>        LDR      r0<span class="p">,</span><span class="o">|</span>L3.544<span class="o">|</span>
+</span><span class='line'><span class="o">|</span>L3.4<span class="o">|</span>
+</span><span class='line'>        LDR      r1<span class="p">,[</span>r0<span class="p">,</span><span class="c1">#0]</span>
+</span><span class='line'>        CMP      r1<span class="p">,</span><span class="c1">#0</span>
+</span><span class='line'>        BEQ      <span class="o">|</span>L3.4<span class="o">|</span>
+</span><span class='line'>        LDR      r1<span class="p">,</span><span class="o">|</span>L3.544<span class="o">|</span>
+</span><span class='line'><span class="kc">...</span>
+</span><span class='line'><span class="o">|</span>L3.544<span class="o">|</span>
+</span><span class='line'>        DCD      <span class="mh">0xe002c004</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Điều gì khác biệt ở đây? Đầu tiên, ở dòng LDR trước label |L3.4|, compiler đã đặt địa chỉ 0xE002C004 vào thanh ghi r0. Ở dòng LDR đầu tiên ngay sau label |L3.4|, ta thấy compiler đã LOAD LẠI GIÁ TRỊ của ô nhớ 0xE002C004 vào ô nhớ r1! Sau đó nó mới thực hiện so sánh giá trị của ô nhớ r1 này với 0.</p>
+
+<p>Lý do là gì? Vì ta đã đặt biến pStatReg là biến volatile, để báo hiệu là biến này có thể thay đổi một cách bất thường, ngoài flow của chương trình. Do vậy nên, để &#8220;đề phòng&#8221;, compiler lúc nào cũng phải load lại giá trị mới của ô nhớ 0xE002C004, để đảm bảo mình có giá trị mới nhất!</p>
+
+<p>Đến đây, bạn có thể hỏi là &#8220;giá trị bị thay đổi một cách bất thường&#8221; là như thế nào? Hiện tượng này đặc biệt hay xảy ra khi lập trình nhúng.  Trong hệ thống nhúng, một thanh ghi có thể bị thay đổi giá trị do những điều kiện bên ngoài. Ví dụ như mức điện áp không vượt quá ngưỡng, làm cho giá trị 0 thành 1, 1 thành 0. Hoặc, khi cổng UART nhận được đầy buffer thì thanh ghi BUFFER_READY tự động chuyển 0 thành 1&#8230; Bằng cách sử dụng biến volatile, chương trình C được compiler biên dịch sẽ đảm bảo luôn luôn đọc lại giá trị của thanh ghi, tránh mọi assumption của compiler.</p>
 
 <h2>Tiến trình con xử lý ngắt (Interrupt Service Routine)##</h2>
 
@@ -1383,15 +1829,6 @@ giá trị auto increment tiếp theo: 3
 <li>Python Decorator: Python tools để implement decorator pattern</li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Giới thiệu ngôn ngữ lập trình OCaml]]></title>
-    <link href="http://ktmt.github.com/blog/2013/05/06/gioi-thieu-ngon-ngu-ocaml/"/>
-    <updated>2013-05-06T12:16:00+09:00</updated>
-    <id>http://ktmt.github.com/blog/2013/05/06/gioi-thieu-ngon-ngu-ocaml</id>
-    <content type="html"><![CDATA[<blockquote><p>Sometimes, the elegant implementation is a function. Not a method. Not a class. Not a framework. Just a function. - John Carmack</p></blockquote>
 ]]></content>
   </entry>
   
@@ -2401,7 +2838,7 @@ mà bạn có thể tham khảo ở đây: http://www.thegeekstuff.com/2008/09/b
 </span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span><span class="p">);</span>
 </span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0F0F0F0F</span><span class="p">);</span>
 </span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">data</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">);</span>
 </span><span class='line'>        <span class="k">return</span> <span class="n">data</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
