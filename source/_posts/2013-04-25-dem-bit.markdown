@@ -18,7 +18,7 @@ int fbc(unsigned int data)
         data = (data & 0x33333333) + ((data >> 2) & 0x33333333);
         data = (data & 0x0F0F0F0F) + ((data >> 4) & 0x0F0F0F0F);
         data = (data & 0x00FF00FF) + ((data >> 8) & 0x00FF00FF);
-        data = (data & 0x0000FFFF) + ((data >> 8) & 0x0000FFFF);
+        data = (data & 0x0000FFFF) + ((data >> 16) & 0x0000FFFF);
         return data;
 }
 {% endcodeblock %}
