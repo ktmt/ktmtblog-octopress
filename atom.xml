@@ -4,7 +4,7 @@
   <title><![CDATA[Blog kỹ thuật máy tính]]></title>
   <link href="http://ktmt.github.com/atom.xml" rel="self"/>
   <link href="http://ktmt.github.com/"/>
-  <updated>2013-05-21T23:25:19+09:00</updated>
+  <updated>2013-05-27T00:12:18+09:00</updated>
   <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
@@ -113,6 +113,303 @@
 
 <pre><code>void (*signal(int, void (*fp)(int)))(int);
 </code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Cơ bản về Arduino - Platform for Physical Computing]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/21/co-ban-ve-arduino-platform-for-physical-computing/"/>
+    <updated>2013-05-21T09:37:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/21/co-ban-ve-arduino-platform-for-physical-computing</id>
+    <content type="html"><![CDATA[<h1>Giới thiệu về Arduino và Physical Computing</h1>
+
+<p>Có thể bạn đã quen lập trình trên PC, với những ngôn ngữ như C, C++, C#, Java, Python, Ruby&#8230;</p>
+
+<p>Nhưng bạn có biết là phần mềm trên PC chỉ chiếm khoảng 10% sản lượng phần mềm trên thị trường. 90% còn lại là code điều khiển tivi, máy giặt, điều hòa, tủ lạnh&#8230; tóm lại là tất cả các thiết bị điện tử xung quanh bạn. Đây cũng là một mảng theo tôi là khá thú vị. Lập trình theo hướng này được gọi là embedded computing, hay physical computing, tức là lập trình để con người tương tác với các thiết bị thực.</p>
+
+<p>Để người thiết kế có thể nhanh chóng đưa ra được mẫu thể hiện ý tưởng của mình, rất cần phải có những platform để dễ dàng prototyping. Và một trong những platform đang được sử dụng rất nhiều trong prototyping là Arduino.</p>
+
+<p>Vậy Arduino là gì và vì sao nó được sử dụng rộng rãi như vậy?</p>
+
+<p>Arduino là một bo mạch xử lý được dùng để lập trình tương tác với các thiết bị phần cứng như cảm biến, động cơ,&#8230; Điểm hấp dẫn ở Arduino với anh em lập trình là ngôn ngữ cực kì dễ học (giống C/C++), các ngoại vi trên bo mạch đều đã được chuẩn hóa, nên không cần biết nhiều về điện tử, chúng ta cũng có thể lập trình được những ứng dụng thú vị. Thêm nữa, vì Arduino là một platform đã được chuẩn hóa, nên đã có rất nhiều các bo mạch mở rộng (gọi là shield) để cắm chồng lên bo mạch Arduino, có thể hình dung nôm na là &#8220;library&#8221; của các ngôn ngữ lập trình. Ví dụ, muốn kết nối Internet thì có Ethernet shield, muốn điều khiển động cơ thì có Motor shield, muốn kết nối nhận tin nhắn thì có GSM shield,&#8230; Rất đơn giản, và ta chỉ phải tập trung vào việc &#8220;lắp ghép&#8221; các thành phần này và sáng tạo ra các ứng dụng cần thiết :)</p>
+
+<p>Có thể kể ở đây một số ứng dụng hay ho của Arduino:</p>
+
+<ul>
+<li><p>Robot: Arduino được dùng để làm bộ xử lý trung tâm của rất nhiều loại robot. Đó là nhờ vào khả năng đọc các thiết bị cảm biến, điều khiển động cơ,&#8230; của Arduino.</p></li>
+<li><p>Game tương tác: chúng ta có thể dùng Arduino để tương tác với Joystick, màn hình,&#8230; để chơi các trò như Tetrix, phá gach, Mario&#8230; Còn nhiều game rất sáng tạo nữa, ví dụ bạn có thể tham khảo ở đây:
+<a href="http://wn.com/arduino_game">http://wn.com/arduino_game</a></p></li>
+<li><p>Máy bay không người lái</p></li>
+<li><p>Mô phỏng Ipod :D (ví dụ ở đây: <a href="http://www.youtube.com/watch?v=5gy7w6R091M">http://www.youtube.com/watch?v=5gy7w6R091M</a>)</p></li>
+<li><p>và nhiều nhiều ứng dụng khác nữa &#8230;</p></li>
+</ul>
+
+
+<h1>Để lập trình Arduino cần những gì?</h1>
+
+<p>Như vậy, bạn đã biết là tuy là một bo mạch nhỏ như thế, Arduino có thể dùng vào rất nhiều ứng dụng thú vị khác nhau. Vậy để phát triển ứng dụng dựa trên Arduino, ta cần những gì?
+Rất đơn giản, bạn chỉ cần IDE phát triển (download ở <a href="http://arduino.cc/">đây</a>), một dây kết nối USB loại A-B, và một bo mạch Arduino là bạn có thể bắt đầu được rồi.</p>
+
+<p>Ngôn ngữ lập trình của Arduino dựa trên ngôn ngữ lập trình Wiring cho phần cứng. Chắc bạn đã quá quen thuộc với ngôn ngữ C/C++, như vậy việc viết code Wiring là rất dễ dàng. Cộng thêm, trên <a href="http://arduino.cc/">website</a>, có khá nhiều các library viết sẵn để điều khiển ngoại vi: LCD, sensor, motor&#8230; nên việc bạn cần làm chỉ là kết hợp chúng với nhau để tạo ứng dụng cho riêng bạn.</p>
+
+<h1>Cận cảnh phần cứng của Arduino</h1>
+
+<p><img src="http://ktmt.github.com/images/arduino-intro/arduino-overview.gif" title="" ></p>
+
+<p>Hình trên là cận cảnh con Arduino Uno. Đối với chúng ta lập trình cho Arduino thì trước tiên quan tâm những thành phần được đánh số ở trên:</p>
+
+<ol>
+<li><p>Cổng USB (loại B): đây là cổng giao tiếp để ta upload code từ PC lên vi điểu khiển. Đồng thời nó cũng là giao tiếp serial để truyền dữ liệu giữa vi điểu khiển với máy tính.</p></li>
+<li><p>Jack nguồn: để chạy Arduino thì có thể lấy nguồn từ cổng USB ở trên, nhưng không phải lúc nào cũng có thể cắm với máy tính được. Lúc đó, ta cần một nguồn 9V đến 12V.</p></li>
+<li><p>Hàng Header: đánh số từ 0 đến 12 là hàng digital pin, nhận vào hoặc xuất ra các tín hiệu số. Ngoài ra có một pin đất (GND) và pin điện áp tham chiếu (AREF).</p></li>
+<li><p>Hàng header thứ hai: chủ yếu liên quan đến điện áp đất, nguồn.</p></li>
+<li><p>Hàng header thứ ba: các chân để nhận vào hoặc xuất ra các tín hiệu analog. Ví dụ như đọc thông tin của các thiết bị cảm biến.</p></li>
+<li><p>Vi điều khiển AVR: đây là bộ xử lý trung tâm của toàn bo mạch. Với mỗi mẫu Arduino khác nhau thì con chip này khác nhau. Ở con Arduino Uno này thì sử dụng ATMega328.</p></li>
+</ol>
+
+
+<h1>&#8220;Hello World&#8221; trên nền Arduino</h1>
+
+<p>Với việc học bất cứ một ngôn ngữ nào, thường người ta hay bắt đầu bằng ví dụ &#8220;Hello World&#8221;, tức là bắt máy tính bắn ra màn hình dòng chữ &#8220;Hello, World!&#8221;. Với các bạn có kinh nghiệm lập trình, việc này có lẽ quá dễ dàng, chỉ vài dòng code là được, ngôn ngữ nào cũng vậy (C, C++, Java, Python, Ruby&#8230;).</p>
+
+<p>Nhưng với lập trình trên Arduino thì sao? Việc bắt cái bo mạch Arduino đưa ra một thông tin báo hiệu nào đó cho ta là nó đang chạy, phải thực hiện thế nào? Nói cách khác, output của Arduino sẽ là như thế nào đây:</p>
+
+<ol>
+<li><p>Nháy LED</p></li>
+<li><p>Kết nối với PC qua đường UART, bắn lên dòng chữ Hello World cho ta ngắm.</p></li>
+<li><p>Kết nối với một cái màn LCD, cũng bắt nó bắn lên Hello World cho ta nhìn.</p></li>
+</ol>
+
+
+<p>&#8230; vài cách nữa</p>
+
+<p>Trong bài mở đầu này, tôi chọn cách dễ nhất là Nháy LED. Nháy LED cũng được coi là Hello World của lập trình nhúng, với mỗi con chip mới, điều đầu tiên nên làm là nháy LED, để kiểm tra xem mình đã kiểm soát được đầu vào đầu ra cho con chip chưa :)</p>
+
+<p>Đầu tiên là đoạn code nháy LED:</p>
+
+<figure class='code'><figcaption><span>blink_series.c </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cm">/* </span>
+</span><span class='line'><span class="cm">  Multiple blink </span>
+</span><span class='line'><span class="cm">  Turns on and off a LED series, using Arduino pin 4,5,6,7</span>
+</span><span class='line'><span class="cm">  </span>
+</span><span class='line'><span class="cm">  written by Viet Nguyen</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'>
+</span><span class='line'> <span class="kt">int</span> <span class="n">led</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'> <span class="c1">//the setup routine runs once when you reset the Arduino</span>
+</span><span class='line'> <span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+</span><span class='line'> <span class="p">{</span>
+</span><span class='line'>   <span class="c1">//initialize the digital pin as an output</span>
+</span><span class='line'>   <span class="k">for</span><span class="p">(</span><span class="n">led</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">led</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">led</span> <span class="o">++</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">{</span>
+</span><span class='line'>     <span class="n">pinMode</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span> <span class="c1">//init the digital pin as output.</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'> <span class="c1">// the loop routine runs over and over again</span>
+</span><span class='line'> <span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+</span><span class='line'> <span class="p">{</span>
+</span><span class='line'>   <span class="k">for</span><span class="p">(</span><span class="n">led</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">led</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">led</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">{</span>
+</span><span class='line'>     <span class="n">digitalWrite</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>  <span class="c1">//turn the LED on (HIGH is the voltage level)</span>
+</span><span class='line'>     <span class="n">delay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>      <span class="c1">//100 ms</span>
+</span><span class='line'>     <span class="n">digitalWrite</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>  <span class="c1">//turn the LED off by making the volage LOW</span>
+</span><span class='line'>     <span class="n">delay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>      <span class="c1">//100 ms</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bạn thấy đó, đoạn code trên rất đơn giản và mang phong cách giống C/C++. Một chương trình như trên được gọi là sketch, sẽ được upload lên bo mạch Arduino qua cổng USB.</p>
+
+<p>Phân tích chương trình: có 2 method quan trọng nhất là setup() và loop().</p>
+
+<ul>
+<li><p>setup() làm nhiệm vụ khởi tạo mode cho các ngoại vi của Arduino. Hàm này sẽ được chạy một lần khi bo mạch Arduino được reset. Ở chương trình này, setup() chỉ làm nhiệm vụ đặt các chân 4,5,6,7 của Arduino sang mode output.</p></li>
+<li><p>loop() là chương trình chính của Arduino. Đoạn code trong loop() sẽ được Arduino chạy vô hạn. Trong chương trình này, có hàm digitalWrite() để đặt các chân (pin) ở mức điện áp cao (HIGH) hay thấp (LOW). Hàm tiếp theo là delay(), nhận đối số là một số nguyên, thẻ hiện số mili giây ta muốn chương trình tạm ngưng.</p></li>
+</ul>
+
+
+<p>Đó là tất cả về phần code chạy, còn nối dây như thế nào? Dưới đây là sơ đồ nối dây:</p>
+
+<p><img src="http://ktmt.github.com/images/arduino-intro/arduino_led.png"></p>
+
+<p>Giải thích một chút, đoạn code trên sẽ lần lượt xuất điện áp 5V ra các pin 4,5,6,7 rồi tắt. Để kiểm nghiệm, nối LED với một con trở giữa các pin đó với đất, ta sẽ thấy các đèn LED bật tắt nhịp nhàng :)</p>
+
+<p>Sau đây là video demo :P</p>
+
+<iframe width="560" height="315" src="http://www.youtube.com/embed/4EOGnKN2RiE" frameborder="0" allowfullscreen></iframe>
+
+
+<h1>Kết luận#</h1>
+
+<p>Bài này đã giới thiệu những kiến thức mở đầu về Arduino, cách lập trình trên platform này và demo bài &#8220;Hello World&#8221; của Arduino. Với cộng đồng chia sẻ rất lớn, nhiều ứng dụng, Arduino rất đáng để học, cũng là một cách để bạn tiếp cận dễ dàng hơn với electronics :D</p>
+
+<h1>Tham khảo</h1>
+
+<ol>
+<li><a href="http://arduino.cc/en/">http://arduino.cc/en/</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Web Beacon và cookie]]></title>
+    <link href="http://ktmt.github.com/blog/2013/05/18/web-beacon/"/>
+    <updated>2013-05-18T15:27:00+09:00</updated>
+    <id>http://ktmt.github.com/blog/2013/05/18/web-beacon</id>
+    <content type="html"><![CDATA[<h2>Web Beacon là gì</h2>
+
+<p>Web Beacon, hay Web Bug là 1 khái niệm với 2 tên gọi khác nhau.
+Có thể bạn chưa từng nghe nói đến, hay đã nghe nhưng ko hiểu rõ lắm về cụm từ này. Trước hết mình sẽ lấy định nghĩa trên Wikipedia xuống để dễ theo dõi</p>
+
+<blockquote><p>A web bug is an object that is embedded in a web page or email and is usually invisible to the user but allows checking that a user has viewed the page or email. Common uses are email tracking and page tagging for Web analytics</p></blockquote>
+
+<p>Như vậy, Web beacon là 1 technique trong web programming, mục đích là phục vụ cho web data analytics.</p>
+
+<p>Tại sao lại cần phải có web beacon ? Cách implement web beacon ra sao ? Bài viết này sẽ trả lời 2 câu hỏi trên và 2 khái niệm liên quan thông qua các ví dụ và hình dung cụ thể.</p>
+
+<h2>Tại sao lại phải có web beacon ?</h2>
+
+<p>Nếu bạn đã từng tự xây dựng 1 web application, deploy trên server của chính bạn - bravo - bạn đã có sản phẩm của chính bạn - đứa con tinh thần đầu tiên :D</p>
+
+<p>Now what ? Bạn muốn application của mình to hơn, lớn nữa, performance cao lên, vậy sẽ bắt đầu phải scale up, add feature, brainstorming để <strong>lôi kéo user</strong>.</p>
+
+<p>Phần khó khăn nhất ở đây - Long live the users :D Application cần có nhiều idea mới. Hoặc đơn giản, không có thứ gì interesting thì phải có link đến những web khác có interesting content.
+Vậy, <strong>làm thế nào</strong> để biết user cảm thấy interesting với content nào nhất ? User hứng thú với dịch vụ gì và không hứng thú với dịch vụ gì ?</p>
+
+<p>1 cách mô hình hoá, Website của bạn - website A có link đến website N1, N2, N3, &#8230; (các site có intersting content)
+Bạn - site A webmaster muốn biết user của bạn click vào những link nào nhiều nhất trong số các N-site.
+Dĩ nhiên là site nào ít attractive nhất thì muốn bỏ đi, site nào càng nhiều attractive thì tìm thêm các loại tương ứng.
+Mặc dù khi user click vào các link thì đã ra khỏi site của bạn và đi đến site khác, nhưng bạn có thể <strong>đặt web beacon ở từng link</strong> để tracking user của bạn.</p>
+
+<p>Ngược lại, giả sử vì mục đích quảng cáo, site N của bạn đặt link (banner) ở các site A1, A2, A3,&#8230;.
+Đổi lại bạn đang trả tiền cho tất cả.
+Dĩ nhiên bạn muốn biết user visit site của mình đến từ nơi nào nhiều nhất.
+Nơi nào user ko đến thì cắt bỏ để giảm chi phí v.v&#8230;
+Bạn có thể <strong>đặt web beacon ở cổng vào site mình</strong> và record lại các information bạn cần.</p>
+
+<p>Thử tưởng tượng 1 hệ thống web có n node X1, X2,&#8230; Xn , mỗi node đều đặt web beacon ở đầu vào và các đầu ra của mình, mỗi node sẽ có 1 action flow của user, được identify bằng 1 sessionID thống nhất. Đến giai đoạn user behavior analytics, chỉ cần dựa vào 1 sessionID đó có thể tổng hợp được flow tổng quát của từng user trên cả hệ thống !</p>
+
+<h2>Implement Web Beacon</h2>
+
+<p>Trước hết, Web beacon thường được implement dưới dạng 1 file gif 1x1 pixel, gần như trong suốt với user và giảm tối đa load mỗi lần generate ra request với server.</p>
+
+<p>Trường hợp 1 ở bên trên, cách implement khá đơn giản: Mỗi link đến các website N1, N2, N3&#8230; có để đặt gán với 1 hàm javascript, khởi động 1 ajax request đến server của site mình kèm theo các thông tin hữu ích (IP của user, target website v.v&#8230;)
+Nội dung request là GET web beacon (request file fig 1x1 pixel) Như thế server site mình sẽ mất thêm lượng tải tối thiếu cho mục đích tracking.</p>
+
+<p>Cách viết cụ thể ajax request và xử lý cookie phía server sẽ không trình bày cụ thể ở bài viết này.</p>
+
+<p>Trường hợp 2, cần có 1 chút lưu ý. Các site A1, A2, A3,&#8230; bạn đặt banner cần phải có 1 param ghi lại domain của họ, ví dụ:</p>
+
+<figure class='code'><figcaption><span>siteA.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">method =</span><span class="err"> </span><span class="s">&quot;GET&quot;</span> <span class="na">action =</span><span class="err"> </span><span class="s">&quot;www.your_site.com&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;hidden&quot;</span> <span class="na">name=</span><span class="s">&quot;callback_url&quot;</span> <span class="na">value=</span><span class="s">&quot;domain_of_this_site&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như vậy user đi đến site N của bạn sẽ mang theo &#8220;callback_url&#8221;. Ở cổng vào site của bạn có thể đặt 1 beacon như sau</p>
+
+<figure class='code'><figcaption><span>siteN.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;/img/_.gif?from_=&lt;?php $_GET[&quot;</span><span class="na">callback_url</span><span class="err">&quot;];?</span><span class="nt">&gt;</span><span class="err">&amp;</span>_=<span class="cp">&lt;?php date(&quot;Y-m-d H:i:s&quot;);?&gt;</span>&quot;&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Tại sao ở đây lại cần hàm date(&#8220;Y-m-d H:i:s&#8221;) ? Browser có cơ chế cache và thông thường sẽ cache lại các file image tại 1 website để lần sau quay lại load trang web nhanh hơn. Nếu Browser detect thấy file _.gif nằm trong cache thì sẽ <strong>không make request đến server</strong> và tracking sẽ thất bại :D</p>
+
+<p>Với &amp;_=&lt;?php date(&#8220;Y-m-d H:i:s&#8221;);?> image sẽ vẫn đc request nhưng với đuôi có chưa curent time nên sẽ không bị cache.</p>
+
+<h2>Cross-domain cookies</h2>
+
+<p>Phần này sẽ đề cập đến 1 khái niệm liên quan: cross-domain cookie.
+Giả sử site A có đặt link hay ads(quảng cáo) của site N, và cả site A lẫn site N đều nằm thuộc cùng 1 group, 1 công ty. Lúc đó webmaster của site A và site N có thể sử dụng cross-domain cookie để tracking user action flow trên cả 2 site.</p>
+
+<p>Cái gì gọi là cross-domain cookie ? Chẳng phải là cookie chỉ readable với 1 domain cố định hay sao ?</p>
+
+<p>Bạn có thể hình dung đơn giản như sau:</p>
+
+<ul>
+<li>User visit site A, site A tạo 1 cookie với domain của mình, kèm theo 1 sessionID. Với sessionID này site A có thể tracking user trong phạm vi site của mình.</li>
+<li>User click vào link (hoặc ads) đến site N, site A &#8220;gửi kèm&#8221; 1 param là sessionID kể trên . Site N đón nhận request với sessionID và cũng tạo 1 cookie trên domain của mình chứa sessionID dược nhận.</li>
+<li>User click vào nút &#8220;Come back to previous site&#8221; trên site N, site N sẽ tổng hợp action flow trên site mình (dựa vào cookie tạo ở trên), send ngược trờ lại cùng với sessionID cho site A.</li>
+<li>Site A sẽ welcome user trở lại, VD thêm đoạn chào hỏi: &#8220;Aha, bạn đến site N để mua abcxyz phải không, để tôi show cho bạn thêm vài site khác nữa cũng có thứ đồ abcxyz đó nữa, tốt lắm &#8221; etc :D</li>
+</ul>
+
+
+<p>Vậy vấn đề sẽ thế nào nếu như ko có nút &#8220;Come back to previous site&#8221; hay link hoặc ads trên site A ?
+Nói 1 cách khác, nếu user chỉ visit site A và site N bằng cách gõ URL trực tiếp trên thanh URL của browser ?</p>
+
+<p>Implement cross-domain cookies sẽ hơi phức tạp hơn nhưng không phải là không làm được.</p>
+
+<ul>
+<li>User visit siteA, site A vẫn tạo cookie với 1 sessionID như trên</li>
+<li>User visit siteN/randompage, site N redirect lại siteA/cookieGetter.php với param callback_url=&#8221;randompage&#8221;</li>
+<li>Khi browser quay trờ lại siteA/cookieGetter.php, site A sẽ check cookie của mình và nếu tìm thấy sessionID sẽ gửi dưới dạng param ngược lại cho siteN/randompage (&#8220;randompage được lấy ra từ param callback_url&#8221;)</li>
+<li>User được redirect back lại siteN/randompage cùng với sessionID, lúc này site N sẽ tạo cookie của site mình với sessionID kể trên.</li>
+</ul>
+
+
+<p>Như vậy cross-domain cookie thực tế vẫn là các cookie khác nhau trên các domain khác nhau</p>
+
+<h2>Third-party cookies</h2>
+
+<p>Third-party cookies lại là 1 khái niệm khác và dễ nhầm lẫn. Trong trường hợp site A và site N ở trên không cùng 1 công ty hay đơn vị quản lý, cookie của site A đối với site N gọi là third-party cookie và ngược lại.</p>
+
+<p>Giả sử trên site A đặt 1 ads banner của site N. Khi browser của user load webpage từ site A, 1 đoạn JS có thể được khỏi động để load banner image từ site N. Site N có thể tạo ra 1 cookie của mình với 1 sessionID (anonymous profile) và <strong>được phép set vào browser mặc dù user đang ở site A</strong>.</p>
+
+<p>Tiếp theo, user đến site B cũng đặt ads banner của site N. Mọi chuyện sẽ diễn ra tương tự và site N lại <strong>được phép set vào browser 1 cookie mặc dù user đang ở site B</strong> Tuy nhiên với khả năng đọc được cookie của chính mình, lần này site N sẽ detect được cookie đã từng được set và tìm thấy sessionID lần trước. Chuyện gì xảy ra ở đây ?</p>
+
+<p>Site N không hề biết user ở đâu, dùng browser gì, nhưng biết là <strong>cùng 1 user</strong> đã đi từ site A đến site B. Hay gọi là, site N có &#8220;anonymous profile&#8221; của user, identify bằng unique sessionID ở trên.</p>
+
+<p>Kết quả: Site N có thể build rất nhiều anonymous profile cho rất nhiều user, và theo thời gian nắm bắt habit và interest, đưa ra các banner quảng cáo phù hợp nếu lần sau gặp lại mỗi user.</p>
+
+<p>Đây là một kỹ thuật phổ biến trong công nghệ quảng cáo. Tuy nhiên, các browser hiện đại đều có chức năng block third-party cookie. Vậy nếu bạn không thích bị track, có thể đơn giản disable third-party cookie trên browser của mình.</p>
+
+<h2>Kết luận</h2>
+
+<ul>
+<li>Web beacon: là 1 technique trong web programming, mục đích là phục vụ cho web data analytics</li>
+<li>Cross-domain cookies: các cookie khác nhau trên các domain khác nhau, tuy nhiên identify được lẫn nhau thông qua unique ID</li>
+<li>Third-party cookies: cookies của domain khác nhưng được set khi user visit webpage của server mình</li>
+</ul>
+
 ]]></content>
   </entry>
   
@@ -558,7 +855,7 @@ Kết quả mong chờ: (a=0, b=0)
     2               |               | World (T2)
 </code></pre>
 
-<p>Lúc này, mọi thao tác đọc sẽ vẫn trả về Foo-Bar. Khi T2 commit, dữ liệu đọc tiếp theo sẽ là Hello-Bar. Và khi T2 commit, dữ liệu đọc sẽ là Hello-World. Nói cách khác, tại mỗi thời điểm ta nhìn thấy 1 phiên bản dữ liệu, các cập nhật bởi thread khác sẽ được lưu tại một version khác.</p>
+<p>Lúc này, mọi thao tác đọc sẽ vẫn trả về Foo-Bar. Khi T1 commit, dữ liệu đọc tiếp theo sẽ là Hello-Bar. Và khi T2 commit, dữ liệu đọc sẽ là Hello-World. Nói cách khác, tại mỗi thời điểm ta nhìn thấy 1 phiên bản dữ liệu, các cập nhật bởi thread khác sẽ được lưu tại một version khác.</p>
 
 <p>Chính nhờ cách quản lý nhiều version dữ liệu này, mà việc đọc không cần lock shared-lock vẫn đảm bảo được tính toàn vẹn của dữ liệu được đọc.</p>
 
@@ -1745,7 +2042,7 @@ giá trị auto increment tiếp theo: 3
 </span><span class='line'>Batman Here! Gotham is saved!</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Cơ chế của decorator có thể hiểu đơn giản là, khi compiler đọc đến đoạn code đefine function với decorator, compiler sẽ compile function 1 cách bình thường và pass function object kết quả thẳng cho decorator(dưới dạng function hoặc class). Decorator(function hoăc class) lấy agrument là 1 function object và return kết quả là 1 function object khác.</p>
+<p>Cơ chế của decorator có thể hiểu đơn giản là, khi intepreter đọc đến đoạn code đefine function với decorator, interpreter sẽ evaluate function 1 cách bình thường và pass function object kết quả thẳng cho decorator(dưới dạng function hoặc class). Decorator(function hoăc class) lấy agrument là 1 function object và return kết quả là 1 function object khác.</p>
 
 <p>Function object kết quả nói trên gồm function object ban đầu đã được gói lại và &#8220;thêm thắt&#8221;, và từ nay về sau sẽ được gọi thay cho function object ban đầu mỗi khi có lệnh call.</p>
 

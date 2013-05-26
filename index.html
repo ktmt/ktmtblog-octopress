@@ -215,137 +215,88 @@
   
 
 
-<time datetime="2013-05-15T23:03:00+09:00" data-updated="true" itemprop="datePublished">May 15<span>th</span>, 2013</time></div>
+<time datetime="2013-05-21T09:37:00+09:00" data-updated="true" itemprop="datePublished">May 21<span>st</span>, 2013</time></div>
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ssl/'>ssl</a>, <a class='category' href='/blog/categories/tips/'>tips</a>, <a class='category' href='/blog/categories/tutorials/'>tutorials</a>
+	<a class='category' href='/blog/categories/arduino/'>arduino</a>, <a class='category' href='/blog/categories/embedded/'>embedded</a>, <a class='category' href='/blog/categories/physical-computing/'>physical computing</a>
 
 
 </div>
 		
-			<span class="comments"><a href="/blog/2013/05/15/su-dung-ssl-voi-rails-va-mot-so-chu-y/#disqus_thread">Comments</a></span>
+			<span class="comments"><a href="/blog/2013/05/21/co-ban-ve-arduino-platform-for-physical-computing/#disqus_thread">Comments</a></span>
 		
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/05/15/su-dung-ssl-voi-rails-va-mot-so-chu-y/" itemprop="url">Sử Dụng Ssl Trên Rubyonrails</a></h1>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/05/21/co-ban-ve-arduino-platform-for-physical-computing/" itemprop="url">Cơ Bản về Arduino - Platform for Physical Computing</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<h1>HTTPS trên rails</h1>
+		<h1>Giới thiệu về Arduino và Physical Computing</h1>
 
-<p>Là RoR developer, khi phải làm việc với một số thông tin quan trọng như: thông tin cá nhân user, thông tin về thanh toán trực tuyến thì thường bạn phải dùng kết nối có bảo mật (secure connection), và điển hình ở đây là sử dụng HTTPS. Để setup HTTPS trên rails, thì trước hết mình phải nhắc lại là các web server phổ biến trên rails như là webrick, unicorn hay thin đều không hỗ trợ HTTPS từ đầu.  Để sử dụng SSL thì có 2 cách:</p>
+<p>Có thể bạn đã quen lập trình trên PC, với những ngôn ngữ như C, C++, C#, Java, Python, Ruby&#8230;</p>
+
+<p>Nhưng bạn có biết là phần mềm trên PC chỉ chiếm khoảng 10% sản lượng phần mềm trên thị trường. 90% còn lại là code điều khiển tivi, máy giặt, điều hòa, tủ lạnh&#8230; tóm lại là tất cả các thiết bị điện tử xung quanh bạn. Đây cũng là một mảng theo tôi là khá thú vị. Lập trình theo hướng này được gọi là embedded computing, hay physical computing, tức là lập trình để con người tương tác với các thiết bị thực.</p>
+
+<p>Để người thiết kế có thể nhanh chóng đưa ra được mẫu thể hiện ý tưởng của mình, rất cần phải có những platform để dễ dàng prototyping. Và một trong những platform đang được sử dụng rất nhiều trong prototyping là Arduino.</p>
+
+<p>Vậy Arduino là gì và vì sao nó được sử dụng rộng rãi như vậy?</p>
+
+<p>Arduino là một bo mạch xử lý được dùng để lập trình tương tác với các thiết bị phần cứng như cảm biến, động cơ,&#8230; Điểm hấp dẫn ở Arduino với anh em lập trình là ngôn ngữ cực kì dễ học (giống C/C++), các ngoại vi trên bo mạch đều đã được chuẩn hóa, nên không cần biết nhiều về điện tử, chúng ta cũng có thể lập trình được những ứng dụng thú vị. Thêm nữa, vì Arduino là một platform đã được chuẩn hóa, nên đã có rất nhiều các bo mạch mở rộng (gọi là shield) để cắm chồng lên bo mạch Arduino, có thể hình dung nôm na là &#8220;library&#8221; của các ngôn ngữ lập trình. Ví dụ, muốn kết nối Internet thì có Ethernet shield, muốn điều khiển động cơ thì có Motor shield, muốn kết nối nhận tin nhắn thì có GSM shield,&#8230; Rất đơn giản, và ta chỉ phải tập trung vào việc &#8220;lắp ghép&#8221; các thành phần này và sáng tạo ra các ứng dụng cần thiết :)</p>
+
+<p>Có thể kể ở đây một số ứng dụng hay ho của Arduino:</p>
+
+<ul>
+<li><p>Robot: Arduino được dùng để làm bộ xử lý trung tâm của rất nhiều loại robot. Đó là nhờ vào khả năng đọc các thiết bị cảm biến, điều khiển động cơ,&#8230; của Arduino.</p></li>
+<li><p>Game tương tác: chúng ta có thể dùng Arduino để tương tác với Joystick, màn hình,&#8230; để chơi các trò như Tetrix, phá gach, Mario&#8230; Còn nhiều game rất sáng tạo nữa, ví dụ bạn có thể tham khảo ở đây:
+<a href="http://wn.com/arduino_game">http://wn.com/arduino_game</a></p></li>
+<li><p>Máy bay không người lái</p></li>
+<li><p>Mô phỏng Ipod :D (ví dụ ở đây: <a href="http://www.youtube.com/watch?v=5gy7w6R091M">http://www.youtube.com/watch?v=5gy7w6R091M</a>)</p></li>
+<li><p>và nhiều nhiều ứng dụng khác nữa &#8230;</p></li>
+</ul>
+
+
+<h1>Để lập trình Arduino cần những gì?</h1>
+
+<p>Như vậy, bạn đã biết là tuy là một bo mạch nhỏ như thế, Arduino có thể dùng vào rất nhiều ứng dụng thú vị khác nhau. Vậy để phát triển ứng dụng dựa trên Arduino, ta cần những gì?
+Rất đơn giản, bạn chỉ cần IDE phát triển (download ở <a href="http://arduino.cc/">đây</a>), một dây kết nối USB loại A-B, và một bo mạch Arduino là bạn có thể bắt đầu được rồi.</p>
+
+<p>Ngôn ngữ lập trình của Arduino dựa trên ngôn ngữ lập trình Wiring cho phần cứng. Chắc bạn đã quá quen thuộc với ngôn ngữ C/C++, như vậy việc viết code Wiring là rất dễ dàng. Cộng thêm, trên <a href="http://arduino.cc/">website</a>, có khá nhiều các library viết sẵn để điều khiển ngoại vi: LCD, sensor, motor&#8230; nên việc bạn cần làm chỉ là kết hợp chúng với nhau để tạo ứng dụng cho riêng bạn.</p>
+
+<h1>Cận cảnh phần cứng của Arduino</h1>
+
+<p><img src="/images/arduino-intro/arduino-overview.gif" title="" ></p>
+
+<p>Hình trên là cận cảnh con Arduino Uno. Đối với chúng ta lập trình cho Arduino thì trước tiên quan tâm những thành phần được đánh số ở trên:</p>
 
 <ol>
-<li>Add thêm plugin: ví dụ như với webrick thì bạn sử dụng &#8220;webrick/https&#8221;, nhưng cách này có một bất lợi là bạn phải setting từ đầu, và server đó sẽ luôn và chỉ phục vụ các request ssl:</li>
+<li><p>Cổng USB (loại B): đây là cổng giao tiếp để ta upload code từ PC lên vi điểu khiển. Đồng thời nó cũng là giao tiếp serial để truyền dữ liệu giữa vi điểu khiển với máy tính.</p></li>
+<li><p>Jack nguồn: để chạy Arduino thì có thể lấy nguồn từ cổng USB ở trên, nhưng không phải lúc nào cũng có thể cắm với máy tính được. Lúc đó, ta cần một nguồn 9V đến 12V.</p></li>
+<li><p>Hàng Header: đánh số từ 0 đến 12 là hàng digital pin, nhận vào hoặc xuất ra các tín hiệu số. Ngoài ra có một pin đất (GND) và pin điện áp tham chiếu (AREF).</p></li>
+<li><p>Hàng header thứ hai: chủ yếu liên quan đến điện áp đất, nguồn.</p></li>
+<li><p>Hàng header thứ ba: các chân để nhận vào hoặc xuất ra các tín hiệu analog. Ví dụ như đọc thông tin của các thiết bị cảm biến.</p></li>
+<li><p>Vi điều khiển AVR: đây là bộ xử lý trung tâm của toàn bo mạch. Với mỗi mẫu Arduino khác nhau thì con chip này khác nhau. Ở con Arduino Uno này thì sử dụng ATMega328.</p></li>
 </ol>
 
 
-<figure class='code'><figcaption><span>webrickssl.rb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">module</span> <span class="nn">Rails</span>
-</span><span class='line'>  <span class="k">class</span> <span class="nc">Server</span> <span class="o">&lt;</span> <span class="o">::</span><span class="ss">Rack</span><span class="p">:</span><span class="ss">:Server</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">default_options</span>
-</span><span class='line'>      <span class="k">super</span><span class="o">.</span><span class="n">merge</span><span class="p">({</span>
-</span><span class='line'>        <span class="ss">:Port</span> <span class="o">=&gt;</span> <span class="mi">3000</span><span class="p">,</span>
-</span><span class='line'>        <span class="ss">:environment</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;RAILS_ENV&#39;</span><span class="o">]</span> <span class="o">||</span> <span class="s2">&quot;development&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dup</span><span class="p">,</span>
-</span><span class='line'>        <span class="ss">:daemonize</span> <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span>
-</span><span class='line'>        <span class="ss">:debugger</span> <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span>
-</span><span class='line'>        <span class="ss">:pid</span> <span class="o">=&gt;</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;tmp/pids/server.pid&quot;</span><span class="p">),</span>
-</span><span class='line'>        <span class="ss">:config</span> <span class="o">=&gt;</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;config.ru&quot;</span><span class="p">),</span>
-</span><span class='line'>        <span class="ss">:SSLEnable</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
-</span><span class='line'>        <span class="ss">:SSLVerifyClient</span> <span class="o">=&gt;</span> <span class="ss">OpenSSL</span><span class="p">:</span><span class="ss">:SSL</span><span class="o">::</span><span class="no">VERIFY_NONE</span><span class="p">,</span>
-</span><span class='line'>        <span class="ss">:SSLPrivateKey</span> <span class="o">=&gt;</span> <span class="ss">OpenSSL</span><span class="p">:</span><span class="ss">:PKey</span><span class="o">::</span><span class="no">RSA</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-</span><span class='line'>        <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;vendor/ssl/gs.key&quot;</span><span class="p">))),</span>
-</span><span class='line'>        <span class="ss">:SSLCertificate</span> <span class="o">=&gt;</span> <span class="ss">OpenSSL</span><span class="p">:</span><span class="ss">:X509</span><span class="o">::</span><span class="no">Certificate</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-</span><span class='line'>        <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;vendor/ssl/gs.crt&quot;</span><span class="p">))),</span>
-</span><span class='line'>        <span class="ss">:SSLCertName</span> <span class="o">=&gt;</span> <span class="o">[[</span><span class="s2">&quot;CN&quot;</span><span class="p">,</span> <span class="ss">WEBrick</span><span class="p">:</span><span class="ss">:Utils</span><span class="o">::</span><span class="n">getservername</span><span class="o">]]</span>
-</span><span class='line'>      <span class="p">})</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
+<h1>&#8220;Hello World&#8221; trên nền Arduino</h1>
 
+<p>Với việc học bất cứ một ngôn ngữ nào, thường người ta hay bắt đầu bằng ví dụ &#8220;Hello World&#8221;, tức là bắt máy tính bắn ra màn hình dòng chữ &#8220;Hello, World!&#8221;. Với các bạn có kinh nghiệm lập trình, việc này có lẽ quá dễ dàng, chỉ vài dòng code là được, ngôn ngữ nào cũng vậy (C, C++, Java, Python, Ruby&#8230;).</p>
 
-<p>Để switch được giữa ssl và non-ssl thì thường bạn sẽ phải chạy song song 2 bản webrick, một bản hỗ trợ ssl và một bản không</p>
+<p>Nhưng với lập trình trên Arduino thì sao? Việc bắt cái bo mạch Arduino đưa ra một thông tin báo hiệu nào đó cho ta là nó đang chạy, phải thực hiện thế nào? Nói cách khác, output của Arduino sẽ là như thế nào đây:</p>
 
 <ol>
-<li>Bạn sử dụng <strong>Nginx</strong> như một ssl proxy, sau khi xử lý ssl request thì Nginx sẽ forward lại request cho rails-server. Ở bài viết này mình sẽ nói về thiết lập môi trường ssl ở dưới môi trường development sử dụng <strong>Pow</strong> và <strong>Nginx</strong></li>
+<li><p>Nháy LED</p></li>
+<li><p>Kết nối với PC qua đường UART, bắn lên dòng chữ Hello World cho ta ngắm.</p></li>
+<li><p>Kết nối với một cái màn LCD, cũng bắt nó bắn lên Hello World cho ta nhìn.</p></li>
 </ol>
 
 
-<h1>Pow + Nginx</h1>
+<p>&#8230; vài cách nữa</p>
 
-<p>Tại sao lại sử dụng Pow? Pow là một rails-server rất hay được sử dụng trong công đoạn <strong>development</strong>. Lý do vì: dễ cài đặt, không phải config, và pow cho mỗi webapp của chúng ta một cái domain đẹp đẽ trên local. Để cài đặt pow thì vô cùng đơn giản:</p>
+<p>Trong bài mở đầu này, tôi chọn cách dễ nhất là Nháy LED. Nháy LED cũng được coi là Hello World của lập trình nhúng, với mỗi con chip mới, điều đầu tiên nên làm là nháy LED, để kiểm tra xem mình đã kiểm soát được đầu vào đầu ra cho con chip chưa :)</p>
 
-<figure class='code'><figcaption><span>install.sh </span></figcaption>
+<p>Đầu tiên là đoạn code nháy LED:</p>
+
+<figure class='code'><figcaption><span>blink_series.c </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$curl</span> get.pow.cx | sh
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Pow không đi kèm một bộ tool dòng lệnh tốt lắm (command line tool), tuy nhiên rất may đã có người làm hộ chúng ta 1 cái gem tên là <strong>powder</strong>, có nó thì chúng ta sẽ sử dụng pow dễ dàng hơn:</p>
-
-<figure class='code'><figcaption><span>install.sh </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$sudo</span> gem install powder
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Sau khi install xong powder, chúng ta đi đến folder chứa rails app và chỉ cần [powder link appname] là đã xong phần cài đặt</p>
-
-<figure class='code'><figcaption><span>install.sh </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> ~/yourapp
-</span><span class='line'><span class="nv">$powder</span> link app-name
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Sau khi làm thao tác này thì một symlink với tên là app-name sẽ được tạo ra ở trong thư mục <strong>~/.pow</strong>
-Kết thúc thao tác này, powder đã tự động được khởi động, và chúng ta chỉ cần truy cập vào url [app-name.dev] là đã sử dụng được như bình thường :)</p>
-
-<p>OK vậy là xong pow, giờ đến lượt nginx, để cài đặt nginx thì khá đơn giản trên mac, mình sử dụng brew:</p>
-
-<figure class='code'><figcaption><span>install.sh</span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>brew install nginx
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Thường thì nginx sau khi được cài đặt xong sẽ nằm ở :[/usr/local/etc/nginx]</p>
-
-<p>Bạn đang muốn sử dụng HTTPS, nên công đoạn tiếp theo sẽ là setup để nginx nhận request HTTPS và forward lại cho pow. Đầu tiên là phải generate ra một cặp <strong>private key</strong> và <strong>certificate sign</strong>, tại sao lại cần cặp này thì các bạn có thể tự tìm hiểu về giao thức HTTPS.</p>
-
-<figure class='code'><figcaption><span>install.sh</span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$openssl</span> req -new -nodes -keyout server.key -out server.csr
-</span><span class='line'><span class="nv">$openssl</span> x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Sau khi có cặp key và sign, rồi bạn copy cặp đó vào thư mục [/usr/local/etc/nginx/ssl] cho dễ config. Tiếp đến bạn mở config của nginx ra và config lại như dưới đây</p>
-
-<figure class='code'><figcaption><span>nginx </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -375,124 +326,70 @@ Kết thúc thao tác này, powder đã tự động được khởi động, v�
 <span class='line-number'>28</span>
 <span class='line-number'>29</span>
 <span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>worker_processes  1;
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cm">/* </span>
+</span><span class='line'><span class="cm">  Multiple blink </span>
+</span><span class='line'><span class="cm">  Turns on and off a LED series, using Arduino pin 4,5,6,7</span>
+</span><span class='line'><span class="cm">  </span>
+</span><span class='line'><span class="cm">  written by Viet Nguyen</span>
+</span><span class='line'><span class="cm"> */</span>
 </span><span class='line'>
-</span><span class='line'>events {
-</span><span class='line'>      worker_connections  1024;
-</span><span class='line'>}
+</span><span class='line'> <span class="kt">int</span> <span class="n">led</span><span class="p">;</span>
 </span><span class='line'>
+</span><span class='line'> <span class="c1">//the setup routine runs once when you reset the Arduino</span>
+</span><span class='line'> <span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+</span><span class='line'> <span class="p">{</span>
+</span><span class='line'>   <span class="c1">//initialize the digital pin as an output</span>
+</span><span class='line'>   <span class="k">for</span><span class="p">(</span><span class="n">led</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">led</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">led</span> <span class="o">++</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">{</span>
+</span><span class='line'>     <span class="n">pinMode</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span> <span class="c1">//init the digital pin as output.</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'> <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>http {
-</span><span class='line'>      include       mime.types;
-</span><span class='line'>      default_type  application/octet-stream;
-</span><span class='line'>
-</span><span class='line'>      sendfile        on;
-</span><span class='line'>      keepalive_timeout  65;
-</span><span class='line'>
-</span><span class='line'>      server {
-</span><span class='line'>        ### server port and name ###
-</span><span class='line'>        listen          443 ssl;
-</span><span class='line'>        server_name     app-name.dev;
-</span><span class='line'>
-</span><span class='line'>        ### SSL log files ###
-</span><span class='line'>        access_log      logs/ssl-access.log;
-</span><span class='line'>        error_log       logs/ssl-error.log;
-</span><span class='line'>
-</span><span class='line'>        ### SSL cert files ###
-</span><span class='line'>        ssl_certificate      ssl/app-name.crt;
-</span><span class='line'>        ssl_certificate_key  ssl/app-name.key;
-</span><span class='line'>        ### Add SSL specific settings here ###
-</span><span class='line'>        keepalive_timeout    60;
-</span><span class='line'>        ### We want full access to SSL via backend ###
-</span><span class='line'>        location / {
-</span><span class='line'>          proxy_pass  http://app-name.dev/;
-</span><span class='line'>          ### force timeouts if one of backend is died ##
-</span><span class='line'>          proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;
-</span><span class='line'>
-</span><span class='line'>          ### Set headers ####
-</span><span class='line'>          proxy_set_header Host $host;
-</span><span class='line'>          proxy_set_header X-Real-IP $remote_addr;
-</span><span class='line'>          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-</span><span class='line'>
-</span><span class='line'>          ### Most PHP, Python, Rails, Java App can use this header ###
-</span><span class='line'>          proxy_set_header X-Forwarded-Proto https;
-</span><span class='line'>          ### By default we don't want to redirect it ####
-</span><span class='line'>          proxy_redirect     off;
-</span><span class='line'>        }
-</span><span class='line'>     }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Công việc cuối cùng chỉ là chạy nginx, bạn khởi động nginx với option -t để test config file có đúng và không có warning nào không:</p>
-
-<figure class='code'><figcaption><span>runnginx.sh </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo nginx -t
-</span><span class='line'>nginx: the configuration file /usr/local/etc/nginx/nginx.conf syntax is ok
-</span><span class='line'>nginx: configuration file /usr/local/etc/nginx/nginx.conf <span class="nb">test </span>is successful
+</span><span class='line'> <span class="c1">// the loop routine runs over and over again</span>
+</span><span class='line'> <span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+</span><span class='line'> <span class="p">{</span>
+</span><span class='line'>   <span class="k">for</span><span class="p">(</span><span class="n">led</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">led</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">led</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">{</span>
+</span><span class='line'>     <span class="n">digitalWrite</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>  <span class="c1">//turn the LED on (HIGH is the voltage level)</span>
+</span><span class='line'>     <span class="n">delay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>      <span class="c1">//100 ms</span>
+</span><span class='line'>     <span class="n">digitalWrite</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>  <span class="c1">//turn the LED off by making the volage LOW</span>
+</span><span class='line'>     <span class="n">delay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>      <span class="c1">//100 ms</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'> <span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Như vậy là mọi thứ đã OK, giờ chỉ việc dev thôi :D</p>
+<p>Bạn thấy đó, đoạn code trên rất đơn giản và mang phong cách giống C/C++. Một chương trình như trên được gọi là sketch, sẽ được upload lên bo mạch Arduino qua cổng USB.</p>
 
-<p>Để switch một cách đơn giản nhất giữa HTTPS và HTTP thì mình tạo 2 hàm sau trong application_controller:</p>
+<p>Phân tích chương trình: có 2 method quan trọng nhất là setup() và loop().</p>
 
-<figure class='code'><figcaption><span>switch.rb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">def</span> <span class="nf">redirect_to_https</span>
-</span><span class='line'>  <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">protocol</span> <span class="o">==</span> <span class="s1">&#39;http://&#39;</span>
-</span><span class='line'>    <span class="n">redirect_to</span> <span class="ss">action</span><span class="p">:</span> <span class="n">action_name</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">params</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">query_parameters</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">protocol</span><span class="p">:</span> <span class="s1">&#39;https://&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">redirect_to_http</span>
-</span><span class='line'>  <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">protocol</span> <span class="o">==</span> <span class="s1">&#39;https://&#39;</span>
-</span><span class='line'>    <span class="n">redirect_to</span> <span class="ss">action</span><span class="p">:</span> <span class="n">action_name</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">params</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">query_parameters</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">protocol</span><span class="p">:</span> <span class="s1">&#39;http://&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li><p>setup() làm nhiệm vụ khởi tạo mode cho các ngoại vi của Arduino. Hàm này sẽ được chạy một lần khi bo mạch Arduino được reset. Ở chương trình này, setup() chỉ làm nhiệm vụ đặt các chân 4,5,6,7 của Arduino sang mode output.</p></li>
+<li><p>loop() là chương trình chính của Arduino. Đoạn code trong loop() sẽ được Arduino chạy vô hạn. Trong chương trình này, có hàm digitalWrite() để đặt các chân (pin) ở mức điện áp cao (HIGH) hay thấp (LOW). Hàm tiếp theo là delay(), nhận đối số là một số nguyên, thẻ hiện số mili giây ta muốn chương trình tạm ngưng.</p></li>
+</ul>
 
 
-<p>Và với nhứng method nào cần sử dụng https thì mình chỉ cần gọi đến hàm redirect_to_https là ok :D.</p>
+<p>Đó là tất cả về phần code chạy, còn nối dây như thế nào? Dưới đây là sơ đồ nối dây:</p>
 
-<p>Các bạn có thể thấy bộ đôi pow và nginx rất dễ sử dụng đúng không.
-Gần đây mình có gặp phải một problem với bộ đôi này là mình sử dụng oauth2 để login với google account. Và google api <strong>không chấp nhận callback uri có domain có đuôi là .dev nhưng lại chấp nhận domain là localhost</strong>. Khi cài đặt powder thì default cái 127.0.0.1 sẽ không được trỏ đến app-name.dev của bạn, để làm việc này thì bạn chỉ cần vào ~/.pow, tạo một symlink với tên là <strong>default</strong> trỏ đến rails app của bạn là OK :D.</p>
+<p><img src="/images/arduino-intro/arduino_led.png"></p>
+
+<p>Giải thích một chút, đoạn code trên sẽ lần lượt xuất điện áp 5V ra các pin 4,5,6,7 rồi tắt. Để kiểm nghiệm, nối LED với một con trở giữa các pin đó với đất, ta sẽ thấy các đèn LED bật tắt nhịp nhàng :)</p>
+
+<p>Sau đây là video demo :P</p>
+
+<iframe width="560" height="315" src="http://www.youtube.com/embed/4EOGnKN2RiE" frameborder="0" allowfullscreen></iframe>
+
+
+<h1>Kết luận#</h1>
+
+<p>Bài này đã giới thiệu những kiến thức mở đầu về Arduino, cách lập trình trên platform này và demo bài &#8220;Hello World&#8221; của Arduino. Với cộng đồng chia sẻ rất lớn, nhiều ứng dụng, Arduino rất đáng để học, cũng là một cách để bạn tiếp cận dễ dàng hơn với electronics :D</p>
+
+<h1>Tham khảo</h1>
+
+<ol>
+<li><a href="http://arduino.cc/en/">http://arduino.cc/en/</a></li>
+</ol>
+
 
 		
 		
@@ -515,201 +412,139 @@ Gần đây mình có gặp phải một problem với bộ đôi này là mình
   
 
 
-<time datetime="2013-05-13T04:52:00+09:00" data-updated="true" itemprop="datePublished">May 13<span>th</span>, 2013</time></div>
+<time datetime="2013-05-18T15:27:00+09:00" data-updated="true" itemprop="datePublished">May 18<span>th</span>, 2013</time></div>
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/concurrency/'>concurrency</a>, <a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/storage/'>storage</a>
+	<a class='category' href='/blog/categories/web-programming/'>Web programming</a>
 
 
 </div>
 		
-			<span class="comments"><a href="/blog/2013/05/13/exclusivelock-sharedlock/#disqus_thread">Comments</a></span>
+			<span class="comments"><a href="/blog/2013/05/18/web-beacon/#disqus_thread">Comments</a></span>
 		
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/05/13/exclusivelock-sharedlock/" itemprop="url">Exclusive Lock - Shared Lock</a></h1>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/05/18/web-beacon/" itemprop="url">Web Beacon và Cookie</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<h2>1. Mở đầu</h2>
+		<h2>Web Beacon là gì</h2>
 
-<p>Nhân tiện trả lời thắc mắc của bạn kiennt về <em>shared lock</em> và <em>exclusive lock</em> được nhắc đến trong bài viết <a href="http://ktmt.github.io/blog/2013/05/07/storageenginemysql/">Giới Thiệu Một Số Storage Engine Của Mysql</a>, mình viết bài này để giải thích khái niệm và ý nghĩa của exclusive lock, shared lock, MVCC cũng như làm rõ một số điểm chưa rõ ràng trong bài viết trên.</p>
+<p>Web Beacon, hay Web Bug là 1 khái niệm với 2 tên gọi khác nhau.
+Có thể bạn chưa từng nghe nói đến, hay đã nghe nhưng ko hiểu rõ lắm về cụm từ này. Trước hết mình sẽ lấy định nghĩa trên Wikipedia xuống để dễ theo dõi</p>
 
-<h2>2. Cơ chế và ý nghĩa của Lock và MVCC</h2>
+<blockquote><p>A web bug is an object that is embedded in a web page or email and is usually invisible to the user but allows checking that a user has viewed the page or email. Common uses are email tracking and page tagging for Web analytics</p></blockquote>
 
-<h3>2.1 Khái niệm và ý nghĩa của lock</h3>
+<p>Như vậy, Web beacon là 1 technique trong web programming, mục đích là phục vụ cho web data analytics.</p>
 
-<p><a href="http://en.wikipedia.org/wiki/Lock_%28computer_science%29">Lock</a> (khóa) là <em>cơ chế đồng bộ</em> và <em>giới hạn truy cập</em> đến <em>tài nguyên đươc chia sẻ</em> trong một môi trường có <em>nhiều luồng xử lý cùng truy cập</em>.</p>
+<p>Tại sao lại cần phải có web beacon ? Cách implement web beacon ra sao ? Bài viết này sẽ trả lời 2 câu hỏi trên và 2 khái niệm liên quan thông qua các ví dụ và hình dung cụ thể.</p>
 
-<p>Nói một cách hình tượng, lock giống một cái cờ tuyên bố chủ quyền đối với tài nguyên máy tính. Mỗi luồng xử lý (thread) khi truy cập tài nguyên dùng chung nào đó sẽ phải &#8220;dựng cờ lên&#8221; để báo cho các luồng xử lý khác biết tài nguyên đó đang được xử dụng và &#8220;hạ cờ xuống&#8221; khi hoàn thành xử lý trên tài nguyên đó. Các luồng xử lý khác bằng việc quan sát trạng thái của cờ này mà sẽ chiếm tài nguyên cho xử lý của mình, hay chờ đợi cho đến khi luồng xử lý khác kết thúc. Có thể nói lock là một phương tiện khẳng định quyền sở hữu đối với 1 loại tài nguyên. Nhờ cơ chế lock này mà tại mỗi thời điểm chỉ có duy nhất 1 luồng xử lý truy cập tài nguyên dùng chung..</p>
+<h2>Tại sao lại phải có web beacon ?</h2>
 
-<p><em>Shared lock</em>, hay còn gọi là read-only lock (khóa chỉ đọc) là lock mà một luồng xử lý phải chiếm hữu khi muốn đọc từ một vùng nhớ được chia sẻ.</p>
+<p>Nếu bạn đã từng tự xây dựng 1 web application, deploy trên server của chính bạn - bravo - bạn đã có sản phẩm của chính bạn - đứa con tinh thần đầu tiên :D</p>
 
-<p><em>Exclusive lock</em>, hay còn gọi là read-write lock (khóa đọc ghi) là lock mà một luồng xử lý phải chiếm hữu khi muốn cập nhật một vùng nhớ được chia sẻ.</p>
+<p>Now what ? Bạn muốn application của mình to hơn, lớn nữa, performance cao lên, vậy sẽ bắt đầu phải scale up, add feature, brainstorming để <strong>lôi kéo user</strong>.</p>
 
-<h3>2.2 Tại sao phải cần lock</h3>
+<p>Phần khó khăn nhất ở đây - Long live the users :D Application cần có nhiều idea mới. Hoặc đơn giản, không có thứ gì interesting thì phải có link đến những web khác có interesting content.
+Vậy, <strong>làm thế nào</strong> để biết user cảm thấy interesting với content nào nhất ? User hứng thú với dịch vụ gì và không hứng thú với dịch vụ gì ?</p>
 
-<h4>a. Tác dụng của exclusive lock</h4>
+<p>1 cách mô hình hoá, Website của bạn - website A có link đến website N1, N2, N3, &#8230; (các site có intersting content)
+Bạn - site A webmaster muốn biết user của bạn click vào những link nào nhiều nhất trong số các N-site.
+Dĩ nhiên là site nào ít attractive nhất thì muốn bỏ đi, site nào càng nhiều attractive thì tìm thêm các loại tương ứng.
+Mặc dù khi user click vào các link thì đã ra khỏi site của bạn và đi đến site khác, nhưng bạn có thể <strong>đặt web beacon ở từng link</strong> để tracking user của bạn.</p>
 
-<p>Xét bài toán ta có 2 luồng xử lý A, B cùng thao tác trên 2 biến a, b.
-Giá trị hiện tại của các biến</p>
+<p>Ngược lại, giả sử vì mục đích quảng cáo, site N của bạn đặt link (banner) ở các site A1, A2, A3,&#8230;.
+Đổi lại bạn đang trả tiền cho tất cả.
+Dĩ nhiên bạn muốn biết user visit site của mình đến từ nơi nào nhiều nhất.
+Nơi nào user ko đến thì cắt bỏ để giảm chi phí v.v&#8230;
+Bạn có thể <strong>đặt web beacon ở cổng vào site mình</strong> và record lại các information bạn cần.</p>
+
+<p>Thử tưởng tượng 1 hệ thống web có n node X1, X2,&#8230; Xn , mỗi node đều đặt web beacon ở đầu vào và các đầu ra của mình, mỗi node sẽ có 1 action flow của user, được identify bằng 1 sessionID thống nhất. Đến giai đoạn user behavior analytics, chỉ cần dựa vào 1 sessionID đó có thể tổng hợp được flow tổng quát của từng user trên cả hệ thống !</p>
+
+<h2>Implement Web Beacon</h2>
+
+<p>Trước hết, Web beacon thường được implement dưới dạng 1 file gif 1x1 pixel, gần như trong suốt với user và giảm tối đa load mỗi lần generate ra request với server.</p>
+
+<p>Trường hợp 1 ở bên trên, cách implement khá đơn giản: Mỗi link đến các website N1, N2, N3&#8230; có để đặt gán với 1 hàm javascript, khởi động 1 ajax request đến server của site mình kèm theo các thông tin hữu ích (IP của user, target website v.v&#8230;)
+Nội dung request là GET web beacon (request file fig 1x1 pixel) Như thế server site mình sẽ mất thêm lượng tải tối thiếu cho mục đích tracking.</p>
+
+<p>Cách viết cụ thể ajax request và xử lý cookie phía server sẽ không trình bày cụ thể ở bài viết này.</p>
+
+<p>Trường hợp 2, cần có 1 chút lưu ý. Các site A1, A2, A3,&#8230; bạn đặt banner cần phải có 1 param ghi lại domain của họ, ví dụ:</p>
+
+<figure class='code'><figcaption><span>siteA.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">method =</span><span class="err"> </span><span class="s">&quot;GET&quot;</span> <span class="na">action =</span><span class="err"> </span><span class="s">&quot;www.your_site.com&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;hidden&quot;</span> <span class="na">name=</span><span class="s">&quot;callback_url&quot;</span> <span class="na">value=</span><span class="s">&quot;domain_of_this_site&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như vậy user đi đến site N của bạn sẽ mang theo &#8220;callback_url&#8221;. Ở cổng vào site của bạn có thể đặt 1 beacon như sau</p>
+
+<figure class='code'><figcaption><span>siteN.html </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;/img/_.gif?from_=&lt;?php $_GET[&quot;</span><span class="na">callback_url</span><span class="err">&quot;];?</span><span class="nt">&gt;</span><span class="err">&amp;</span>_=<span class="cp">&lt;?php date(&quot;Y-m-d H:i:s&quot;);?&gt;</span>&quot;&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Tại sao ở đây lại cần hàm date(&#8220;Y-m-d H:i:s&#8221;) ? Browser có cơ chế cache và thông thường sẽ cache lại các file image tại 1 website để lần sau quay lại load trang web nhanh hơn. Nếu Browser detect thấy file _.gif nằm trong cache thì sẽ <strong>không make request đến server</strong> và tracking sẽ thất bại :D</p>
+
+<p>Với &amp;_=&lt;?php date(&#8220;Y-m-d H:i:s&#8221;);?> image sẽ vẫn đc request nhưng với đuôi có chưa curent time nên sẽ không bị cache.</p>
+
+<h2>Cross-domain cookies</h2>
+
+<p>Phần này sẽ đề cập đến 1 khái niệm liên quan: cross-domain cookie.
+Giả sử site A có đặt link hay ads(quảng cáo) của site N, và cả site A lẫn site N đều nằm thuộc cùng 1 group, 1 công ty. Lúc đó webmaster của site A và site N có thể sử dụng cross-domain cookie để tracking user action flow trên cả 2 site.</p>
+
+<p>Cái gì gọi là cross-domain cookie ? Chẳng phải là cookie chỉ readable với 1 domain cố định hay sao ?</p>
+
+<p>Bạn có thể hình dung đơn giản như sau:</p>
 
 <ul>
-<li>a = 0</li>
-<li>b = 0</li>
+<li>User visit site A, site A tạo 1 cookie với domain của mình, kèm theo 1 sessionID. Với sessionID này site A có thể tracking user trong phạm vi site của mình.</li>
+<li>User click vào link (hoặc ads) đến site N, site A &#8220;gửi kèm&#8221; 1 param là sessionID kể trên . Site N đón nhận request với sessionID và cũng tạo 1 cookie trên domain của mình chứa sessionID dược nhận.</li>
+<li>User click vào nút &#8220;Come back to previous site&#8221; trên site N, site N sẽ tổng hợp action flow trên site mình (dựa vào cookie tạo ở trên), send ngược trờ lại cùng với sessionID cho site A.</li>
+<li>Site A sẽ welcome user trở lại, VD thêm đoạn chào hỏi: &#8220;Aha, bạn đến site N để mua abcxyz phải không, để tôi show cho bạn thêm vài site khác nữa cũng có thứ đồ abcxyz đó nữa, tốt lắm &#8221; etc :D</li>
 </ul>
 
 
-<p>Nhiệm vụ của 2 luồng xử lý:</p>
+<p>Vậy vấn đề sẽ thế nào nếu như ko có nút &#8220;Come back to previous site&#8221; hay link hoặc ads trên site A ?
+Nói 1 cách khác, nếu user chỉ visit site A và site N bằng cách gõ URL trực tiếp trên thanh URL của browser ?</p>
+
+<p>Implement cross-domain cookies sẽ hơi phức tạp hơn nhưng không phải là không làm được.</p>
 
 <ul>
-<li>Luồng xử lý A đọc giá trị 2 biến, tăng giá trị của a lên 1, và cập nhật giá trị cả 2 biến vào bộ nhớ.</li>
-<li>Luồng xử lý B đọc giá trị 2 biến, tăng giá trị của b lên 1, và cập nhật giá trị cả 2 biến vào bộ nhớ.</li>
+<li>User visit siteA, site A vẫn tạo cookie với 1 sessionID như trên</li>
+<li>User visit siteN/randompage, site N redirect lại siteA/cookieGetter.php với param callback_url=&#8221;randompage&#8221;</li>
+<li>Khi browser quay trờ lại siteA/cookieGetter.php, site A sẽ check cookie của mình và nếu tìm thấy sessionID sẽ gửi dưới dạng param ngược lại cho siteN/randompage (&#8220;randompage được lấy ra từ param callback_url&#8221;)</li>
+<li>User được redirect back lại siteN/randompage cùng với sessionID, lúc này site N sẽ tạo cookie của site mình với sessionID kể trên.</li>
 </ul>
 
 
-<p>Giả sử A thực hiện trước, đọc giá trị của a và b (a=0, b=0) và tăng a lên 1. Lúc này giá trị của a đang là 1, của b là 0. Tuy nhiên, chính tại thời điểm này, hệ điều hành quyết định dừng A, và thực hiện B. B đọc giá trị 2 biến a và b và tăng b lên 1 rồi cập nhật cả 2 biến vào bộ nhớ. Do A chưa cập nhật giá trị 2 biến, giá trị của a lúc này vẫn là 0, của b là 1 (a=0,b=1 do A chưa hoàn thành). Vì vậy, tại thời điểm B kết thúc a = 0, b = 1. Đến đây hệ điều hành thực hiện chạy A ở bước cuối cùng, cập nhật giá trị 2 biến (a = 1, b = 0) vào bộ nhớ, ghi đè giá trị b = 1 được cập nhật bởi B. Kết quả cuối cùng (a = 1, b = 0) sai so với kết quả mong đợi (a = 1, b = 1).</p>
+<p>Như vậy cross-domain cookie thực tế vẫn là các cookie khác nhau trên các domain khác nhau</p>
 
-<pre><code>    Luồng A            |  Luồng B
-    -------------------|-------------------------
-    Đọc a, b (a=0, b=0)| 
-    a = 1, b = 0       |
-                       |  Đọc a, b (a=0, b=0)
-                       |  a = 0, b = 1
-                       |  Ghi a, b (a = 0, b = 1)
-    Ghi a, b (a=1, b=0)|
+<h2>Third-party cookies</h2>
 
+<p>Third-party cookies lại là 1 khái niệm khác và dễ nhầm lẫn. Trong trường hợp site A và site N ở trên không cùng 1 công ty hay đơn vị quản lý, cookie của site A đối với site N gọi là third-party cookie và ngược lại.</p>
 
-Trạng thái cuối cùng (a=1, b=0)
-Kết quả mong chờ: (a=1, b=1)
-</code></pre>
+<p>Giả sử trên site A đặt 1 ads banner của site N. Khi browser của user load webpage từ site A, 1 đoạn JS có thể được khỏi động để load banner image từ site N. Site N có thể tạo ra 1 cookie của mình với 1 sessionID (anonymous profile) và <strong>được phép set vào browser mặc dù user đang ở site A</strong>.</p>
 
-<p>Để giải quyết bài toán này, người ta dùng một exclusive lock. Luồng A, B muốn cập nhật giá trị a, b phải trước tiên chiếm lock, rồi mới thực hiện xử lý của mình. Các bước thực hiện giờ sẽ như sau:</p>
+<p>Tiếp theo, user đến site B cũng đặt ads banner của site N. Mọi chuyện sẽ diễn ra tương tự và site N lại <strong>được phép set vào browser 1 cookie mặc dù user đang ở site B</strong> Tuy nhiên với khả năng đọc được cookie của chính mình, lần này site N sẽ detect được cookie đã từng được set và tìm thấy sessionID lần trước. Chuyện gì xảy ra ở đây ?</p>
+
+<p>Site N không hề biết user ở đâu, dùng browser gì, nhưng biết là <strong>cùng 1 user</strong> đã đi từ site A đến site B. Hay gọi là, site N có &#8220;anonymous profile&#8221; của user, identify bằng unique sessionID ở trên.</p>
+
+<p>Kết quả: Site N có thể build rất nhiều anonymous profile cho rất nhiều user, và theo thời gian nắm bắt habit và interest, đưa ra các banner quảng cáo phù hợp nếu lần sau gặp lại mỗi user.</p>
+
+<p>Đây là một kỹ thuật phổ biến trong công nghệ quảng cáo. Tuy nhiên, các browser hiện đại đều có chức năng block third-party cookie. Vậy nếu bạn không thích bị track, có thể đơn giản disable third-party cookie trên browser của mình.</p>
+
+<h2>Kết luận</h2>
 
 <ul>
-<li>Chiếm lock. Nếu như chiếm được lock thì tiến hành xử lý tiếp theo. Nếu không, chờ đến khi chiếm được lock</li>
-<li>Đọc a, b</li>
-<li>Cập nhật a (hoặc b)</li>
-<li>Ghi a, b</li>
-<li>Thôi chiếm lock</li>
+<li>Web beacon: là 1 technique trong web programming, mục đích là phục vụ cho web data analytics</li>
+<li>Cross-domain cookies: các cookie khác nhau trên các domain khác nhau, tuy nhiên identify được lẫn nhau thông qua unique ID</li>
+<li>Third-party cookies: cookies của domain khác nhưng được set khi user visit webpage của server mình</li>
 </ul>
-
-
-<p>Quy trình bây giờ tăng 2 bước (chiếm lock hoặc chờ đến khi nào chiếm được lock và nhả lock). Các bước chạy ở  trên giờ sẽ như sau:
-A chiếm lock thành công (do chưa có luồn nào chiếm lock) và tiến hành đọc và cập nhật a (a=1, b=0). Tại thời điểm A bị dùng, B được chạy và thử chiếm lock nhưng do A đang nắm giữ lock nên B sẽ <em>phải</em> chờ. Lúc này A thực hiện nốt bước cuối cùng ghi giá trị vào bộ nhớ (a=1, b=0) và nhả lock. B lúc này thấy lock bị nhả và nắm giữ lock, đọc giá trị từ bộ nhớ (a=1, b=0!!), cập nhật b (a=1, b=1) và ghi dữ liệu vào bộ nhớ (a=1, b=1) đồng thời nhả lock. Kết quả cuối cùng như mong đợi (a=1, b=1)</p>
-
-<pre><code>    Luồng A             | Luồng B
-    --------------------|--------------------------------
-    Chiếm lock          |
-    Đọc a, b            |    
-    a = 1, b = 0        |
-                        | Chiếm lock (không thành công)
-    Ghi a, b (a=1, b=0) |
-    Nhả lock            |
-                        | Chiếm lock (thành công)
-                        | Đọc a, b (a=1, b=0)
-                        | a = 1, b = 1
-                        | Ghi a, b (a = 1, b = 1)
-                        | Nhả lock
-
-Trạng thái cuối cùng (a=1, b=1)
-Kết quả mong chờ: (a=1, b=1)!!!!
-</code></pre>
-
-<p>Ta có thể thấy nhờ có lock, mà tại mỗi thời điểm chỉ có 1 luồng xử lý truy cập a, b. Các luồng khác khi không chiếm được lock sẽ phải chờ đến lượt.</p>
-
-<p><em>Kết luận</em>: exclusive lock được sử dụng để đồng bộ 2 xử lý ghi đồng thời.</p>
-
-<h4>b. Tác dụng của shared lock</h4>
-
-<p>Để hiểu ý nghĩa shared lock, ta xét bài toán tương tự như ở trên. Lần này, thay vì 2 luồng cùng cập nhật vùng nhớ chung, 1 luồng sẽ đọc, còn một luồng sẽ cập nhật. Giả sử A đọc và B cập nhật, và giá trị ban đầu là a=0, b=0.</p>
-
-<p>A tiến hành đọc a (a=0) và bị hệ điều hành <em>cho nghỉ</em> để B thực hiện. B đọc a, b (a=0, b=0) và thực hiện cập nhật b (a=0, b=1) và ghi kết quả lên bộ nhớ. A đọc nốt giá trị còn lại b (b=1).</p>
-
-<p>Kết quả cuối cùng đối với A rõ ràng không như mong đợi (Mong chờ: a=0, b=0 nhưng nhận về a=0, b=1).</p>
-
-<pre><code>    Luồng A     | Luồng B
-    ------------|-------------------------
-    Đọc a (a=0) |
-                | Đọc a, b (a=0, b=0)
-                | a = 0, b = 1
-                | Ghi a, b (a = 0, b = 1)
-    Đọc b (b=0) |
-
-Kết quả cuối cùng (a=0, b=1)
-Kết quả mong chờ: (a=0, b=0)
-</code></pre>
-
-<p>Để giải quyết bài toán này, ta dùng shared-lock. Luồng A muốn đọc sẽ cần phải chiếm shared-lock. Luồng B muốn ghi sẽ phải nhìn xem shared-lock có bị chiếm hay không. Nếu shared-lock đang bị chiếm. B phải đợi cho đến khi tất cả shared-lock được giải phóng mới tiến hành cập nhật. Luồng chạy sau bây giờ sẽ như sau:</p>
-
-<p>A chiếm shared-lock và tiến hành đọc a (a=0). A được <em>cho nghỉ</em> và B được <em>đưa vào sân</em>. Do A đang chiếm shared lock nên B không được quyền cập nhật và được <em>cho nghỉ</em>. A thực hiện nốt việc đọc b (b=0) và nhả shared-lock. B không thấy shared-lock và tiến hành cập nhật b (b=1) như bình thường.</p>
-
-<pre><code>    Luồng A           | Luồng B
-    ------------------|-----------------------------
-    Chiếm shared-lock |
-    Đọc a (a=0)       |
-                      | Nhìn thấy shared-lock. Nghỉ
-    Đọc b (b=0)       |
-    Nhả shared-lock   |
-                      | Chiếm exclusive lock
-                      | Đọc a, b (a=0, b=0)
-                      | a = 0, b = 1
-                      | Ghi a, b (a = 0, b = 1)
-                      | Nhả exclusive lock.
-
-Kết quả cuối cùng (a=0, b=0)
-Kết quả mong chờ: (a=0, b=0)
-</code></pre>
-
-<p><em>Kết luận</em>: shared-lock được sử dụng để đồng bộ 2 xử lý đọc ghi đồng thời.</p>
-
-<h4>c. Tại sao cần chiếm shared lock khi đọc dữ liệu</h4>
-
-<p>Đến đây ta có thể dễ dàng trả lời câu hỏi thứ nhất của kiennt! Khi tiến hành đọc dữ liệu, nếu không chiếm shared-lock, dữ liệu đó có thể bị cập nhật bởi 1 thread khác, dẫn tới giá trị đọc được bị thay đổi một phần, không bảo đảm tính toàn vẹn.</p>
-
-<p>Tuy vậy có một điểm trong bài viết cần được làm rõ như sau: Trong câu nói &#8220;MyISAM lock toàn bộ table. User (MySQL server) chiếm shared-lock khi đọc và chiếm exclusive-lock khi ghi. Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!&#8221;, thì câu nói: &#8220;Tuy vậy, việc đọc ghi có thể diễn ra đồng thời!&#8221; là không đúng.</p>
-
-<p>Nói một cách chính xác hơn: việc <em>đọc và cập nhật (SELECT và UPDATE)</em> không được tiến hành đồng thời (Do tại thời điểm chiếm exclusive lock, không shared-lock nào được phép tồn tại). Tuy nhiên, việc <em>ghi mới</em> dữ liệu có thể được tiến hành mà không gây ảnh hưởng gì đến tính toàn vẹn của dữ liệu được đọc (vì chúng khác nhau!). Nói cách khác việc <em>đọc và ghi mới (SELECT và INSERT)</em> có thể được tiến hành đồng thời, và thực tế đây cũng là một tính năng của MyISAM.</p>
-
-<h3>2.2 MVCC (Multiversion concurrency control)</h3>
-
-<p>MVCC được đặt ra để giải quyết vấn đề đọc và ghi đồng thời. Rõ ràng ở giải pháp shared-lock trình bày ở trên, việc A phải chiếm shared lock là rất mất thời gian; B phải chờ đợi A hoàn thành xử lý đọc mới được cập nhật cũng hoàn toàn không hiệu quả. MVCC giải quyết sự không hiệu quả này bằng nhận xét: <em>Thao tác đọc không cập nhật dữ liệu</em> vì vậy nếu ta duy trì 2 version của dữ liệu (1 cũ - 1 mới) và chỉ tiến hành ghi đè dữ liệu mới vào cũ khi A hoàn thành việc đọc, thì ta không cần shared-lock. B sẽ cập nhật và <em>version mới</em> thay vì phải chờ A hoàn thành việc đọc.</p>
-
-<p>MVCC lưu timestamp và transaction ID để duy trì tính tính nhất quán của dữ liệu.</p>
-
-<p>Để hiểu cách MVCC hoạt động, ta xét ví dụ sau (Copy từ Wikipedia :D)</p>
-
-<pre><code>    Thời gian       | Object 1      | Object 2
-    ----------------|---------------|------------
-    0               | Foo           | Bar
-    1               | Hello (T1)    | 
-</code></pre>
-
-<p>Tại thời điểm 0, Object 1 có giá trị Foo, Object 2 có giá trị Bar. Tại thời điểm 1, thread T1 cập nhật giá trị Object 1 thành Hello. Như vậy trước khi T1 commit dữ liệu, bất cứ xử lý đọc nào cũng cho kết quả Object 1 và 2 tại thời điểm 0 (Foo-Bar). Khi T1 commit dữ liệu, xử lý đọc sẽ trả về giá trị Hello-Bar.</p>
-
-<p>Giả sử tại thời điểm T1 chưa commit, T2 lại cập nhật Object 2 như sau:</p>
-
-<pre><code>    Thời gian       | Object 1      | Object 2
-    ----------------|---------------|------------
-    0               | Foo           | Bar
-    1               | Hello (T1)    | 
-    2               |               | World (T2)
-</code></pre>
-
-<p>Lúc này, mọi thao tác đọc sẽ vẫn trả về Foo-Bar. Khi T2 commit, dữ liệu đọc tiếp theo sẽ là Hello-Bar. Và khi T2 commit, dữ liệu đọc sẽ là Hello-World. Nói cách khác, tại mỗi thời điểm ta nhìn thấy 1 phiên bản dữ liệu, các cập nhật bởi thread khác sẽ được lưu tại một version khác.</p>
-
-<p>Chính nhờ cách quản lý nhiều version dữ liệu này, mà việc đọc không cần lock shared-lock vẫn đảm bảo được tính toàn vẹn của dữ liệu được đọc.</p>
-
-<h2>3. Tổng kết</h2>
-
-<p>Bài viết đã giải thích phần nào hiểu hơn ý nghĩa của exclusive lock và shared-lock cũng như tác dụng và sự cần thiết của chúng. Đồng thời, bài viết cũng làm rõ những điểm được nói đến trong viết trong bài <a href="http://ktmt.github.io/blog/2013/05/07/storageenginemysql/">Giới Thiệu Một Số Storage Engine Của Mysql</a> cũng như giải đáp những thắc mắc của bạn kiennt.</p>
-
-<h2>4. Tham khảo:</h2>
-
-<ol>
-<li><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control">MVCC</a></li>
-<li><a href="http://en.wikipedia.org/wiki/Lock_%28computer_science%29">Lock</a></li>
-<li><a href="http://stackoverflow.com/questions/11837428/whats-the-difference-between-an-exclusive-lock-and-a-shared-lock">Exclusive lock &amp; shared lock</a></li>
-<li><a href="http://www.amazon.com/High-Performance-MySQL-Optimization-Replication/dp/1449314287">High performance MySQL</a></li>
-</ol>
 
 
 		

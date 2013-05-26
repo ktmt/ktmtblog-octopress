@@ -44,7 +44,7 @@
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/05/06/memoization-and-decorator/</loc>
-        <lastmod>2013-05-07T21:51:57+09:00</lastmod>
+        <lastmod>2013-05-27T00:10:37+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/05/07/storageenginemysql/</loc>
@@ -64,11 +64,21 @@
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/05/13/exclusivelock-sharedlock/</loc>
-        <lastmod>2013-05-13T07:51:04+09:00</lastmod>
+        <lastmod>2013-05-27T00:09:07+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/05/15/su-dung-ssl-voi-rails-va-mot-so-chu-y/</loc>
         <lastmod>2013-05-19T22:48:25+09:00</lastmod>
+    </url>
+    <url>
+        <loc>http://ktmt.github.com/blog/2013/05/18/web-beacon/</loc>
+        <lastmod>2013-05-27T00:10:37+09:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://ktmt.github.com/blog/2013/05/21/co-ban-ve-arduino-platform-for-physical-computing/
+        </loc>
+        <lastmod>2013-05-27T00:10:37+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/2013/05/21/quy-tac-xoan-oc/</loc>
@@ -76,11 +86,11 @@
     </url>
     <url>
         <loc>http://ktmt.github.com/blog/archives/</loc>
-        <lastmod>2013-05-21T23:25:10+09:00</lastmod>
+        <lastmod>2013-05-27T00:10:37+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/</loc>
-        <lastmod>2013-05-21T23:25:10+09:00</lastmod>
+        <lastmod>2013-05-27T00:10:37+09:00</lastmod>
     </url>
     <url>
         <loc>http://ktmt.github.com/robots.txt</loc>

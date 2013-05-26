@@ -4,7 +4,7 @@
   <title><![CDATA[Category: python | Blog kỹ thuật máy tính]]></title>
   <link href="http://ktmt.github.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://ktmt.github.com/"/>
-  <updated>2013-05-21T23:25:19+09:00</updated>
+  <updated>2013-05-27T00:12:18+09:00</updated>
   <id>http://ktmt.github.com/</id>
   <author>
     <name><![CDATA[kỹ thuật máy tính]]></name>
@@ -204,7 +204,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>Gotham needs Batman
 </span><span class='line'>Batman Here! Gotham is saved!</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>Cơ chế của decorator có thể hiểu đơn giản là, khi compiler đọc đến đoạn code đefine function với decorator, compiler sẽ compile function 1 cách bình thường và pass function object kết quả thẳng cho decorator(dưới dạng function hoặc class). Decorator(function hoăc class) lấy agrument là 1 function object và return kết quả là 1 function object khác.</p>
+<p>Cơ chế của decorator có thể hiểu đơn giản là, khi intepreter đọc đến đoạn code đefine function với decorator, interpreter sẽ evaluate function 1 cách bình thường và pass function object kết quả thẳng cho decorator(dưới dạng function hoặc class). Decorator(function hoăc class) lấy agrument là 1 function object và return kết quả là 1 function object khác.</p>
 
 <p>Function object kết quả nói trên gồm function object ban đầu đã được gói lại và "thêm thắt", và từ nay về sau sẽ được gọi thay cho function object ban đầu mỗi khi có lệnh call.</p>
 

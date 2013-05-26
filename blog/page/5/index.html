@@ -7,7 +7,7 @@
 	<meta name="author" content="kỹ thuật máy tính">
 
 	
-	<meta name="description" content="Apr 25th, 2013 programming, bit twiddling Comments Đếm Bit Mở đầu Bạn đang say sưa hacking code và bắt gặp một hàm với những con số bí ẩn như ở dưới &hellip;">
+	<meta name="description" content="Apr 29th, 2013 programming, python Comments Python Object Model 1. old-style và new-style class trong Python Bạn đã nghe ở đâu đó &#8220;In python &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -68,6 +68,758 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-29T00:00:00+09:00" data-updated="true" itemprop="datePublished">Apr 29<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming/'>programming</a>, <a class='category' href='/blog/categories/python/'>python</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/04/29/python-object-model/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/04/29/python-object-model/" itemprop="url">Python Object Model</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h3>1. old-style và new-style class trong Python</h3>
+
+<p>Bạn đã nghe ở đâu đó &#8220;In python everything is object&#8221;.</p>
+
+<p>Điều đó có nghĩa là gì? Liệu nó có giống các ngôn ngữ lập trình khác,
+mọi thứ trong Python đều là instance của BaseClass? Tôi đã nghe về <strong>object</strong>
+class trong Python, liệu đó có phải là Base Class của Python</p>
+
+<p>Python có hai mô hình <strong>old-style</strong> và <strong>new-style</strong>. Thực tế trong các phiên bản cũ của Python, không có một class cụ thể nào cho mọi object cả. Nhưng từ Python 2.2, với sự giới thiệu của <strong>new-style</strong> class, chúng ta có thể biến mọi object là instance của <strong>object</strong></p>
+
+<p>Từ Python 2.1 trở về trước, <strong>old-style</strong> class là lựa chọn duy nhất cho các lập trình viên. Khái niệm <strong>old-style</strong> class là không liên quan tới khái niệm kiểu. Nếu x là một instance của old-style class, x.<strong>class</strong> sẽ trỏ tới class của x, nhưng type(x) thì không.</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># old-style class was define by statement:</span>
+</span><span class='line'><span class="c">#   class &lt;class-name&gt;: &lt;class definition body&gt;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">pass</span>
+</span><span class='line'><span class="c"># type of class A is &#39;type&#39; because &#39;type&#39; is base-class in Python</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># make an instance of A</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+</span><span class='line'><span class="c"># a.__class__ reference to class A</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">A</span> <span class="n">at</span> <span class="mh">0x10aea6ce8</span><span class="o">&gt;</span>
+</span><span class='line'><span class="c"># bute type of a is not A but &#39;instance&#39;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;instance&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="c"># &#39;instance&#39; still is &#39;type&#39; class</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>new-style</strong> class được giới thiệu với động lực tạo ra một mô hình object thống nhất cho Python. Mọi đối tượng sẽ được kế thừa từ <strong>object</strong></p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">object</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>new-style</strong> class được định nghĩa bằng cách kế thừa từ <strong>object</strong> class.
+Khác với <strong>old-style</strong> class, nếu x là một instance của <strong>new-style</strong> class, cả x.<strong>class</strong> và type(x) đều trỏ về class của x</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">A</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;type&#39;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="o">.</span><span class="n">__class__</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">type</span> <span class="s">&#39;A&#39;</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Để tương thích với các phiên bản của của Python, class mặc định vẫn được để ở <strong>old-style</strong>.
+Nếu chúng ta muốn sử dụng <strong>new-style</strong>, chúng ta bắt buộc phải định nghĩa class là subclass của <strong>object</strong></p>
+
+<h3>2. Điểm khác biệt giữa <strong>old-style</strong> và <strong>new-style</strong> class</h3>
+
+<p>Điểm khác biệt rõ nhất được nhìn thấy trong hệ thống kiểu.
+Hãy xem làm thế nào <strong>old-style</strong> class và <strong>new-style</strong> class thực hiện việc đa kế thừa. &#8220;Đa kế thừa&#8221; là khả năng một class có thể kế thừa từ nhiều class khác nhau. Nếu A kế thừa từ B, A là subclass(child class, derived class) của B, còn B là superclass (base class, parent class của A)</p>
+
+<p>Đa kế thừa cho phép một class A có thể có nhiều cha (theo tôi, đa kế thừa không thực sự tốt. có nhiều cách để giải quyết vấn đề đa kế thừa, hãy xem Ruby với mixins hay Java với interface thực hiện điều đó. tôi thực sự rất thích mô hình mixins của Ruby)</p>
+
+<p>Trong mô hình object của Python, mọi class đều có thuộc tình <strong><strong>bases</strong></strong> để lưu lại tất cả các class cha của nó, theo thứ tự xuất hiện của việc thừa kế.</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">C</span><span class="o">.</span><span class="n">__bases__</span>
+</span><span class='line'><span class="p">(</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">A</span> <span class="n">at</span> <span class="mh">0x10aea6ce8</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">B</span> <span class="n">at</span> <span class="mh">0x10af8de20</span><span class="o">&gt;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Vấn đề của đa kế thừa đó là thự tự của các superclass.</p>
+
+<p>Khi một instance của một subclass truy cập vào một thuộc tính (hoặc một method),</p>
+
+<pre><code>đầu tiên, nó sẽ tìm kiếm các thuộc tính được định nghĩa trong không gian của nó.
+Nếu thuộc tình (hoặc method) không được tìm thấy, nó sẽ tìm đến không gian
+của class (thuộc tính của class, hàm của class). Nếu vẫn không tìm thấy, nó
+sẽ tìm kiếm tiếp trong không gian của các super class. Khi một class có nhiều
+super class, thứ tự của các super class chính là thứ tự khi tìm kiếm
+</code></pre>
+
+<p>Trong <strong>old-style</strong> class, thứ tự của các superclass là depth-first, left-to-right
+theo thứ tự xuất hiện trong bases list</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;A&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;B&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">print</span> <span class="s">&quot;C&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="c"># order of D.__bases__ is (B, C) so D.test =&gt; B.test</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">D</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;B&quot;</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">E</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="c"># order of E.__bases__ is (C, B) so E.test =&gt; C.test</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">E</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;C&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># so what if we make an class is inherited from D, E</span>
+</span><span class='line'><span class="c"># note that, D and E are inherited from 2 class B, C with reverse order</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="c"># in old-style class, it does not matter, the searching method</span>
+</span><span class='line'><span class="c"># only care about order of superclass in __bases__</span>
+</span><span class='line'><span class="c"># so now F.test =&gt; D.test =&gt; B.test</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">F</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;B&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># even if we make an class is inherited from A, D, E</span>
+</span><span class='line'><span class="c"># it still works and test() method will be test() method of A</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">G</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="o">&gt;&gt;&gt;</span> <span class="n">G</span><span class="p">()</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</span><span class='line'><span class="s">&quot;A&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cách phân giải method của <strong>old-style</strong> khá đơn giản và dễ hiểu. Nhưng nếu chúng
+ta áp dụng quy luật này, đôi khi chúng ta sẽ phạm phải sai lầm khi kế thừa.
+Giả sử, một class G được kế thừa từ A, D và E, trong khi A là parent class của D và E.
+Rõ ràng, một lỗi nên được Python ném ra trong trường hợp này để bảo về việc kế thừa vòng tròn như vậy</p>
+
+<p><strong>new-stlye</strong> giải quyết vấn đề này. <strong>new-style</strong> sử dụng MRO (Method Resolution Order) được giới thiệu từ Python 2.3</p>
+
+<figure class='code'><figcaption><span>python.py </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">mro</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="sd">    Return ordering of superclass of cls</span>
+</span><span class='line'><span class="sd">    This ordering was used when we want to access class instance atrribute</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    `cls`: class type we want to resolve</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">    @raise `TypeError` if cannot resolution superclass order</span>
+</span><span class='line'><span class="sd">    @return `list` of class</span>
+</span><span class='line'><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="n">bases_cls</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__bases__</span>
+</span><span class='line'>    <span class="n">mro_base_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">mro</span><span class="p">(</span><span class="n">base_cls</span><span class="p">)</span> <span class="k">for</span> <span class="n">base_cls</span> <span class="ow">in</span> <span class="n">bases_cls</span><span class="p">]</span>
+</span><span class='line'>    <span class="n">mro_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">cls</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">while</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>        <span class="c"># find the good head</span>
+</span><span class='line'>        <span class="c"># good head is head of a list which is not is tail of any list in mro_base_lists</span>
+</span><span class='line'>        <span class="n">list_head</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">set_tails</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">set_tails</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">good_head</span> <span class="o">=</span> <span class="bp">None</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">head</span> <span class="ow">in</span> <span class="n">list_head</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">if</span> <span class="n">head</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">set_tails</span><span class="p">:</span>
+</span><span class='line'>                <span class="n">good_head</span> <span class="o">=</span> <span class="n">head</span>
+</span><span class='line'>                <span class="k">break</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># if cannot find good_head, raise TypeError</span>
+</span><span class='line'>        <span class="k">if</span> <span class="ow">not</span> <span class="n">good_head</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">raise</span> <span class="ne">TypeError</span>
+</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>            <span class="c"># add to mro_list</span>
+</span><span class='line'>            <span class="n">mro_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">good_head</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c"># remove good_head in all list and add to mro_list</span>
+</span><span class='line'>            <span class="k">for</span> <span class="n">alist</span> <span class="ow">in</span> <span class="n">mro_base_lists</span><span class="p">:</span>
+</span><span class='line'>                <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>                    <span class="n">alist</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">good_head</span><span class="p">)</span>
+</span><span class='line'>                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span class='line'>                    <span class="k">pass</span>
+</span><span class='line'>            <span class="n">mro_base_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mro_base_lists</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">mro_list</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">E</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span> <span class="k">pass</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">test_mro</span><span class="p">():</span>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test1 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">B</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test2 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test 3 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">D</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test 4 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">assert</span> <span class="n">mro</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">E</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">A</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&quot;Test 5 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">mro</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;Test 6 passed&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">test_mro</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ý tướng của MRO là sắp xếp các super class với điều kiện:</p>
+
+<pre><code>+ Nếu B là cha của C, B luôn luôn đứng trước C trong list.
+</code></pre>
+
+<p>Với điều kiện đó, Python sẽ ném ra một lỗi nếu chúng ta cố gắng định nghĩa class
+D kế thừa từ (B, C), E kế thừa từ (C, B) và F kế thừa từ (D, E)</p>
+
+<p>Tham khảo
+<a href="http://www.python.org/download/releases/2.3/mro/">explaination in python docs</a></p>
+
+		
+		
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-28T00:06:00+09:00" data-updated="true" itemprop="datePublished">Apr 28<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/linux-tips-tutorial/'>linux, tips, tutorial</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/04/28/make-fun-with-unix-command-prompt/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/04/28/make-fun-with-unix-command-prompt/" itemprop="url">Fun With Unix Command Prompt</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p><img src="/images/UnixCommandPrompt/unix.png"></p>
+
+<p>Chắc hẳn là một unix user (có thể mac os hay linux), lại là một programmer, bạn sẽ phải hàng ngày sử dụng terminal cho việc lập trình, quản lý source, monitoring hệ thống&#8230;. Và đã là người sử dụng terminal hàng ngày thì cái bạn phải nhìn thấy nhiều nhất chính là cái gọi là &#8220;Command prompt&#8221;</p>
+
+<p><img src="/images/UnixCommandPrompt/unix-terminal.png"></p>
+
+<p>Cái command prompt này thì tùy thuộc vào shell bạn đang dùng (bash hay zsh..) mà sẽ có những cách tùy chỉnh khác nhau. Mình thì đang dùng bash (chắc một ngày gần đây sẽ chuyển qua zsh), nên bài viết này sẽ áp dụng chủ yếu ở trên bash. Command prompt ở trên bash thì gồm có 4 biến môi trường (environment variable) chính: PS1, PS2, PS3, PS4 (Ngoài ra còn có COMMAND_PROMPT nữa nhưng thằng này na ná PS1 nên mình không đề cập đến). Để sử dụng các biến môi trường này thì bạn chỉ cần:</p>
+
+<figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span> <span class="o">=</span> <span class="s2">&quot;abcxyz&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>hoặc đặt đoạn code đó vào ~/.bash_profile hoặc ~/.bashrc rồi</p>
+
+<figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.bash_profile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>để shell load lại các setting trong file tương ứng là biến môi trường đã được set.</p>
+
+<p>Dưới đây mình sẽ nói về việc sử dụng các biến môi trường này để biến cái command prompt của bạn trở nên <strong>màu mè</strong> và <strong>thân thiện</strong> hơn. Về thứ tự thì mình sẽ nói về cái có độ tùy biến thấp đến cao</p>
+
+<h2>PS2</h2>
+
+<p>Trong 5 biến mình nói ở trên thì biến PS2 là thằng nhàm chán nhất. PS2 gọi là Continuation interactive prompt. Tại sao lại gọi như vậy thì: khi một câu lệnh unix quá dài thì bạn thường dùng kí hiệu &#8220;&#92;&#8221; ở cuối dòng để làm cho câu lệnh đấy thành multiple-line (gõ được ở nhiều dòng). Và PS2 là biến quyết định <strong>cái gì được in ở đầu mỗi dòng đó</strong></p>
+
+<p><img src="/images/UnixCommandPrompt/PS2-1.png"></p>
+
+<p>Cách sử dụng thì vô cùng đơn giản:</p>
+
+<figure class='code'><figcaption><span>export export.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS2</span><span class="o">=</span><span class="s2">&quot;continue here -&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Và kết quả là:</p>
+
+<p><img src="/images/UnixCommandPrompt/PS2-2.png"></p>
+
+<p>Chắc bạn cũng đã hình dung ra cách dùng PS2 thế nào rồi nhỉ, và hẳn bạn đang nghĩ, biến này chả có gì thú vị lắm nhỉ, mình cũng nghĩ thế :D. Thế nên chúng ta qua thằng tiếp theo nhé: PS3</p>
+
+<h2>PS3</h2>
+
+<p>PS3 gọi là biến dùng cho việc &#8220;select inside shell script&#8221;
+Giả sử bạn phải viết một đoạn script cho lựa chọn (ví dụ như bạn làm infra, phải viết script kiểu như: hãy chọn giữa install rvm hay rbenv chẳng hạn).Thì chắc đoạn script đó sẽ trông như sau:</p>
+
+<figure class='code'><figcaption><span>select select.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Select your option:&quot;</span>
+</span><span class='line'><span class="k">select </span>i in 1<span class="o">)</span> 2<span class="o">)</span> 3<span class="o">)</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'><span class="k">  case</span> <span class="nv">$i</span> in
+</span><span class='line'>    x<span class="o">)</span>....
+</span><span class='line'>    y<span class="o">)</span>....
+</span><span class='line'>    z<span class="o">)</span>....
+</span><span class='line'>  <span class="k">esac</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'><span class="c"># /.select.sh</span>
+</span><span class='line'>x<span class="o">)</span>....
+</span><span class='line'>y<span class="o">)</span>....
+</span><span class='line'>z<span class="o">)</span>....
+</span><span class='line'>
+</span><span class='line'><span class="c">#? 1</span>
+</span><span class='line'>x<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như các bạn thấy, prompt để lựa chọn khi không có setting gì sẽ là <strong>không hiện gì</strong>, quite boring
+Giờ nếu chúng ta chỉ cần setting PS3 cho đoạn code đó như sau</p>
+
+<figure class='code'><figcaption><span>select select.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code
+</span><span class='line'><span class="nv">PS3</span><span class="o">=</span><span class="s2">&quot;Select an option of installer (1-3): &quot;</span>
+</span><span class='line'><span class="k">select </span>i in 1<span class="o">)</span> 2<span class="o">)</span> 3<span class="o">)</span>
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'><span class="k">  case</span> <span class="nv">$i</span> in
+</span><span class='line'>    x<span class="o">)</span>....
+</span><span class='line'>    y<span class="o">)</span>....
+</span><span class='line'>    z<span class="o">)</span>....
+</span><span class='line'>  <span class="k">esac</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'><span class="c"># /.select.sh</span>
+</span><span class='line'>x<span class="o">)</span>....
+</span><span class='line'>y<span class="o">)</span>....
+</span><span class='line'>z<span class="o">)</span>....
+</span><span class='line'>
+</span><span class='line'><span class="c">#? Select an option of installer (1-3): 1</span>
+</span><span class='line'>x<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như vậy là chúng ta sẽ có một cái prompt <strong>có hiện gì</strong>, use case để dùng thì chắc trong phần lớn các trường hợp sẽ là để cung cấp thông tin cho user về các option lựa chọn phía dưới. PS3 có vẻ khá useful trong một số case nhất định đúng không :D, tiếp theo chúng ta sẽ đến với PS4</p>
+
+<h2>PS4</h2>
+
+<p>Khi execute một đoạn script mà bạn muốn tracking output (để debug chẳng hạn), bạn sẽ dùng {set -x} để làm việc đó. ví dụ như đoạn code ở dưới đây:</p>
+
+<figure class='code'><figcaption><span>tracking tracking.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code tracking.sh
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>ls -all -lrt | grep xyz
+</span><span class='line'><span class="nb">pwd</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'>++ ls -all -lrt
+</span><span class='line'>++ grep xyz
+</span><span class='line'>drwxr-xr-x   2 doxuanhuy  staff   68 Apr 28 11:45 xyz
+</span><span class='line'>++ <span class="nb">pwd</span>
+</span><span class='line'>/Users/doxuanhuy/cur-project/android-globalit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như các bạn thấy, {set -x} sẽ output ra các câu lệnh được execute và prefix bằng cái &#8220;++&#8221;. 2 kí tự này có vè không thể hiện được gì nhỉ, và với PS4, bạn có thể thêm thông tin hữu ích cho việc debug như line number thông qua biến $LINENO, hay function name thông qua biến $FUNCNAME, hay script name thông qua biến $0</p>
+
+<figure class='code'><figcaption><span>tracking tracking.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">==</span>&gt; code tracking.sh
+</span><span class='line'><span class="nb">export </span><span class="nv">PS4</span><span class="o">=</span><span class="s1">&#39;$0.$FUNCNAME $LINENO &#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>somefunction<span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    ls -all -lrt | grep xyz
+</span><span class='line'>      <span class="nb">pwd</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="nv">somefunction</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">==</span>&gt; run
+</span><span class='line'>../test.sh. 8 somefunction
+</span><span class='line'>../test.sh.somefunction 5 ls -all -lrt
+</span><span class='line'>../test.sh.somefunction 5 grep xyz
+</span><span class='line'>drwxr-xr-x   2 doxuanhuy  staff   68 Apr 28 11:45 xyz
+</span><span class='line'>../test.sh.somefunction 6 <span class="nb">pwd</span>
+</span><span class='line'>/Users/doxuanhuy/cur-project/android-globalit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Như vậy chúng ta đã có những thông tin khá hữu ích để debug đúng không.
+Và tiếp theo chúng ta sẽ đi đến bộ đôi thú vị nhất trong ngày: PS1 và COMMAND_PROMPT</p>
+
+<h2>PS1</h2>
+
+<p>Đây chính là biến quyết định cái gì sẽ hiện lên ở command prompt, và là biến có nhiều cái để hack nhất trong các loại PSx</p>
+
+<p><img src="/images/UnixCommandPrompt/PS1-1.png"></p>
+
+<p>Đầu tiên chúng ta sẽ nói về PS1
+Giả sử chúng ta muốn command prompt hiện lên Username, Hostname và full-path đến directory hiện tại, đơn giản chúng ta chỉ cần</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\u@\h \w&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đây \u là Username, \h là Hostname và \w là full path của current dir.
+Như vậy chúng ta sẽ có 1 cái prompt như dưới đây</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>doxuanhuy@xxx ~/cur-project/android-globalit&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Quite easy phải không :D
+Hay hơn chút nữa, bạn muốn hiện thêm current time, lên prompt, rất đơn giản:</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\$(date +%k:%M:%S) \w&gt; &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ở đây (date +%k:%M:%S) là để format date và biến nó thành variable thông qua $</p>
+
+<p>Và kết quả là</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>12:23:59 ~/cur-project/android-globalit&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ngoài ra còn rất nhiều cái bạn có thể cho vào command prompt để biến nó thêm phần phong phú như:</p>
+
+<ul>
+<li>!: The history number of the command</li>
+<li>$kernel_version: The output of the uname -r command from $kernel_version variable</li>
+<li>\$?: Status of the last command</li>
+</ul>
+
+
+<p>Hacking thêm chút nữa, bạn có thể thay đổi màu của từng phần trên command prompt thông qua 3 metacharacter sau:</p>
+
+<ul>
+<li>\e[ - Indicates the beginning of color prompt ( giống như cái &#8221;<sup>&#8221;</sup> của regex vậy)</li>
+<li>x;ym - Indicates color code. Use the color code values mentioned below ( bạn đặt x;ym ở trước node nào thì node đó sẽ được colorize theo màu đó)</li>
+<li>\e[m - indicates the end of color prompt (giống như cái &#8220;$&#8221; của regex)</li>
+</ul>
+
+
+<p>Một ví dụ đơn giản:</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;\e[0;34m\u@\h \w&gt; \e[m&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Đoạn code trên có nghĩa là gì:</p>
+
+<p><img src="/images/UnixCommandPrompt/PS1-2.png"></p>
+
+<p>Hacking thêm một chút nữa, bạn hiện là một developer đang sử dụng git với rất nhiều repo, rất nhiều branch. Mỗi lần vào một repo nào đấy bạn lại phải {git branch} để xem bạn đang ở branch nào, bất tiện vô cùng. Bạn muốn prompt của bạn sẽ hiện branch name mỗi khi bạn vào folder của một repo nào đấy? Thật đơn giản, với backquote để execute bash command và sự trợ giúp của sed, bạn làm điều đó thật đơn giản:</p>
+
+<figure class='code'><figcaption><span>PS1 PS1.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s1">&#39;\e[0;36m\u⌘ \e[0;35m\W \e[0;33m`git branch 2&gt; /dev/null | grep -e ^* | sed -E  s/^\*\ \(.+\)$/\(\1\)\ /`\e[m\]&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Trông có vẻ đáng sợ, nhưng thực ra lại rất đơn giản :D, Chúng ta sẽ đi từng phần nhé:</p>
+
+<ul>
+<li>\e[ : start của command prompt</li>
+<li>[0;36m\u⌘ : bạn tô màu phần user (\u) bởi 0;36m (màu xanh dương) và thêm vào đằng sau cái kí tự ⌘ (cho cool thôi :D)</li>
+<li>\e[0;35m\W : bạn tô màu phần directory hiện tại (\W) bởi 0;35m (màu hồng)</li>
+<li>\e[0;33m : tô màu <strong>toàn bộ phần đằng sau</strong> bởi màu 0;33m (màu vàng)</li>
+<li>git branch 2> /dev/null | grep -e ^* | sed -E  s/<sup>&#92;*\</sup> (.+)$/(&#92;\1)\ /: nguyên văn đoạn này sẽ như sau: đầu tiên bạn dùng &#8220;git branch&#8221; để lấy branch hiện tại. Trong trường hợp không ở trong git repo nào thì sẽ có lỗi ra stderr, bạn redirect cái lỗi này vào dev/null thông qua &#8220;2> /dev/null&#8221; để nó không hiện ra prompt (2 là stderr). Sau đấy bạn tìm line nào có * ở đầu (current git branch) thông qua việc pipe vào grep. Tìm được line đó rồi thì bạn sẽ tách phần đằng sau dấu * ra thông qua sed , và output phần đó ra ngoài với format (branch) thông qua $/(\1). Tất cả đoạn code này được để vào backquote để được execute trực tiếp mỗi khi PS1 được gọi. Và kết quả thật bất ngờ:</li>
+</ul>
+
+
+<p><img src="/images/UnixCommandPrompt/PS1-3.png"></p>
+
+<p>Looks so cool!!
+Ngoài ra bạn còn có rất nhiều thứ có thể hacking với PS1 như:</p>
+
+<ul>
+<li>\j the number of jobs currently managed by the shell</li>
+<li># the command number of this command</li>
+<li>\l the basename of the shell&#8217;s terminal device name
+&#8230;..
+mà bạn có thể tham khảo ở đây: http://www.thegeekstuff.com/2008/09/bash-shell-ps1-10-examples-to-make-your-linux-prompt-like-angelina-jolie/</li>
+</ul>
+
+
+<h2>Ending</h2>
+
+<p>Như vậy với PS[1-4], bạn đã có thể customize command prompt của bạn trở nên đẹp đẽ hơn, cool hơn và useful hơn. Trong các bài viết sắp tới mình sẽ nói về việc sử dụng các công cụ rất mạnh của unix family os như grep, sed, wc để giúp cho công việc development của bạn trở nên thú vị hơn :D. Happy hacking!</p>
+
+		
+		
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
@@ -265,412 +1017,6 @@ $ echo $?
 <li><a href="http://www.drpaulcarter.com/pcasm/">assembly book</a></li>
 <li><a href="http://download.savannah.gnu.org/releases/pgubook/ProgrammingGroundUp-1-0-booksize.pdf">Programming groundup</a></li>
 </ol>
-
-
-		
-		
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-24T23:33:00+09:00" data-updated="true" itemprop="datePublished">Apr 24<span>th</span>, 2013</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/motivation/'>motivation</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2013/04/24/happy-programmer/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/04/24/happy-programmer/" itemprop="url">Happy Programmer</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>Happy programmer là gì nhỉ, chắc ai đọc xong title của bài post này cũng không hiểu ý mình định nói đến là gì :D. Đầu tiên với cá nhân mình thì happy programmer là những programmer(lập trình viên), có khả năng kiếm được tiền và sống tốt bằng việc lập trình, họ training liên tục để trở thành better programmer, và họ hạnh phúc với cuộc sống như vậy. Nếu bạn đã và đang là một programmer, có nhiều lý do để bạn nên happy với việc đấy. Lý do là:</p>
-
-<ul>
-<li><p>Lý do đầu tiên là không happy thì bạn sẽ không làm được gì cả, đơn giản là vậy thôi. Bạn làm công việc gì cũng vậy, nếu bạn cảm thấy không thoải mái với nó thì tốt nhất là không nên làm, mỗi người chỉ có một cuộc sống, đừng phí thời gian làm những gì bạn không thích.</p></li>
-<li><p>Lý do thứ hai, bạn có biết là programmer là một trong số hiếm các ngành bạn được <strong>làm đúng cái bạn được học ra</strong>, và có thể <strong>kiếm tiền đủ sống</strong> với nó (Định nghĩa đủ sống của mình là đủ ăn no, tiêu không phải dè sẻn, đủ để thi thoảng đi du lịch, để thi thoàng mua sắm, tính theo tiền Việt với mình cứ lương tầm 1k2 trở lên mình gọi là đủ sống). Tất nhiên để có cái đủ sống đó thì bạn không thể là một average programmer, ít ra bạn phải là một người có kĩ năng tương xứng.</p></li>
-<li><p>Lý do thứ ba, với mình là một người không thích cuộc sống nhàm chán, thì cái nghề lập trình là cái nghề mà mỗi ngày đều có cái để mình suy nghĩ, để giải quyết. Niềm vui lớn nhất của mình là có vấn đề, giải quyết, và đem solution đi khoe với thằng đồng nghiệp, rồi nó tròn mắt ra thán phục, kể cũng sướng.</p></li>
-</ul>
-
-
-<p>Với từng đấy lý do thì chắc các bạn có thể thấy là, trở thành một happy programmer là một điều nên làm, đúng không :D. Chắc nhiều bạn thắc mắc mình có chỗ đứng thế nào mà lại khuyên bảo các bạn. Mình không kiếm nhiều tiền, và cũng không nổi tiếng, do đấy mình không thể khuyên bảo bất kì ai.Mình chỉ muốn chia sẻ là mình đang cực kì happy với việc mỗi ngày được code cái gì đó useful, tìm hiểu thêm được về công nghệ mới, bàn luận về thuật toán với mấy thằng bạn :D</p>
-
-<p> Hơi lạc đề một chút, thực trạng IT ở Việt Nam đang làm chúng ta không có nhiều happy programmer, hay đúng hơn là chỉ có một số ít programmer cảm thấy happy với công việc, mức lương và luôn cố gắng để hoàn thiện kĩ năng bản thân. IT Việt Nam hiện nay theo mình đang chia làm 2 mảng chính Start-up và Outsource. Ở bên Start-up với lực lượng chính là các venture (và một số các ông lớn như VNG) có vẻ xuất hiện nhiều happy programmer hơn,  mình chỉ biết sơ sơ về mảng này thông qua một vài người bạn, nên không dám nhận xét nhiều. Còn ở bên mảng Outsource, cái mảng mà đang chiếm phần lớn tỉ trọng trong mảng IT VN, thì thực trạng tỉ lệ công việc nhàm chán cao, không yêu cầu kĩ năng, cộng với tầm nhìn công nghệ hạn hẹp của các ông chủ thì đang có thực trạng là  các lập trình viên thường chăm chăm nhảy lên project manager. Việc đấy không có gì là sai cả, hoàn toàn đúng là khác, chỗ nào lương cao hơn, ta nhảy lên chỗ đó, là mình mình cũng làm thế. Cái sai ở đây là cái sai của những người lãnh đạo, mình nghĩ họ là những người không có tầm nhìn (đặc biệt là tầm nhìn về mặt công nghệ), họ có thể kiếm được tiền, rất nhiều tiền (có thể hàng chục tỉ, hàng trăm tỉ) nhưng cái đó chắc không còn lâu nữa, khi mà cái thị trường lao động rẻ màu mỡ VN không còn là duy nhất, và không còn chỗ để khai thác. Chính vì vậy nếu bạn là một người làm outsource, mà không cố để trở thành một happy programmer ngay khi còn có thể, thì không lâu nữa chắc mình sẽ gặp lại bạn ở đầu dốc Bưởi :D. Mình sẽ nói về outsource Việt Nam trong một bài khác.</p>
-
-<p>Quay lại vấn đề chính, hiện tại cá nhân mình thấy mình đang là một happy programmer :D. Tuy nhiên việc duy trì cái sự happy đấy đòi hỏi mình phải làm theo một số rule và duy trì một nhịp sống để luôn keep high motivation. Dưới đây là những cái mình đã và đang thực hiện hàng ngày,đó cũng là những rule chung mà nếu ai có điều kiện cũng nên thử làm, mình nghĩ nó sẽ ít nhiều có ích cho các bạn :</p>
-
-<ul>
-<li><p>Stay healthy: Một trong những đặc điểm chung của nerdy là sinh hoạt cực kì thiếu điều độ. Có một thời gian dài mình toàn ngủ lúc 4h, dậy lúc 12h, cho đến gần đây mình mới nhận thấy là sinh hoạt điều độ (ngủ lúc 12h, dậy 8h30, ngồi đọc sách, code một tí, ăn cơm, lên trường, tối về đúng giờ, ăn cơm đúng giờ, code một tí, đi ngủ) đem lại cho mình khả năng tập trung tốt hơn hẳn, và cũng đớ hẳn một số cảm giác khó chịu trước hay gặp như đầy bụng, buồn ngủ&#8230;</p></li>
-<li><p>Embrace the uncomfortable: sẵn sàng làm những việc không thoải mái cũng là những việc nên tập. Một ví dụ đơn giản nhất là làm unit-test. Đợt mới làm việc mình cực ghét unit-test (cũng một phần tại chỗ mình làm unit-test thiếu chuyên nghiệp quá). Kết quả thì là code bug , và khi code có thay đổi lớn về kiến trúc, không có unit-test thì chắc bạn chỉ có khóc, bạn sẽ không biết đoạn nào chạy đoạn nào không. Do đấy việc cố làm những gì mình cảm thấy không thoải mái vừa là một cách rèn luyện mình, mình tin là khi làm rồi bạn sẽ không còn cảm thấy việc gì là uncomfortable nữa.</p></li>
-<li><p>Learn a new programming language: Nhiều bạn chắc sẽ tự nghĩ, ngôn ngữ lập trình thì mình biết cả thùng, từ c, cpp, java, perl, python&#8230; Bạn nào nghĩ thế chắc nên đọc lại http://norvig.com/21-days.html của peter norvig. Học một ngôn ngữ mới, mình định nghĩa hiểu về ngôn ngũ đấy khi bạn có thể viết được một cái gì đấy useful bằng ngôn ngữ đó, một cái web crawler, một con chat-bot, một cái web,&#8230;, bạn hiểu ngôn ngữ đấy về mặt bản chất (vd như js thì ít ra phải hiểu prototype programming, module pattern, hay ruby thì hiểu metaprogramming, ruby vm,&#8230; python thì chí ít cũng nắm được cái decorator nó là cái gì, hay là new-style class với old-style class khác nhau thế nào). Học ngôn ngữ mới giúp bạn có cái nhìn rộng hơn, làm đầu óc bạn flexible hơn. Cá nhân mình thì thấy khi đã hiểu kĩ imperative programming thì bạn nên đọc thêm về declarative programming( ví dụ như haskell hay scala(functional programming) hay prolog(logic programming))</p></li>
-<li><p>Automate: automate là kĩ năng không thể thiếu của bất kì programmer nào. Bản chất của programmer là phải lazy and dumb. Lý do tại sao thì bạn tham khảo tại http://www.codinghorror.com/blog/2005/08/how-to-be-lazy-dumb-and-successful.html. Automate là bước đầu hiện thực hóa của lazy. Bạn phải gõ đi gõ lại một thứ, phải click đi click lại một thứ mà bạn vẫn miệt mài ngồi làm thì chắc bạn nên bỏ nghề đi thôi :D. Hãy viết tool automate bất cứ cái gì có thể.</p></li>
-<li><p>Learn more mathematic: Cái này thì không áp dụng với tất cả mọi người. Có 2 type of computer programmer: computer scientist và computer engineer. Computer scientist sẽ làm những công việc có hàm lượng &#8220;science&#8221; cao hơn một chút, như physic engine, compiler optimizer hay data mining, hoặc pattern recognition.. Còn computer engineer sẽ làm thiên về technical, họ sẽ có rất nhiều trick để làm chương trình chạy nhanh hơn, có rất nhiều kĩ năng để làm một hệ thống robust. Đi theo hướng nào là tùy career path của từng người. Cá nhân mình thì mình thích có tí gì đó thiên về khoa học, do đấy những kĩ năng về probabilistic, matrix algebra, linear algebra là phải có. Và toán là một trong những kĩ năng không thể nhồi ngay được, nên bắt buộc bạn phải học mỗi ngày, hay mỗi tuần một chút một. Nếu bạn không có chút interest nào với toán thì bạn có thể thay toán bằng algorithm, thi thoảng lên topcoder hay project euler ngồi làm cũng giúp bạn có kĩ năng tốt hơn để giải quyết công việc hàng ngày :).</p></li>
-<li><p>Focus on security: Rất nhiều app developer thiếu những kĩ năng về security cơ bản, đặc biệt là web app với những xss hay sql injection, cho đến khi bị tấn công thì mới ngớ người ra. Ngay cả developer ở những tập đoàn lớn như facebook hay twitter cũng đã từng mắc những lỗi cơ bản liên quan đến oauth (đặc biệt là twitter).Do đó việc tìm hiểu về những lỗ hổng cơ bản là cần thiết với tất cả các programmer.</p></li>
-<li><p>Complete a personal project: side project là một trong những yếu tố rất quan trọng giúp bạn keep high motivation cho việc phát triển career path để thành một programmer đúng nghĩa. Với side project, bạn có thể làm gì bạn thích, design những gì bạn muốn, up lên github, khoe hàng trên ycombinator, và tự hào nhìn số starred của repo trên github (cá nhân mình thì chưa làm được cái đoạn từ khoe hàng trên ycombinator), nhưng mình vẫn cố gằng nghĩ ra, và hoàn thành các side project, chỉ vì đơn giản là nó giúp mình happy và highly motivated với việc là một programmer đúng nghĩa</p></li>
-<li><p>Get your community: Ở VN hiện tại có một điều mình rất bức xúc là thiếu cộng đồng làm công nghệ. Thiếu cộng đồng thì bạn làm gì đi nữa, có side project khủng bố thế nào đi nữa thì cũng chả khác gì bạn đang masturbate cả :D. Mô hình meetup hay conference giúp bạn có thể giao lưu với những người cùng sở thích, biết bạn đang đứng ở đâu, và làm thể nào để phát triển bản thân. Bạn sẽ có những lời khuyên tốt nhất và chân thành nhất. Chính vì vậy đừng ngần ngại, hãy tìm những người bạn cùng sở thích lập trình, lập thành các group, cùng giải quyết vấn đề, bạn sẽ học được nhiều điều hơn bạn nghĩ :D</p></li>
-</ul>
-
-
-<h2>The end</h2>
-
-<p>Trên đây là những điều mình vẫn đang làm hàng ngày, và những điều đấy giúp mình luôn tin là mình đang đi đúng con đường mình đã chọn. Bạn hãy thử làm xem bạn có trở nên happy hơn với việc là một programmer không, nếu không thì mình nghĩ là bạn nên đổi nghề&#8230; :D. Chúc các bạn thành công.</p>
-
-		
-		
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-21T23:56:00+09:00" data-updated="true" itemprop="datePublished">Apr 21<span>st</span>, 2013</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/programming/'>programming</a>, <a class='category' href='/blog/categories/test/'>test</a>, <a class='category' href='/blog/categories/ut/'>ut</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2013/04/21/selenium/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/04/21/selenium/" itemprop="url">Selenium và Jenkins</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<h2>Mở đầu</h2>
-
-<p>Trong quy trình phát triển một phần mềm, Test nói chung và UT nói riêng luôn là những process rất quan trọng. Tuy nhiên khi Application càng ngày càng lớn thì khối lượng Test càng phình to và cost sẽ vượt quá cost bỏ ra cho coding. Để giảm thiểu số công sức bỏ ra, developer thường hay dùng các test framework có sẵn và tìm cách automation quy trình test.</p>
-
-<p>PHP có PHPUnit, Java có JUnit, Python có nose v.v&#8230; Tuy nhiên bên ngoài UT vẫn còn những quy trình bắt buộc phải làm bằng tay. Bạn viết ra 1 website, bạn muốn test trên website bạn có đúng những link hiện ra như bạn muốn hay ko, màu sắc có thay đổi hay không, khi user click vào link có nhảy đến page target và mang theo hàm callback đã định nghĩa hay ko v.v&#8230;</p>
-
-<p>Trong bài viết này sẽ giới thiệu 2 công cụ automation UT và test khá nổi tiếng. Sủ dụng và tận dụng, đôi khi sẽ thành những tool mang lại hiệu quả bất ngờ trong cả những công việc khác :D</p>
-
-<h2>Selenium</h2>
-
-<p>Selenium - nói 1 cách đơn giản, là công cụ automator tất cả các thao tác của con người trên browser. Bạn có thể giả lập 1 set các action, VD như: &lt; User bật browser lên, User vào trang web của bạn, User đi theo link route linh1-link2-link3-link4, User click vào download button trong link 4 ></p>
-
-<p>Selenium có 2 cách dùng, Selenium Server và Selenium WebDriver. Hiện nay trên firefox đã có plugin Selenium IDE. Bạn có thể dùng nó để record lại hành động của mình và export ra test code in Python, Ruby, C#, hoặc Java. Selenium test code chạy ở chế độ bình thường sẽ tự động bật browser của bạn lên và tự hành động y như bạn đã làm trước dó :D</p>
-
-<p>Tuy nhiên để quy trình test không tốn quá nhiều tài nguyên, người ta thường hay config để selenium chạy headless trên Linux. VD như Python sẽ có package Xvfb, cho phép tạo display chạy ngầm và bật web driver trên đó.</p>
-
-<p>Ở dưới là VD config cho CentOS distro</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>pip install selenium
-</span><span class='line'>yum install Xvfb 
-</span><span class='line'>yum install firefox
-</span><span class='line'>pip install pyvirtualdisplay</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>~/.bash_profile </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>...
-</span><span class='line'>#Create virtual screen by Xvfb
-</span><span class='line'>Xvfb :5 -ac -screen 0 1024x768x8 &
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>TestMySite.py</span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">SeleniumHeadlessTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">()</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="s">&quot;&quot;</span> <span class="c">#Testing URL here </span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">verificationErrors</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span class='line'><span class="o">....</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>running python test</span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>export DISPLAY=:5.0
-</span><span class='line'>python TestMySite.py</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Bypass the working attendance system</h2>
-
-<p>Ở phần này tôi sẽ đặt ra 1 ví dụ trực quan: giả sử, công ty bạn có hệ thống check time làm việc của nhân viên. Nhân viên khi đến công ty phải login vào page, ấn vào button &#8220;Đã đến&#8221;. Tương tự khi về lại phải login vào và ấn thêm button &#8220;Đã về&#8221;</p>
-
-<p>Có selenium trong tay, bạn có thể giải quyết vấn đề khá đơn giản, viết 1 test script mô phỏng toàn bộ quá trình nói trên, đặt cron cho nó chạy vào giờ đến và giờ về chỉ định</p>
-
-<figure class='code'><figcaption><span>selenium - selenium.py </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">SeleniumHeadlessTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="n">mock</span><span class="o">=</span> <span class="s">&quot;&quot;</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">()</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">mock</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">verificationErrors</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">test_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="n">name</span><span class="o">=</span><span class="s">&quot;&quot;</span>
-</span><span class='line'>        <span class="n">pwd</span><span class="o">=</span><span class="s">&quot;&quot;</span>
-</span><span class='line'>        <span class="n">driver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span>
-</span><span class='line'>        <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;..._name_field_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;..._password_field_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;..._login_button_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
-</span><span class='line'><span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Thêm 1 ít sleep time random(VD random trong khoảng 10 phút) và đặt cron 30 10 * * 1-5. Bạn đã có 1 con bot luôn check time in cho bạn trong khoảng 10h30-10h40 mỗi ngày trong tuần
-:D Với package Xvfb như đã nói ở trên, con bot sẽ chạy silent bên trong máy (hay máy ảo) và ko tạo ra 1 notice nào. Redirect log ra 1 file ẩn sẽ giúp manage quá trình chạy tốt hơn.</p>
-
-<p>Khi xuất hiện 1 số ngày nghỉ ko phải thứ 7, CN mà muốn đặt lịch để con bot ko chạy, vấn đề sẽ hơi phức tạp hơn 1 chút. bạn cần phải viết 1 con bot observer khác check ngày và update lại cron job</p>
-
-<h2>Selenium + Nose</h2>
-
-<p>Nếu bạn đã dùng Python 1 thời gian, chắc hẳn sẽ biết đến Nose - UT framework cho Python. Ở phần này sẽ demo thêm 1 config cho Selenium + Nose</p>
-
-<p>Yêu cầu: Trang web www.mysite.com của bạn có 100 sublink: www.mysite.com/1 , www.mysite.com/2, www.mysite.com/3 &#8230;.. www.mysite.com/100</p>
-
-<p>Bạn phải test xem trong từ sublink đó có 1 file image tên là &#8220;myimage.png&#8221; với div=myimage hay không.</p>
-
-<p>Như vậy có 100 test case ở đây, tuy nhiên content khá giống nhau, bạn có thể nghĩ đến chuyện tạo template</p>
-
-<figure class='code'><figcaption><span>template.py</span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">unittest</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="kn">import</span> <span class="n">Select</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">selenium.common.exceptions</span> <span class="kn">import</span> <span class="n">NoSuchElementException</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">SeleniumHeadlessTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">()</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="s">&quot;www.mysite.com&quot;</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">failures</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">Test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="n">driver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span>
-</span><span class='line'>        <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="o">+</span> <span class="s">&quot;foo&quot;</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">try</span><span class="p">:</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;//div[@id=&#39;myimage&#39;]&quot;</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">except</span> <span class="n">NoSuchElementException</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">driver</span><span class="o">.</span><span class="n">back</span><span class="p">()</span>
-</span><span class='line'>            <span class="bp">self</span><span class="o">.</span><span class="n">failures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">)</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">failures</span><span class="p">),</span><span class="mi">0</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Tạo file config chứa các giá trị muốn replace cho &#8220;foo&#8221; trong template.py, ở đây cụ thể là 1..100</p>
-
-<figure class='code'><figcaption><span>config </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># any comment
-</span><span class='line'>! another comment
-</span><span class='line'>$ I'm comment too, do u believe me :D
-</span><span class='line'>1
-</span><span class='line'>2
-</span><span class='line'>...
-</span><span class='line'>100</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Code 1 cái test_generator, ở đây tôi dùng chính Python fabric:D</p>
-
-<figure class='code'><figcaption><span>selenium - fabfile.py</span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># pip install fabric</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">with_statement</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">fabric.api</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">fileinput</span><span class="o">,</span> <span class="nn">textwrap</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">_DIR</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">test_generator</span><span class="p">():</span>
-</span><span class='line'>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;./config&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-</span><span class='line'>        <span class="c"># Ignore comment line in config file</span>
-</span><span class='line'>        <span class="n">prefs</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;#&quot;</span><span class="p">,</span><span class="s">&quot;!&quot;</span><span class="p">,</span><span class="s">&quot;&lt;&quot;</span><span class="p">,</span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="s">&quot;$&quot;</span><span class="p">,</span><span class="s">&quot;%&quot;</span><span class="p">,</span><span class="s">&quot;&amp;&quot;</span><span class="p">,</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">]</span>
-</span><span class='line'>        <span class="n">ffilter</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">prefs</span><span class="p">),</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-</span><span class='line'>        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ffilter</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">bar</span><span class="o">=</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span class='line'>            <span class="k">with</span> <span class="n">lcd</span><span class="p">(</span><span class="n">_DIR</span><span class="p">):</span>
-</span><span class='line'>                <span class="c"># create test source </span>
-</span><span class='line'>                <span class="n">local</span><span class="p">(</span><span class="s">&#39;cp -r template.py &#39;</span><span class="o">+</span><span class="n">bar</span><span class="o">+</span><span class="s">&#39;.py&#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;./&#39;</span><span class="o">+</span><span class="n">bar</span><span class="o">+</span><span class="s">&#39;.py&#39;</span><span class="p">,</span><span class="s">&#39;r+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tf</span><span class="p">:</span>
-</span><span class='line'>                <span class="c"># replace all &quot;foo&quot; with variable read from config file</span>
-</span><span class='line'>                <span class="n">tfmap</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">l</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span><span class="s">&quot;bar&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="s">&quot;foo&quot;</span> <span class="ow">in</span> <span class="n">l</span> <span class="k">else</span> <span class="n">l</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
-</span><span class='line'>                <span class="n">tf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span class='line'>                <span class="n">tf</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">tfmap</span><span class="p">)</span>
-</span><span class='line'>            <span class="n">tf</span><span class="o">.</span><span class="n">closed</span>
-</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">closed</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Done! Giờ bạn có thể</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#pip install multiprocessing
-</span><span class='line'>export DISPLAY=:5.0
-</span><span class='line'>fab test_generator 2>fabErr.log
-</span><span class='line'>nosetest --exe -v --process=4 --process-restartworker .</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Jenkins</h2>
-
-<p>Tiếp tục về quy trình test automation, Jenkins là 1 tool xuất sắc khác. Jenkins đại diện cho khái niệm CI (continuous integration).</p>
-
-<p>Bạn muốn cả bộ UT/test chạy mỗi ngày vào 10 h sáng. Mội ngày system leader đến check log để biết có bao nhiêu test đang fail, bao nhiêu error, quản lý health theo từng ngày, bạn hoàn toàn có thể dùng test framework + cronjob</p>
-
-<p>Tuy nhiên Jenkins cung cấp 1 giao diện trực quan hơn, percentage, graph, coverage report, code convention checking ,v.v&#8230;.. hoàn toàn tự động, có thể wake up theo svn hoặc git. Jenkins cũng có rất nhiều plugin và support hầu hết các test framework.</p>
-
-<p>VD về Jenkins jobs</p>
-
-<p><img src="/images/SeleniumAndJenkins/JenkinsJobs.png" title="image" alt="images">
-Source Code Management</p>
-
-<p><img src="/images/SeleniumAndJenkins/ExecuteShell.png" title="image" alt="images">
-Execute Shell</p>
-
-<p><img src="/images/SeleniumAndJenkins/BuildTriggers.png" title="image" alt="images">
-Build Trigger</p>
-
-<p>Đặt lịch, tương tự cron jobs</p>
-
-<p>1 recommended config là tạo 1 jenkins job observer check svn và git, nếu có update tại subsystem nào thì run jenkins jobs tương ứng với subsystem đấy. 1 sub system lại có thể chứa nhiều test framework cần wakeup (VD với PHP + Oracle, bạn có PHPUnit và utPLSQL)</p>
-
-<h2>Kết luận</h2>
-
-<ul>
-<li><p>Cron jobs: package lập lịch của Linux</p></li>
-<li><p>Xvfb: package tạo display ảo của Linux</p></li>
-<li><p>Selenium: là công cụ giả lập action trên browser, bắt chước y hệt thao tác của user và ko loại trừ bất cứ hạn chế nào</p></li>
-<li><p>Jenkins: CI Test Tool, dùng để lập lịch, theo dõi và quản lý health của system</p></li>
-</ul>
 
 
 		
