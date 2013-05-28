@@ -102,7 +102,7 @@ Gotham needs Batman
 Batman Here! Gotham is saved! 
 {% endcodeblock %} 
 
-Cơ chế của decorator có thể hiểu đơn giản là, khi compiler đọc đến đoạn code đefine function với decorator, compiler sẽ compile function 1 cách bình thường và pass function object kết quả thẳng cho decorator(dưới dạng function hoặc class). Decorator(function hoăc class) lấy agrument là 1 function object và return kết quả là 1 function object khác. 
+Cơ chế của decorator có thể hiểu đơn giản là, khi intepreter đọc đến đoạn code đefine function với decorator, interpreter sẽ evaluate function 1 cách bình thường và pass function object kết quả thẳng cho decorator(dưới dạng function hoặc class). Decorator(function hoăc class) lấy agrument là 1 function object và return kết quả là 1 function object khác. 
 
 Function object kết quả nói trên gồm function object ban đầu đã được gói lại và "thêm thắt", và từ nay về sau sẽ được gọi thay cho function object ban đầu mỗi khi có lệnh call.
 
