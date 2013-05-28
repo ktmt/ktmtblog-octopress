@@ -50,7 +50,9 @@ Sau đây là code để test hàm
 {% codeblock test_models.py %}
 
 class TestModel(unittest.TestCase):
-
+    def setUp(self):
+        tree = Tree()
+        self.order = Order(tree=tree)
 
     @mock.patch('StoryTree.helpers.image_helper.save_image')
     @mock.patch('StoryTree.helpers.generator.pdf.merge_pdf_files')
@@ -131,9 +133,15 @@ class Order(models.Model):
         input_files = self.create_input_files(front_image, back_image)
         new_path = pdf.merge_pdf_files(input_files)
         return new_path
+{% endcodeblock %}
 
 
+Code test
+
+{% codeblock test_models.py %}
 class TestModel(unittest.TestCase):
+    def setUp(self):
+        self.order = Order()
 
     @mock.patch('StoryTree.helpers.generator.pdf.merge_pdf_files')
     def test_create_final_pdf_file(
