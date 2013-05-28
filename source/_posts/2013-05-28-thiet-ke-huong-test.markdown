@@ -12,7 +12,6 @@ Một trong những vấn đề khi viết các hàm đó là các hàm thườn
 
 Hãy xét một ví dụ sau
 
-
 {% codeblock models.py %}
 
 class Order(models.Model):
@@ -45,7 +44,7 @@ Hàm `create_final_pdf_file` nhận tham số là một `client_order_id`, tạo
 
 Tuy nhiên tuỳ theo giá trị của `self.order_type` mà cách tạo các ảnh trước và ảnh sau là khác nhau.
 
-Sau đây là code để test hàm
+Nếu chỉ dừng ở đây, bản thân tôi, thấy khá hài lòng với hàm  `create_final_pdf_file`. Hàm dài vừa đủ, không quá dài (19 lines), chỉ có một input đầu vào, và 1 output đầu ra. Tuy nhiên, nếu viết testcase cho hàm này, chúng ta sẽ thấy có vấn đề
 
 {% codeblock test_models.py %}
 
@@ -103,10 +102,9 @@ class TestModel(unittest.TestCase):
             self.assertEqual(1, mock_create_pdf.call_count)
 {% endcodeblock %}
 
-Chúng ta muốn test cả hai trường hợp nên cần phải viết 2 test case. Tuy nhiên, 2 test case này lại duplicate rất nhiều, vì chúng chỉ khác nhau ở logic ở trong đoạn if-else?
+Đoạn code test trên có vấn đề gì? Để test hàm `create_final_pdf_file`, chúng ta cần viết 2 test case, cho 2 trường hợp trong đoạn code if-else. Và 2 đoạn code test bị lặp lại khá nhiều, đặc biệt là ở việc mock các objects. Chúng ta có thể viết lại test case gọn hơn bằng cách viết một function chung, hoặc một function tạo ra các mock object và gọi nó trong từng hàm test. Nhưng liệu có phải đó là vấn đề chính.
 
-Vậy đoạn code để tạo final pdf ở trên đã thực sự tốt? Một hàm tốt, là một hàm chỉ nên làm một việc. Đoạn code if-else xử lý 2 logic khác nhau, chúng nên được tách ra thành một hàm khác.
-
+Điều tôi muốn nói ở đây là: Code smell trong test code có nguyên nhân từ test code, hay từ bản thân đoạn code chúng ta muốn test. Hãy xem lại hàm `create_final_pdf_file`. Hàm nãy đã thực sự tốt? Một hàm tốt, là một hàm chỉ nên làm một việc. Hàm `create_final_pdf_file` ở đây, ngoài việc gọi các hàm khác, còn thêm vào nó đoạn xử lý logic xét kiểu của `order`. Đoạn code if-else xử lý 2 logic khác nhau, chúng nên được tách ra thành một hàm khác.
 
 {% codeblock models.py %}
 
@@ -133,10 +131,10 @@ class Order(models.Model):
         input_files = self.create_input_files(front_image, back_image)
         new_path = pdf.merge_pdf_files(input_files)
         return new_path
+
 {% endcodeblock %}
 
-
-Code test
+Hàm `create_final_pdf_file` sau khi được refactoring, đã trở nên đơn giản và dễ đọc hơn, thay vì phải lướt qua 19 lines, và đọc hiểu logic của đoạn code if-else, giờ đây bạn có thể hiểu nó chỉ bằng `create_input_files`. Và code test mới cho hàm `create_input_files` như sau
 
 {% codeblock test_models.py %}
 class TestModel(unittest.TestCase):
@@ -144,10 +142,7 @@ class TestModel(unittest.TestCase):
         self.order = Order()
 
     @mock.patch('StoryTree.helpers.generator.pdf.merge_pdf_files')
-    def test_create_final_pdf_file(
-            self, mock_merge_pdf):
-        self.order.order_type = Order.SOFT_COVER
-
+    def test_create_final_pdf_file(self, mock_merge_pdf):
         mock_cached_pdf = PropertyMock(
             return_value='StoryTree/tests/fixtures/1.pdf')
         mock_backcover = mock.Mock(return_value=image)
@@ -167,4 +162,8 @@ class TestModel(unittest.TestCase):
 
 {% endcodeblock %}
 
-Việc tách logic của đoạn code tạo 2 input files ra thành một hàm `create_input_files`, làm cho hàm `create_final_pdf` dễ hiểu hơn, nói cách khác, nó che giấu thông tin không cần thiết cho lập trình viên khi đọc tới đoạn code của `create_final_pdf`.Hàm `create_final_test` giờ đây không làm gì khác ngoại việc gọi tới các hàm khác. Không có bất cứ logic nào được đặt trong hàm này. Trên thực tế rất nhiều lập trình viên sẽ không viết test cho những hàm như `create_final_pdf` nữa. Họ chỉ cần viết test cho 4 hàm `create_input_files`, `create_backcover_image`, `create_frontcover_image`, và `cached_pdf_file` là đủ.
+Việc tách logic của đoạn code tạo 2 input files ra thành một hàm `create_input_files`, làm cho hàm `create_final_pdf` dễ hiểu hơn, nói cách khác, nó che giấu thông tin không cần thiết cho lập trình viên khi đọc tới đoạn code của `create_final_pdf`.
+Hàm `create_final_test` giờ đây không làm gì khác ngoại việc gọi tới các hàm khác.
+Không có bất cứ logic nào được đặt trong hàm này. Trên thực tế rất nhiều lập trình viên sẽ không viết test cho những hàm như `create_final_pdf` nữa. Họ chỉ cần viết test cho 4 hàm `create_input_files`, `create_backcover_image`, `create_frontcover_image`, và `cached_pdf_file` là đủ.
+
+Tóm lại, ạn có thể tìm kiếm code smell trong unittest, và refactoring hàm mà unittest đó muốn test
