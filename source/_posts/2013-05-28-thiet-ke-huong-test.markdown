@@ -134,7 +134,7 @@ class Order(models.Model):
 
 {% endcodeblock %}
 
-Hàm `create_final_pdf_file` sau khi được refactoring, đã trở nên đơn giản và dễ đọc hơn, thay vì phải lướt qua 19 lines, và đọc hiểu logic của đoạn code if-else, giờ đây bạn có thể hiểu nó chỉ bằng `create_input_files`. Và code test mới cho hàm `create_input_files` như sau
+Hàm `create_final_pdf_file` sau khi được refactoring, đã trở nên đơn giản và dễ đọc hơn, thay vì phải lướt qua 19 lines, và đọc hiểu logic của đoạn code if-else, giờ đây bạn có thể hiểu nó chỉ bằng `create_input_files`. Và code test mới cho hàm `create_final_pdf_file` như sau
 
 {% codeblock test_models.py %}
 class TestModel(unittest.TestCase):
@@ -166,4 +166,4 @@ Việc tách logic của đoạn code tạo 2 input files ra thành một hàm `
 Hàm `create_final_test` giờ đây không làm gì khác ngoại việc gọi tới các hàm khác.
 Không có bất cứ logic nào được đặt trong hàm này. Trên thực tế rất nhiều lập trình viên sẽ không viết test cho những hàm như `create_final_pdf` nữa. Họ chỉ cần viết test cho 4 hàm `create_input_files`, `create_backcover_image`, `create_frontcover_image`, và `cached_pdf_file` là đủ.
 
-Tóm lại, ạn có thể tìm kiếm code smell trong unittest, và refactoring hàm mà unittest đó muốn test
+Tóm lại, bạn có thể tìm kiếm code smell trong unittest, và refactoring hàm mà unittest đó muốn test
