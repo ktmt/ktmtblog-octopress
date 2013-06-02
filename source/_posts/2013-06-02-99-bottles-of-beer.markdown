@@ -17,6 +17,22 @@ categories:
 99-bottles-of-beer cũng từng là đề bài của code golf và phpgolf. Mission của chúng ta là code 1 đoạn PHP snippet print [lyric][] của bài hát mà dung lượng đoạn code là nhỏ nhất.
 Logic thật đơn giản phải không :D
 
+{% codeblock lyric%}
+99 bottles of beer on the wall, 99 bottles of beer.
+Take one down and pass it around, 98 bottles of beer on the wall.
+
+98 bottles of beer on the wall, 98 bottles of beer.
+Take one down and pass it around, 97 bottles of beer on the wall.
+
+97 bottles of beer on the wall, 97 bottles of beer.
+Take one down and pass it around, 96 bottles of beer on the wall.
+
+...
+
+1 bottle of beer on the wall, 1 bottle of beer.
+Go to the store and buy some more, 99 bottles of beer on the wall.
+{% endcodeblock %}
+
 Với mục tiêu dùng ít code nhất có thể, tôi sẽ không dùng cấu trúc rẽ nhánh if-else, thay vào đó là ternary operator của PHP 
 ( có nghĩa là bạn có thể viết "(condition)?true-action:false-action" thay vì "if (condition) {true-action} else {false-action}"  ) 
 
