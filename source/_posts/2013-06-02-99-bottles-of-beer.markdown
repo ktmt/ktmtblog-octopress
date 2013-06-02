@@ -12,7 +12,7 @@ categories:
 
 ## The song, and the home page ##
 
-Đầu tiên có thể độc giả sẽ tự hỏi ý nghĩa của tiêu đề bài viết là gì ? Vậy trước hết mời bạn ghé qua [home page][] enjoy the [song][] :D
+Đầu tiên có thể độc giả sẽ tự hỏi ý nghĩa của tiêu đề bài viết là gì ? Vậy trước hết mời bạn ghé qua [home page][] và enjoy the [song][] 
 
 99-bottles-of-beer cũng từng là đề bài của code golf và phpgolf. Mission của chúng ta là code 1 đoạn PHP snippet print [lyric][] của bài hát mà dung lượng đoạn code là nhỏ nhất.
 Logic thật đơn giản phải không :D
