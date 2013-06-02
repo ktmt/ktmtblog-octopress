@@ -10,7 +10,7 @@ categories:
 ---
 
 
-## The song, and the home page##
+## The song, and the home page ##
 
 Đầu tiên có thể độc giả sẽ tự hỏi ý nghĩa của tiêu đề bài viết là gì ? Vậy trước hết mời bạn ghé qua [home page][] enjoy the [song][] :D
 
@@ -126,7 +126,7 @@ PHP là 1 ngôn ngữ web! Với allow_url_fopen và allow_url_include turn on c
 Stay hungry, stay foolish :D 
  
 
-## Tham khảo ## 
+## Tham khảo 
 
 1. [phpgolf tips and tricks][]
 2. [Question on StackOverFlow][]
