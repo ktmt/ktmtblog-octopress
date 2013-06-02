@@ -80,7 +80,7 @@ Làm thế nào để rút ngắn hơn nữa ? Nếu để ý vào những chi t
 *  "$x=($i==1)?"bottle":"bottles";" có thể được viết lại : "$x='bottle';$i==1?:$x.='s';"
 * Mỗi lần sử dụng biến $a ta đều có "of" ở đăng trước. Vậy có thể đơn giản cho word "of" vào trong biến a
 * "99 bottles of $a" có thể rewrite tiếp lại thành "99{$x}s of $a"
-* Chúng ta có thể xoá "$i--" trong vòng lặp for, vì thế thêm -- vào trước "$i==1" ở dòng gần cuối thành "--$i==1" và vì thế bỏ luôn đoạn ($i-1) ở sau đó 
+* Chúng ta có thể xoá "$i--" trong vòng lặp for, vì thế thêm -- vào trước "$i==1" ở dòng gần cuối thành "$i--==1" và vì thế bỏ luôn đoạn ($i-1) ở sau đó 
 
 
 
