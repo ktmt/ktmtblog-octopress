@@ -19,6 +19,7 @@ Logic thật đơn giản phải không :D
 
 Với mục tiêu dùng ít code nhất có thể, tôi sẽ không dùng cấu trúc rẽ nhánh if-else, thay vào đó là ternary operator của PHP 
 ( có nghĩa là bạn có thể viết "(condition)?true-action:false-action" thay vì "if (condition) {true-action} else {false-action}"  ) 
+
 Đoạn code đầu tiên tôi nghĩ ra trong đầu như sau:
 
 {% codeblock sol1.php %}
@@ -35,7 +36,9 @@ Với mục tiêu dùng ít code nhất có thể, tôi sẽ không dùng cấu 
 
 ## Optimize ##
 
-Bạn thử ls -l sẽ thấy đoạn code trên có dung lượng 288 bytes! Để rút ngắn đoạn code trên, đầu tiên tôi nhớ lại những kiến thức cơ bản về PHP: dấu space hoàn toàn không cần thiết, và ký tự "?>" ở cuối cũng có thể bỏ đi
+Bạn thử ls -l sẽ thấy đoạn code trên có dung lượng 288 bytes! 
+
+Để rút ngắn đoạn code trên, đầu tiên tôi nhớ lại những kiến thức cơ bản về PHP: dấu space hoàn toàn không cần thiết, và ký tự "?>" ở cuối cũng có thể bỏ đi
 PHP long tag ở đầu có thể thay = PHP short tag 
 
 
@@ -50,7 +53,10 @@ print $b;
 }
 {% endcodeblock %}
 
-263 bytes! Làm thế nào để rút ngắn hơn nữa ? Nếu để ý vào những chi tiết nhỏ hơn, bạn sẽ thấy:
+
+263 bytes! 
+
+Làm thế nào để rút ngắn hơn nữa ? Nếu để ý vào những chi tiết nhỏ hơn, bạn sẽ thấy:
 
 * trong điều kiện vòng lặp, thay "$i>=1" bằng "$i>0"
 * "($i==1)?" là quá dài. Ta có thể bỏ đi 2 dấu ngoặc "$i==1?"
@@ -77,7 +83,9 @@ echo $b;
 241 bytes! 
 
 ## The trick ##
+
 Bạn có nghĩ đã hết cách để rút gọn đoạn code ?
+
 Bạn có quên điều gì không ? Bỏ đi tất cả các ký tự line-feed (line break), cho code thành 1 dòng, chúng ra sẽ có kết quả tốt hơn.
 
 {% codeblock sol4.php %}
@@ -102,7 +110,7 @@ PHP là 1 ngôn ngữ web! Với allow_url_fopen và allow_url_include turn on c
 Stay hungry, stay foolish :D 
  
 
-##  Tham khảo ## 
+## Tham khảo ## 
 
 1. [phpgolf tips and tricks][]
 2. [Question on StackOverFlow][]
