@@ -1,0 +1,122 @@
+---
+layout: post
+title: "unix tools phần 2"
+date: 2013-06-03 22:15
+comments: true
+categories: unix
+---
+
+### Giới thiệu
+
+Hàng ngày chúng ta gặp phải rất nhiều bài toán thống kê khác nhau. Bài toán thống kê số liệu cũng có thể xuất hiện dưới nhiều dạng khác nhau như: bằng việc kiểm apache acccess log thống kê xem có tổng số truy cập vào 1 API trong 1 phút, hay 1 API cụ thể được truy cập từ những địa điểm nào và cụ thể là bao nhiều lần. Xử lý số liệu là một bài toán khó, và việc bóc tách dữ liệu nhiều khi cũng không hể đơn giản. Tuy vậy, bằng việc sử dụng thành thạo các công cụ command line của linux, nhiều khi ta có thể giải quyết những bài toán trên một cách nhanh chóng chỉ bằng 1, 2 dòng lệnh. Bài viết này sẽ đưa ra 1 bài toán cụ thể và cách sử dụng các unix command line tool để giải quyết các bài toán đó.
+
+### Khái lược các tool dùng trong bài
+
+* Grep: Cho phép tìm một chuỗi bất kỳ trong một file. Chuỗi có thể được mô tả bằng regular expression.
+* uniq: công cụ giúp loại bỏ
+* sort: sắp xếp các record trong 1 file
+* wc: đếm từ và dòng trong 1 file
+* awk: công cụ để in các cột dữ liệu, cũng như xử lý dữ liệu trên từng cột
+
+
+### Bài toán
+
+Để dễ hình dung cũng như dễ kiểm tra tính đúng đắn, ta giả sử 1 bài toán tưởng tượng như sau:
+
+Có log file:
+
+        IP1 2 20:00:01 Get /A 
+        IP2 2 20:00:02 Get /B
+        IP2 3 20:00:03 Get /C
+        IP4 2 20:02:01 Get /A 
+        IP5 2 20:03:01 Get /B
+        IP2 3 20:03:02 Get /A
+        IP3 2 20:03:04 Get /B 
+        IP2 2 20:04:01 Get /B
+        IP1 3 20:05:12 Get /C
+        IP6 2 20:05:31 Get /C 
+        IP5 2 20:06:02 Get /B
+        IP4 3 20:07:03 Get /A
+
+Bài toán: Hãy đếm xem trong 1 phút có bao nhiêu requests và thử đếm xem có bao nhiêu request đến A, B.
+
+### Phương pháp giải quyết
+
+Theo đề bài, ta có 2 bài toán
+* Thống kê requests theo từng phút.
+* Thống kê requests đến A, B.
+
+Ta sẽ lần lượt giải từng bài toán 1.
+
+#### Thống kê requests đến A, B
+
+Bài toán này thực chất khá dễ và ta có thể giải quyết bằng grep và wc. Để ý rằng mỗi dòng là 1 requests đến A, B hoặc C vì vậy bài toán có thể chuyển về là: đếm số dòng có ký tự A và ký tự B. Để lọc ký tự ta có thể dùng grep, để đếm số dòng ta có thể dùng wc. Như vậy bài toán có thể được giải quyết bằng cách pipe kết quả grep sang wc.
+
+Lời giải:
+
+{% highlight bash %}
+grep A data.dat | wc -l
+4
+grep B data.dat | wc -l
+5
+{% endhighlight %}
+
+Như vậy có 4 requests đến A và 5 requests đến B trong log file.
+Bằng 1 câu lệnh, ta có thể đưa ngay ra được kết quả. Dễ như ăn kẹo!
+
+#### Đếm số request trong 1 phút.
+
+Bài toán này khó hơn 1 chút do ta chỉ có trong log các request theo từng giây, trong khi ta cần thống kê theo phút. Liệu có cách nào biến bài toán về bài toán đếm số dòng như ở trên không? Nếu như ta có thể nhóm các dòng dữ liệu theo phút, bài toán có thể được giải quyết tương tự như bài toán trên.
+
+Trước tiên, làm thế nào để nhóm dòng theo phút? Muốn nhóm dòng theo phút ta phải tách được phần phút ra. Để ý giờ:phút là trường thứ 3 trong file. Do vậy nếu tách được cột thứ 3 và lấy 5 ký tự đầu tiên, ta có thể lấy phút của từng request. Tách cột là việc của awk!
+
+{% highlight bash %}
+awk '{print substr($3, 1, 5)}' data.dat
+20:00
+20:00
+20:00
+20:02
+20:03
+20:03
+20:03
+20:04
+20:05
+20:05
+20:06
+20:07
+{% endhighlight %}      
+
+Ồ, ta đã tiến được 1 bước! Bước tiếp theo, nếu như ta có thể nhóm các phần tử giống nhau và đếm các phần tử đó, ta sẽ có kết quả mong muốn. Nhóm các giá trị giống nhau là nhiệm vụ của uniq!
+
+{% highlight bash %}
+awk '{print substr($3, 1, 5)}' data.dat | uniq -c
+3 20:00
+2 20:02
+3 20:03
+1 20:04
+2 20:05
+1 20:06
+1 20:07
+{% endhighlight %}   
+
+
+Tuyệt! Như vậy bằng 1 dòng lệnh, ta đã nhóm được các API trong cùng 1 phút, cũng như số lượng API trong thời điểm đấy. Nếu số lượng request nhiều, số dòng kết quả lớn và ta chỉ muốn biết thời điểm có truy cập lớn nhất, ta có thể sắp xếp theo số lượng truy cập. Sắp xếp các dòng theo giá trị cột là công việc của sort! Bằng câu lệnh sort ta có kết quả như dưới đây:
+
+{% highlight bash %}
+awk '{print substr($3, 1, 5)}' data.dat | uniq -c | sort -nk1 -r
+3 20:03
+3 20:00
+2 20:05
+1 20:07
+1 20:06
+1 20:04
+1 20:02
+{% endhighlight %}   
+
+Bài toán đầu tiên cũng đã được giải quyết chỉ với 1 dòng lệnh!
+
+### Kết luận
+
+Bài viết đã giới thiệu qua các công cụ commandline của unix cũng như cách áp dụng công cụ đó vào bài toán cụ thể. Hy vọng qua bài viết bạn đã thấy được phần nào tầm quan trọng cũng như sức mạng của các chương trình tiện ích như awk, wc, grep, uniq, sort. Và để hiểu rõ công cụ thì không cách nào khác là áp dụng thật sáng tạo chúng vào công việc hàng ngày, do vậy bạn hãy thử áp dụng các công cụ trên vào bài toán sau nhé:
+
+**Với log file trên, đếm xem có bao nhiêu nguồn truy cập, và nguồn truy cập nào có số lượng truy cập lớn nhất** ;)
