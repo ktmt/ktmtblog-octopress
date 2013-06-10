@@ -1,10 +1,16 @@
 ---
 layout: post
-title: "Hệ thống sinh 64 bit unique ID"
+title: "Giới thiệu một số phương pháp sinh 64 bit unique ID"
 date: 2013-06-09 21:15
 comments: true
 categories: python, programming
 ---
+
+# Bài toán sinh unique ID
+Unique ID được sử dụng để phân biệt các đối tượng khác nhau.
+Ví dụ primary key là một unique key đặc biệt dùng để phân biệt các row trong table.
+
+Bài viết giới thiệu một số phương pháp sinh 64 bit unique ID.
 
 # Một số giải pháp sinh unique ID
 
@@ -16,7 +22,7 @@ categories: python, programming
 
  + Sử dụng [UUID](http://en.wikipedia.org/wiki/Uuid) - UUID là một giá trị 128bit, tuỳ vào thuật toán xây dựng UUID, có thể dựa trên Mac Address của máy.
 
- Ưu điểm: scaleable, distributed. Tại một thời điểm có thể sinh ra nhiều ID khác nhau, thậm chí client cũng có thể sinh ID mà vẫn đảm bảo không bị trùng lặp với server
+ Ưu điểm: scalable, distributed. Tại một thời điểm có thể sinh ra nhiều ID khác nhau, thậm chí client cũng có thể sinh ID mà vẫn đảm bảo không bị trùng lặp với server
 
  Nhược điểm: sử dụng 128 bit, một số hệ thống phải lưu trữ dưới dạng char, tốn tài nguyên và index
 
@@ -24,9 +30,8 @@ categories: python, programming
 
 # Một số phương pháp sinh 64 bit unique ID
 
-+ Twitter [snowflake](https://github.com/twitter/snowflake/)
+1. Twitter [snowflake](https://github.com/twitter/snowflake/)
  Snowflake là thrift service sử dụng Apache ZooKeeper để liên kết các node và sinh ra 64bit unique ID.
-
  Mỗi node là một worker, các worker được đánh số khác nhau
 
  ID được sinh ra theo công thức
@@ -35,8 +40,10 @@ categories: python, programming
    * worker id - 10 bit (số worker có thể lên đến 1024)
    * sequence number - 12 bit (number được tăng liên tiếp, đảm bảo tại một thời điểm, mỗi worker có thể sinh được 4096 ID)
 
+ Ở phần tiếp theo, chúng ta sẽ implement thuật một service sử dụng thuật toán trên để sinh ID
 
-+ [Instagram 64bt ID](http://instagram-engineering.tumblr.com/post/10853187575/sharding-ids-at-instagram)
+2.2. [Instagram 64bt ID](http://instagram-engineering.tumblr.com/post/10853187575/sharding-ids-at-instagram)
+
  Instagram sinh ID dựa vào posgresql schema. Thuật toán sinh ID tương tự như snowflake, mỗi ID 64 bit bao gồm
 
    * time - 41 bit (time epoch)
