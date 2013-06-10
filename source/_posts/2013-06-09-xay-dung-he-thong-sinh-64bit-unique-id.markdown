@@ -42,7 +42,7 @@ Bài viết giới thiệu một số phương pháp sinh 64 bit unique ID.
 
  Ở phần tiếp theo, chúng ta sẽ implement thuật một service sử dụng thuật toán trên để sinh ID
 
-2.2. [Instagram 64bt ID](http://instagram-engineering.tumblr.com/post/10853187575/sharding-ids-at-instagram)
+2. [Instagram 64bt ID](http://instagram-engineering.tumblr.com/post/10853187575/sharding-ids-at-instagram)
 
  Instagram sinh ID dựa vào posgresql schema. Thuật toán sinh ID tương tự như snowflake, mỗi ID 64 bit bao gồm
 
