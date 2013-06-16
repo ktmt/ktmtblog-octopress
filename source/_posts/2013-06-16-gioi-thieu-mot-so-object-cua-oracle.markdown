@@ -23,7 +23,7 @@ Như vậy syntax của VIEW đơn giản như sau:
 
 {% codeblock view.sql %}
 CREATE VIEW demo_view AS 
-  // select ... (complex query)
+  -- select ... (complex query)
 {% endcodeblock %}
 
 * Một điểm cần lưu ý là, sau khi VIEW được tạo ra thì database không mất bất cứ dung lượng nào ngoại trừ 1 cái dictionary entry để định nghĩa bản thân VIEW. Nói cách khác, VIEW chỉ là định nghĩa, mỗi lần bạn gọi VIEW thì Oracle sẽ đi thực hiện nội dung cái VIEW và trả lại cho bạn kết quả.
@@ -74,7 +74,7 @@ Needs của MATERIALZED VIEW phát sinh khi bạn có 1 complex computation ho�
 
 {% codeblock materialized_view.sql %}
 CREATE MATERIALIZED VIEW demo_materialized_view AS 
-  // select ... (comlex JOIN or computation)
+  -- select ... (comlex JOIN or computation)
 {% endcodeblock %}
  
 * Khác với VIEW, MATERIALIZED VIEW thực sự chiếm storage của DB. Khi được tạo ra MATERIALZED VIEW sẽ đi tính toán theo công thức được chỉ định sẵn và lưu vào 1 object trong DB. Mỗi lần bạn SELECT FROM MATERIALZED_VIEW thì sẽ nhận được kết quả tính toán của lần gần nhất.
