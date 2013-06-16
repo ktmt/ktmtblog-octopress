@@ -92,5 +92,8 @@ Sqrt of 3 = 1.732051
 Và Tèo được khai sáng!
 
 ## Tham khảo
+1.[Structure and Interpretation of Computer Programs][]
+2.[Newton method][]
+
 [Structure and Interpretation of Computer Programs]: http://mitpress.mit.edu/sicp/full-text/book/book.html
 [Newton method]: https://en.wikipedia.org/wiki/Newton's_method
