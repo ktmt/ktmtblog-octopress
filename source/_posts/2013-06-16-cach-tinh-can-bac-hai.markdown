@@ -69,7 +69,7 @@ Vì ta không có kết quả chính xác, nên số lần lặp sẽ là vô h�
 double mysqrt(int x)
 {
     double guess = 1.0f;
-    while (fabs(guess*guess - x) >= PRECISE)
+    while (fabs(guess*guess - x)/x >= PRECISE)
         guess = (x/guess - guess) / 2 + guess;
     return guess;
 }
@@ -92,5 +92,8 @@ Sqrt of 3 = 1.732051
 Và Tèo được khai sáng!
 
 ## Tham khảo
+1. [Structure and Interpretation of Computer Programs][]
+2. [Newton method][]
+
 [Structure and Interpretation of Computer Programs]: http://mitpress.mit.edu/sicp/full-text/book/book.html
 [Newton method]: https://en.wikipedia.org/wiki/Newton's_method
