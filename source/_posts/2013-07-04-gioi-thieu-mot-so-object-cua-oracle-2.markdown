@@ -119,4 +119,4 @@ Như vậy connection từ Application server sang DB server chỉ phát sinh �
 * TRIGGER: Là object định nghĩa sẽ fire event nào khi các action nào được thực hiện trong database.
 * PL/SQL: Là extend của SQL, produceral programming language của Oracle, cho phép thao tác trực tiếp với các object của Database trên Database server với đầy đủ năng lực xử lý như 1 ngôn ngữ hoàn chỉnh 
 
-[Oracle Docs]: http://docs.oracle.com/cd/E11882_01/server.112/e10706/repmview.htm
+[Oracle Doc]: http://docs.oracle.com/cd/E11882_01/server.112/e10706/repmview.htm
