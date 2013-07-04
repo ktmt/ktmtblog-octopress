@@ -107,7 +107,7 @@ VD: với xử lý như sau:
 
 Như vậy trong các bước kể trên, ngoại trừ bước đầu tiên, tất cả các bước còn lại đều phải init connection từ Application server đến DB server. (Không quan tâm bạn dùng DAO hay ORM hay execute query thẳng trên DB)
 
-Tôi có thể designed lại xử lý trên như sau:
+Tôi có thể design lại xử lý trên như sau:
 
 * PHP validate 1 string ADD_ME và nhận 1 string UserId từ user input (trong request gửi đến web server)
 * PHP truyền parameter ADD_ME và UserId cho PACKAGE "EVALUATE_USER" của Oracle
