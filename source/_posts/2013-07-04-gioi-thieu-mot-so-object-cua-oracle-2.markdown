@@ -114,7 +114,7 @@ Tôi có thể designed lại xử lý trên như sau:
 * "EVALUATE_USER" does all the stuff :D
 * "EVALUATE_USER" trả kết quả về cho PHP : 0: kết thúc không có lỗi, 1: Kết thúc với lỗi ở TABLE USERS, 2: Kết thúc với lỗi ở TABLE TEACHER, .....
 
-Như vậy connection từ Application server sang DB server chỉ phát sinh ở bước 2 và bước 4. Tôi dám cá là bạn hệ thống sẽ sppedup với 1 tốc độ không nhỏ :D 
+Như vậy connection từ Application server sang DB server chỉ phát sinh ở bước 2 và bước 4. Tôi dám cá là hệ thống sẽ sppedup với 1 tốc độ không nhỏ :D 
 
 
 ## Kết luận
