@@ -46,13 +46,13 @@ MATERIALIZED còn có nhiều điểm cần lưu ý khi áp dụng cụ thể. B
 
 ## TRIGGER
 
-Nếu bạn đã biết TRIGGER trong MySQL thìcó lẽ sẽ không thấy lạ lẫm với obejct này lắm. TRIGGER về cơ bản là để định nghĩa các action tự động khi có 1 event xảy ra.
+Nếu bạn đã biết TRIGGER trong MySQL thì sẽ không thấy lạ lẫm với obejct này. TRIGGER về cơ bản là để định nghĩa các action tự động khi có 1 event xảy ra.
 
 Ví dụ: Khi bạn có table Users và 2 table Students, Teachers. Bạn muốn khi 1 User mới được INSERT vào table Users, có thể phán đoán dựa theo conđition để cùng insert vào table Students hoặc Teachers 
 
 {% codeblock materialized_view.sql %}
 CREATE OR REPLACE TRIGGER teacher_trigger
-   before insert 
+   BEFORE INSERT 
    ON USERS 
    FOR EACH ROW
    WHEN (NEW.FIELD1= 'TEACHER_CONDITION') -- Or any other condition
@@ -63,7 +63,7 @@ BEGIN
 END;
 
 CREATE OR REPLACE TRIGGER student_trigger
-   after insert 
+   AFTER INSERT 
    ON USERS 
    FOR EACH ROW
    WHEN (NEW.FIELD1= 'STUDENT_CONDITION') -- Or any other condition
@@ -91,7 +91,7 @@ PL/SQL còn nắm lợi thế là thao tác trực tiếp với cursor, table, v
 Như vậy với năng lực của 1 ngôn ngữ hoàn chỉnh, cộng với khả năng tương tác với DB giống như SQL, PL/SQL được dùng để đóng gói xử lý trên DB server.
 
 Bạn có thể developer web application = Java, Ruby, PHP v.v... chỉ gọi đến DB thông qua các PACKAGE object. 
-Mỗi PACKAGE (viết bằng PL/SQL) là 1 "gói" Được viết như 1 module xử lỹ nội bộ trong Oracle DB. 
+Mỗi PACKAGE (viết bằng PL/SQL) là 1 "gói" được viết như 1 module xử lỹ nội bộ trong Oracle DB. 
 Ưu điểm của phương pháp này là tốc độ xử lý sẽ được cải thiện, và communication giữa Application server vs DB server (chỉ là truyền parameter cho PACKAGE và nhận lại result từ PACKAGE) được giảm thiểu. 
  
 VD: với xử lý như sau:
