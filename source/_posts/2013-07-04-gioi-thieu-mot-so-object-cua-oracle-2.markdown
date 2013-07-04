@@ -9,11 +9,13 @@ categories:
   - Oracle
 ---
 
-## Tổng quan về Oracle và những điểm mạnh (tiếp)
+
+## Tổng quan về Oracle và những điểm mạnh 
 
 Như đã giới thiệu với độc giả từ bài viết trước. Oracle là hệ cơ sở dữ liệu có nhiều object tiện dụng được chuẩn bị sẵn, và những hỗ trợ mạnh mẽ từ các công cụ trên top của tầng RDBMS.
 
 Bài viết lần này sẽ giới thiệu tiếp về những object còn lại, và về chính ngôn ngữ của Oracle DB : PL/SQL
+
 
 
 ## MATERIALIZED VIEW LOG
@@ -40,6 +42,7 @@ ON DEMAND là khi nào bạn (user) ra lệnh REFRESH, ON COMMIT là khi nào MA
 
 MATERIALIZED còn có nhiều điểm cần lưu ý khi áp dụng cụ thể. Bài viết chỉ trình bày những khái niệm cơ bản nhất. Bạn có thể xem thêm các restriction và cách create cụ thể tại [Oracle Doc](http://docs.oracle.com/cd/E11882_01/server.112/e10706/repmview.htm)
  
+
 
 ## TRIGGER
 
