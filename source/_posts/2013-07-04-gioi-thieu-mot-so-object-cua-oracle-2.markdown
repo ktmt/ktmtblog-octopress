@@ -38,7 +38,7 @@ Cần lưu ý là COMPLETE hay FAST là phương pháp REFRESH (how).
 Còn thời điểm REFRESH (when) sẽ định nghĩa khi nào thì MATERIALZIED VIEW được REFRESH. Có 2 mode cơ bản là manually (ON DEMAND) và automatically (ON COMMIT, DBMS_JOB).
 ON DEMAND là khi nào bạn (user) ra lệnh REFRESH, ON COMMIT là khi nào MATERIALZED bị thay đổi (COMMIT), còn DBMS_JOB là cho REFRESH thành 1 job được đặt lịch sẵn (giống như cron của Unix system :D) 
 
-MATERIALIZED còn có nhiều điểm cần lưu ý khi áp dụng cụ thể. Bài viết chỉ trình bày những khái niệm cơ bản nhất. Bạn có thể xem thêm các restriction và cách create cụ thể tại [Oracle Doc][]
+MATERIALIZED còn có nhiều điểm cần lưu ý khi áp dụng cụ thể. Bài viết chỉ trình bày những khái niệm cơ bản nhất. Bạn có thể xem thêm các restriction và cách create cụ thể tại [Oracle Doc][http://docs.oracle.com/cd/E11882_01/server.112/e10706/repmview.htm]
  
 
 ## TRIGGER
@@ -118,5 +118,3 @@ Như vậy connection từ Application server sang DB server chỉ phát sinh �
 * MATERIALIZED VIEW LOG : là snapshot, là obecjt bắt buộc phải có khi dùng MATERIALZED VIEW với chiến lược FAST REFRESH .
 * TRIGGER: Là object định nghĩa sẽ fire event nào khi các action nào được thực hiện trong database.
 * PL/SQL: Là extend của SQL, produceral programming language của Oracle, cho phép thao tác trực tiếp với các object của Database trên Database server với đầy đủ năng lực xử lý như 1 ngôn ngữ hoàn chỉnh 
-
-[Oracle Doc]: http://docs.oracle.com/cd/E11882_01/server.112/e10706/repmview.htm
