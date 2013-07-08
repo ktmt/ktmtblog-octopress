@@ -2,7 +2,7 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://ktmt.github.com
+url: http://toandk.github.com
 title: Blog kỹ thuật máy tính
 subtitle: kỹ thuật máy tính
 author: kỹ thuật máy tính
@@ -29,7 +29,7 @@ email:
 root: /
 permalink: /blog/:year/:month/:day/:title/
 source: source
-destination: public/
+destination: public
 plugins: plugins
 code_dir: downloads/code
 category_dir: blog/categories
