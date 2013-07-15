@@ -88,7 +88,8 @@ class Book ()
         $this->title = $title;
     }
 
-...  Here we have 4 more methods : setAuthor ,setGenre, setPublishDate, setISBN
+...  
+// Here we have 4 more methods : setAuthor ,setGenre, setPublishDate, setISBN
 }
 ...
 
@@ -151,9 +152,10 @@ class IoC {
 
 WTH! Cái khỉ gì trông lằng nhằng quá phải không :D 
 
-Đừng lo lắng, để hiểu đoạn code trên, trước hết, hãy để ý rằng ở đây chúng ta có rất nhiều các static function, 
-nghĩa là các function có thể gọi trục tiếp trên class chứ không phải trên instance thông qua cách gọi "Class::StaticMethod()"
-Ngoài ra Closure là 1 anonymous function. Bạn sẽ hiểu ngay khi xem cách dùng dưới đây 
+Đừng lo lắng, để hiểu đoạn code trên trước hết hãy để ý rằng ở đây chúng ta có rất nhiều các static function. 
+Static function có thể gọi trục tiếp trên class chứ không phải trên instance thông qua cách gọi "Class::StaticMethod()".
+Ngoài ra Closure là 1 anonymous function. 
+Bạn sẽ hiểu ngay khi xem cách dùng dưới đây 
 
 {% codeblock  Book.php %}
 <?php
