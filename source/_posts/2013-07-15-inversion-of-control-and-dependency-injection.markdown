@@ -268,8 +268,8 @@ Bạn có thể lấy [đoạn code sample trên Gist](https://gist.github.com/D
 Have fun with IoC :)
 
 ## Summary
-* **Dependency Injection**: Đưa các dependency vào class thông qua constructor hoặc setter, không khỏi tạo trực tiếp bên trong class
-* **Inversion of Control**: bind object vào thời điểm run time, không phải vào thời điểm complile time.
+* **Dependency Injection**: Đưa các dependency vào class thông qua constructor hoặc setter, không khỏi tạo trực tiếp bên trong class.
+* **Inversion of Control**: bind object vào thời điểm run time, không phải vào thời điểm compile time.
 * **Singleton**: Design pattern, cho phép trong 1 hệ thống chỉ có 1 instance duy nhất của class được tồn tại. 
 
 
