@@ -214,7 +214,7 @@ class IoC {
 
     if ( static::singletoned($name) )
     {
-      $instance = static::$singleton[$name];
+      $instance = static::$shared[$name];
       return $instance;
     } 
  
