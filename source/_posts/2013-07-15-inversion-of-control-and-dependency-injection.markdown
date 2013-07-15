@@ -267,6 +267,52 @@ $book2 = IoC::resolve('book'); // exactly same instance with $book1
 Bạn có thể lấy [đoạn code sample trên Gist](https://gist.github.com/DTVD/5997723) về chạy thử.
 Have fun with IoC :)
 
+## Real-World Use Case 
+
+Đọc đến đây có thể bạn sẽ hỏi tôi, việc quái gì phải xoắn cái IoC này thế, nó có thực sự hữu dụng hay chỉ là 1 cái pattern mang tính demo biếu diễn ?
+
+Chúng ta hãy cùng ghé qua [Laravel](http://laravel.com/docs/ioc), 1 framework hiện đại của PHP.
+
+Ở Laravel, [IoC](http://laravel.com/docs/ioc) đã được chuẩn bị sẵn và không chỉ dùng 1 mình, còn kết hợp với [ServiceProviders](http://laravel.com/docs/ioc#service-providers) và [Facades](http://laravel.com/docs/facades) để tăng tối đa độ linh hoạt của code base. 
+Một Facades (lại là 1 design pattern khác - hãy google sau khi đọc bài này :) ) có thể được kết nối với IoC và UnitTest như sau :
+
+{% codeblock  Facades.php %}
+<?php
+
+// binding IoC
+App::bind('book', function()
+{
+    return new Book;
+});
+
+// binding facades to IoC
+use Illuminate\Support\Facades\Facade;
+
+class FacadesBook extends Facade {
+
+    protected static function getFacadeAccessor() { return 'book'; }
+}
+
+{% endcodeblock %} 
+
+
+Tại sao đã bind class Book vào IoC `book` rồi, lại còn tiếp tục bind IoC `book` và Facades `FacadesBook` lần nữa?
+
+Facades trong Laravel có thể "biến thành" Mock object sau khi gọi method `shouldReceive` (a magic method :D)  
+
+{% codeblock  Facades.php %}
+<?php
+//Use Book as usual:
+$book = FacadesBook::AnInstanceMethodOfBookClass($AParams);
+//Mocking for UnitTest:
+FacadesBook::shouldReceive('AnInstanceMethodOfBookClass')->once()->with($AParams)->andReturn($FakeValue);
+$mockBook = FacadesBook::AnInstanceMethodOfBookClass($AParams);
+
+{% endcodeblock %} 
+
+`$book` sẽ trả về giá trị thực khi thực hiện method `AnInstanceMethodOfBookClass` của class Book, trong khi đó `$mockBook` sẽ trả về `$FakeValue`.
+
+
 ## Summary
 * **Dependency Injection**: Đưa các dependency vào class thông qua constructor hoặc setter, không khỏi tạo trực tiếp bên trong class.
 * **Inversion of Control**: bind object vào thời điểm run time, không phải vào thời điểm compile time.
