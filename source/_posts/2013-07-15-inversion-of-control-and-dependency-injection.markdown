@@ -187,7 +187,7 @@ Bạn thử tưởng tượng, nếu như phần register 'book' bên trên chi�
 Nói cách khác, bạn chỉ muốn chỉ có 1 Book với đầy đủ Title, Author, ... được khởi tạo 1 lần, và lần sau muốn sử dụng thì gọi lại chính instance đã được tạo.
 
 Đây là đất diễn của Singleton design pattern :)
-Tôi sẽ viết thêm 1 static function cho IoC như sau: 
+Tôi sẽ thêm static function `singleton` cho IoC như sau: 
 
 {% codeblock  IoC.php %}
 <?php
@@ -195,12 +195,16 @@ class IoC {
   protected static $registry = array();
   protected static $shared = array();
 
-...
-
-  // Singleton 
-  public static function singleton($name, $resolve)
+  // Register, here save the Closure to static::$registry
+  public static function register($name, Closure $resolve)
   {
-    static::$shared[$name] = $resolve;
+     static::$registry[$name] = $resolve;
+  }
+
+  // Singleton, Note that here we save the result of Closure, not the Closure
+  public static function singleton($name, Closure $resolve)
+  {
+    static::$shared[$name] = $resolve();
   }
 
   // Resolve, consider register or singleton here
@@ -221,7 +225,12 @@ class IoC {
     throw new Exception('Nothing registered with that name, fool.');
   }
 
-...
+  // Check resigtered or not
+  public static function registered($name)
+  {
+     return array_key_exists($name, static::$registry);
+  }
+
 
   // Check singleton object or not
   public static function singletoned($name)
@@ -255,6 +264,7 @@ $book2 = IoC::resolve('book'); // exactly same instance with $book1
 ?>
 {% endcodeblock %} 
 
+Bạn có thể lấy [đoạn code sample trên Gist](https://gist.github.com/DTVD/5997723) về chạy thử.
 Have fun with IoC :)
 
 ## Summary
