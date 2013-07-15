@@ -159,7 +159,7 @@ Bạn sẽ hiểu ngay khi xem cách dùng dưới đây
 
 {% codeblock  Book.php %}
 <?php
-IoC:register('book', function(){
+IoC::register('book', function(){
     $book = new Book;
     $book->setTitle(new Title);
     $book->setAuthor(new Author);
@@ -176,9 +176,9 @@ $book = IoC::resolve('book');
 ?>
 {% endcodeblock %} 
 
-Woo! Bây giở mỗi khi muốn tạo 1 instance của Book với đầy đủ các dependency, chỉ cần IoC:resolve('book').
-Cùng với đó, các dependency có thể inject thông qua register. 
-Đến khi unit test, bạn có thể dùng IoC::register để mocking các dependency và test Book mà không khởi tạo Title,Author,.... 
+Woo! Bây giở mỗi khi muốn tạo 1 instance của Book với đầy đủ các dependency, chỉ cần `IoC::resolve('book')`.
+Cùng với đó, các dependency có thể inject thông qua `IoC::register('book',function(){...})`. 
+Đến khi unit test, bạn có thể dùng `IoC::register` để mocking các dependency và test Book mà không khởi tạo Title,Author... 
 
 
 ## Singleton pattern with IoC 
