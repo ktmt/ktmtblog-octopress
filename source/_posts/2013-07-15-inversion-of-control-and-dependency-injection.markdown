@@ -237,7 +237,7 @@ class IoC {
 Và bây giờ 
 {% codeblock  Book.php %}
 <?php
-IoC:singleton('book', function(){
+IoC::singleton('book', function(){
     $book = new Book;
     $book->setTitle(new Title);
     $book->setAuthor(new Author);
@@ -258,8 +258,8 @@ $book2 = IoC::resolve('book'); // exactly same instance with $book1
 Have fun with IoC :)
 
 ## Summary
-* Dependency Injection: Đưa các dependency vào class thông qua constructor hoặc setter, không khỏi tạo trực tiếp bên trong class
-* Inversion of Control: bind object vào thời điểm run time, không phải vào thời điểm complile time.
-* Singleton: Design pattern, cho phép trong 1 hệ thống chỉ có 1 instance duy nhất của class được tồn tại. 
+* **Dependency Injection**: Đưa các dependency vào class thông qua constructor hoặc setter, không khỏi tạo trực tiếp bên trong class
+* **Inversion of Control**: bind object vào thời điểm run time, không phải vào thời điểm complile time.
+* **Singleton**: Design pattern, cho phép trong 1 hệ thống chỉ có 1 instance duy nhất của class được tồn tại. 
 
 
