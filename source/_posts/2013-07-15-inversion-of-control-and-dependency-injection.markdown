@@ -13,15 +13,19 @@ categories:
 
 ## Preface 
 Trước khi đọc bài này, tôi có 1 vài recommend cho độc giả :) 
-1. Bạn nên đọc trước bài viết về [Builder Pattern trong Java] (http://ktmt.github.io/blog/2013/06/14/design-pattern-ap-dung-builder-pattern-trong-test-java/) cũng trong blog ktmt, sẽ có 1 cái nhìn tổng quát và hình dung dễ dàng hơn về ứng dụng của các pattern trong programming.
+
+1. Bạn nên đọc trước bài viết về [Builder Pattern trong Java](http://ktmt.github.io/blog/2013/06/14/design-pattern-ap-dung-builder-pattern-trong-test-java/) cũng trong blog ktmt, sẽ có 1 cái nhìn tổng quát và hình dung dễ dàng hơn về ứng dụng của các pattern trong programming.
+
 2. Có hàng tá bài viết về Inversion Of Control và Dependency Injection. Try to google it first. 
+
 3. Nếu không, nhớ google thêm sau khi đọc bài viết :D  
 
 ## Dependency Injection
 
 Chúng ta sẽ bắt đầu với 1 ví dụ gần giống ví dụ trong bài viết về Builder Pattern ở trên. Xem đoạn code sau. Ngôn ngữ ở đây là PHP.
 
-{% codeblock  Book.php%}
+{% codeblock  Book.php %}
+<?php
 class Book ()
 {
     public function __construct()
@@ -36,6 +40,7 @@ class Book ()
 ...
 
 $book = new Book;
+?>
 {% endcodeblock %} 
 
 Ở đây giả sử Title, Author, Genre, PublishDate hay ISBN đều là các class đã được định nghĩa trước. Như vậy class Book có 5 **dependency** là 5 class kể trên.
@@ -46,7 +51,8 @@ Nói cách khác nếu muốn Book chứa những dependency khác, chẳng có 
 
 Như vậy, để tránh những phiền phức nói trên và tạo độ linh hoạt khi sử dụng, class Book nên được viết lại như sau: 
 
-{% codeblock  Book.php%}
+{% codeblock  Book.php %}
+<?php
 class Book ()
 {
     public function __construct($title, $author, $genre, $publishdate, $isbn)
@@ -62,13 +68,15 @@ class Book ()
 
 $book = new Book (new Title, new Author, new Genre, new PublishDate, new ISBN)
 
+?>
 {% endcodeblock %} 
 
 Bạn có thể thấy, ý tưởng của Dependency Injection(DI) thực ra rất đơn giản, chỉ là bạn vẫn thường sử dụng và không để ý.
 Dependency có thể được inject theo nhiều kiểu, ví dụ bên trên là constructor injection.
 Chúng ta còn có setter injection như sau:
 
-{% codeblock  Book.php%}
+{% codeblock  Book.php %}
+<?php
 class Book ()
 {
     public function __construct()
@@ -91,12 +99,13 @@ $book->setGenre(new Genre);
 $book->setPublishDate(new PublishDate);
 $book->setISBN(new ISBN);
 
+?>
 {% endcodeblock %} 
 
 Và vấn đề mới lại nảy sinh! Có quá nhiều setter và điều đó biến Book thành 1 class phức tạp khi sử dụng. 
 Việc viết lại tất cả các setter khi khởi tạo 1 Book thật là painful !
 
-Để giải quyết vấn đề kể trên, chúng ta sẽ đến với design pattern tiếp theo: Inversion of Control(IoC)
+Để giải quyết vấn đề kể trên, chúng ta sẽ đến với design pattern tiếp theo: Inversion of Control (IoC)
 
 ## Inversion of Control 
 
@@ -107,7 +116,8 @@ như recommend trên đầu bài, bạn có thể google 1 chút về IoC.
 Ở đây tôi sẽ đưa ra luôn 1 implement để sử dụng với class Book kể trên.
 
 
-{% codeblock  IoC.php%}
+{% codeblock  IoC.php %}
+<?php
 class IoC {
    protected static $registry = array();
 
@@ -136,6 +146,7 @@ class IoC {
    }
 
 }
+?>
 {% endcodeblock %} 
 
 WTH! Cái khỉ gì trông lằng nhằng quá phải không :D 
@@ -144,7 +155,8 @@ WTH! Cái khỉ gì trông lằng nhằng quá phải không :D
 nghĩa là các function có thể gọi trục tiếp trên class chứ không phải trên instance thông qua cách gọi "Class::StaticMethod()"
 Ngoài ra Closure là 1 anonymous function. Bạn sẽ hiểu ngay khi xem cách dùng dưới đây 
 
-{% codeblock  Book.php%}
+{% codeblock  Book.php %}
+<?php
 IoC:register('book', function(){
     $book = new Book;
     $book->setTitle(new Title);
@@ -159,6 +171,7 @@ IoC:register('book', function(){
 
 $book = IoC::resolve('book');
 
+?>
 {% endcodeblock %} 
 
 Woo! Bây giở mỗi khi muốn tạo 1 instance của Book với đầy đủ các dependency, chỉ cần IoC:resolve('book').
@@ -174,7 +187,8 @@ Nói cách khác, bạn chỉ muốn chỉ có 1 Book với đầy đủ Title, 
 Đây là đất diễn của Singleton design pattern :)
 Tôi sẽ viết thêm 1 static function cho IoC như sau: 
 
-{% codeblock  IoC.php%}
+{% codeblock  IoC.php %}
+<?php
 class IoC {
   protected static $registry = array();
   protected static $shared = array();
@@ -214,11 +228,13 @@ class IoC {
   }
 
 }
+?>
 {% endcodeblock %} 
 
 
 Và bây giờ 
-{% codeblock  Book.php%}
+{% codeblock  Book.php %}
+<?php
 IoC:singleton('book', function(){
     $book = new Book;
     $book->setTitle(new Title);
@@ -234,6 +250,7 @@ IoC:singleton('book', function(){
 $book1 = IoC::resolve('book');
 $book2 = IoC::resolve('book'); // exactly same instance with $book1
 
+?>
 {% endcodeblock %} 
 
 Have fun with IoC :)
