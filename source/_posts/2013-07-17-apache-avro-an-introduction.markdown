@@ -142,7 +142,7 @@ Có vài lưu ý trong đoạn code trên:
 Như trên đã trình bày, Avro datafile là language-neutral, nghĩa là có thể chia sẻ giữa nhiều ngôn ngữ lập trình khác nhau. Ở đây, xin trình bày ví dụ đọc file *test-person.avsc* ở trên bằng Python:
 
 (Chú ý: phải install Avro implementation của Python theo hướng dẫn tại
-[đây](http://avro.apache.org/docs/current/gettingstartedpython.html))
+[...](http://avro.apache.org/docs/current/gettingstartedpython.html))
 
 {%codeblock avroReader.py %} 
 import avro.schema
@@ -173,6 +173,6 @@ Bài viết đã trình bày những bước căn bản để làm quen với Ap
 
 ## 7. Tham khảo
 
-1. Hadoop: The Definitive Guide
+1. [Hadoop: The Definitive Guide](http://www.amazon.com/Hadoop-Definitive-Guide-Tom-White/dp/1449311520/ref=sr_1_1?ie=UTF8&qid=1374205297&sr=8-1&keywords=hadoop+guide)
 2. [Avro homepage](http://avro.apache.org/) 
 3. [Schema evolution in Avro, Protocol Buffers and Thrift](http://martin.kleppmann.com/2012/12/05/schema-evolution-in-avro-protocol-buffers-thrift.html)
