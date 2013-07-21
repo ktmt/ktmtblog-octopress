@@ -22,7 +22,7 @@ Nếu sử dụng các phương pháp serialization của từng ngôn ngữ (v�
 
 Nếu nói về language-neutral, thì Google's Protocol Buffers và Apache Thrift cũng làm được như vậy. Vậy tại sao lại có thêm Apache Avro?
 
-Những hệ thống này có đặc điểm chung là data được mô tả bằng *schema*, không phụ thuộc ngôn ngữ lập trình. Tuy nhiên, Protocol Buffers và Thrift cần phải có C++ compiler để tạo ra các implementation tương ứng với từng ngôn ngữ lập trình. Quá trình này gọi là code generation. Còn đối với Avro, quá trình code generation chỉ là option, nghĩa là ta có thể đọc và ghi dữ liệu luôn theo một *schema* cho trước, kể cả code của ta chưa từng thấy schema đó bao giờ. Để làm được điều này, schema luôn xuất hiện kèm với data đã được serialized, ở cả lúc đọc và ghi. Cách mã hóa này rất gọn nhẹ, vì giá trị đã encode không cần phải tag cùng với các field identifier như Protocol Buffer.
+Những hệ thống này có đặc điểm chung là data được mô tả bằng *schema*, không phụ thuộc ngôn ngữ lập trình. Tuy nhiên, Protocol Buffers và Thrift cần phải có compiler riêng biệt để tạo ra các implementation tương ứng với từng ngôn ngữ lập trình. Quá trình này gọi là code generation. Còn đối với Avro, quá trình code generation chỉ là option, nghĩa là ta có thể đọc và ghi dữ liệu luôn theo một *schema* cho trước, kể cả code của ta chưa từng thấy schema đó bao giờ. Để làm được điều này, schema luôn xuất hiện kèm với data đã được serialized, ở cả lúc đọc và ghi. Cách mã hóa này rất gọn nhẹ, vì giá trị đã encode không cần phải tag cùng với các field identifier như Protocol Buffer.
 
 ## 3. Avro Data Types và Schemas
 
@@ -142,7 +142,7 @@ Có vài lưu ý trong đoạn code trên:
 Như trên đã trình bày, Avro datafile là language-neutral, nghĩa là có thể chia sẻ giữa nhiều ngôn ngữ lập trình khác nhau. Ở đây, xin trình bày ví dụ đọc file *test-person.avsc* ở trên bằng Python:
 
 (Chú ý: phải install Avro implementation của Python theo hướng dẫn tại
-[...](http://avro.apache.org/docs/current/gettingstartedpython.html))
+[Làm quen với Apache Avro (Python)](http://avro.apache.org/docs/current/gettingstartedpython.html))
 
 {%codeblock avroReader.py %} 
 import avro.schema
