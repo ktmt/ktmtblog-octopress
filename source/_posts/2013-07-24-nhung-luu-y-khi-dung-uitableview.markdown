@@ -8,9 +8,9 @@ categories: iOS
 
 Ở bài viết trước, tôi đã đề cập đến việc custom 1 UITableViewCell. Tuy nhiên, việc sử dụng UITableView cũng còn khá nhiều điều cần phải quan tâm khác. Trong bài viết này, tôi sẽ đề cập đến những vấn đề ấy:
 
-# Tại sao khi khởi tạo 1 Table View Cell lại phải sử dụng static cho định danh?
+# Lưu ý khi dùng định danh cho UITableViewCell
 
-Trong quá trình tạo hiển thị, UITableView sẽ lưu lại các cell bị che khỏi màn hình hiển thị (ko phải render) trong 1 stack. Các Cell này sẽ được sử dụng lại khi mà 1 cell mới xuất hiện trên màn hình. Điều này giúp cải thiện tốc độ load table cell và ko làm tăng thêm bộ nhớ cho chương trình. Khi lấy cell trong stack ra, UITableView sẽ sử dụng định danh đã nói ở trên để lấy được các cell cùng kiểu. Có thể hiểu là nó sẽ so sánh bằng định danh này (chứ không phải so sánh string). Vì thế cần phải đặt kiểu biến định danh là static để mỗi lần so sánh sẽ dùng lại biến này chứ ko so sánh với instance mới. Có thể test điều này bằng cách bỏ từ khoá static và đặt debug vào trong phần tạo cell mới. Nếu break luôn luôn vào nghĩa là các cell ko được sử dụng lại => không đúng.
+Trong quá trình tạo hiển thị, UITableView sẽ lưu lại các cell bị che khỏi màn hình hiển thị (ko phải render) trong 1 stack. Các Cell này sẽ được sử dụng lại khi mà 1 cell mới xuất hiện trên màn hình. Điều này giúp cải thiện tốc độ load table cell và ko làm tăng thêm bộ nhớ cho chương trình. Khi lấy cell trong stack ra, UITableView sẽ sử dụng định danh đã nói ở trên để lấy được các cell cùng kiểu. Chính vì thế định danh này phải được đặt giống với trường identifier trong file xib. Nếu không, các cell của table sẽ không bao giờ được sử dụng lại. Có thế test điều này trong ví dụ: trường identifier trong file CustomTableCell.xib đặt là "CustomTableCell" và định danh trong code đặt là "Custom", khi chạy chương trình, điều kiện if (!cell) sẽ luôn luôn xảy ra => tức là table view sẽ luôn tạo ra cell mới chứ ko sử dụng lại.
 
 {% img /images/LuuYTableView/break_point.png %}
 
