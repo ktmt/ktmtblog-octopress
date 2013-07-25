@@ -27,7 +27,7 @@ Trong ví dụ này, chúng ta sẽ bắt buộc mỗi commit message phải có
 Chúng ta sẽ viết một update hook để làm việc này. Chú ý rắng, update hook nhận 3 giá trị đầu vào: tên của branch được update, SHA-1 của commit trước khi được push, và SHA-1 của commit sau khi được push. Các đoạn code dưới đây được minh hoạ bằng ruby, bạn có thể sử dụng ngôn ngữ lập trình khác nếu muốn
 
 
-{% codeblock update %}
+{% codeblock lang:ruby update %}
 #!/usr/bin/env ruby
 
 $refname = ARGV[0]
@@ -38,7 +38,7 @@ $newrev  = ARGV[2]
 
 Để lấy các commit từ `$oldrev` tới `$newrev`, chúng ta sử dụng lệnh `git rev-lít`. Lệnh này sẽ trả về danh sách các SHA-1 cho các commit nằm giữa 2 commit mà chúng ta truyền vào
 
-{% codeblock %}
+{% codeblock lang:bash %}
 $ git rev-list 538c33..d14fc7
 d14fc7c847ab946ec39590d87783c69b031bdfb7
 9f585da4401b0a3999e84113824d15245c13f0be
@@ -49,7 +49,7 @@ dfa04c9ef3d5197182f13fb5b9b1fb7717d2222a
 
 Sau đó, chúng ta sử dụng lệnh `git cat-file` đẻ duyệt qua từng commit và lấy nội dụng của commit message.
 
-{% codeblock %}
+{% codeblock lang:bash %}
 $ git cat-file commit ca82a6
 tree cfda3bf379e4f8dba8717dee55aab78aef7f4daf
 parent 085bb3bcb608e1e8451d4b2432f8ecbe6306e7e7
@@ -61,14 +61,14 @@ Add new post about githook
 
 Cách đơn giản để lấy commit message từ một commit là khi có SHA-1 , chúng ta xác định dòng blank đầu tiên và lấy tất cả phần đằng sau nó. Chúng ta có thể sử dụng `sed` để làm điều này
 
-{% codeblock %}
+{% codeblock lang:bash %}
 $ git cat-file commit ca82a6 | sed '1,/^$/d'
 Add new post about githook
 {% endcodeblock %}
 
 Sau đây là toàn bộ đoạn code ruby để hoàn thành tác vụ trên
 
-{% codeblock update %}
+{% codeblock lang:ruby update %}
 #!/usr/bin/env ruby
 
 $refname = ARGV[0]
