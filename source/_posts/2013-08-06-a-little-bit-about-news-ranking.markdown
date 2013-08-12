@@ -112,7 +112,7 @@ Công thức của ycombinator đã phản ánh rất đúng power law về pupu
 {% img /images/long_tail.png %}
 
 ## Lamernews
-- Lamernews được viết bởi creator của reddit, và được open source tại [https://github.com/antirez/lamernews](https://github.com/antirez/lamernews). Lamernews được viết bằng ruby (sinatra) và thuật toàn của lamernews được viết khá đơn giản như sau:
+- Lamernews được viết bởi creator của redis, và được open source tại [https://github.com/antirez/lamernews](https://github.com/antirez/lamernews). Lamernews được viết bằng ruby (sinatra) và thuật toàn của lamernews được viết khá đơn giản như sau:
 
 {% codeblock lamerrank.rb %}
 def compute_news_rank(news)
