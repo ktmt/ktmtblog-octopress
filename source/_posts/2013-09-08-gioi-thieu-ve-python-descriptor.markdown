@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Giới thiệu về python descriptor"
-date: 2613-09-08 11:30
+date: 2013-09-08 11:30
 comments: true
 categories:  python
 ---
