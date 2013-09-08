@@ -62,7 +62,7 @@ class Programmer(object):
         return self._age
 
     @age.setter
-    def age(self, value)
+    def age(self, value):
         if age > 0:
             self._age = age
         else:
@@ -102,7 +102,7 @@ class Programmer(object):
         return self._age
 
     @age.setter
-    def age(self, value)
+    def age(self, value):
         if age > 0:
             self._age = age
         else:
@@ -113,7 +113,7 @@ class Programmer(object):
         return self._salary
 
     @age.setter
-    def salary(self, value)
+    def salary(self, value):
         if salary > 0:
             self._salary = salary
         else:
@@ -124,7 +124,7 @@ class Programmer(object):
         return self._rating
 
     @age.setter
-    def rating(self, value)
+    def rating(self, value):
         if rating > 0:
             self._rating = rating
         else:
@@ -147,7 +147,10 @@ class NonNegativeDescriptor(object):
         return instance.__dict__.get(self.label)
 
     def __set__(self, instance, value):
-        instance.__dict__[self.label] = value
+        if value > 0:
+            instance.__dict__[self.label] = value
+        else:
+            raise ValueError("Negative value not allowed: %s" % age)
 
 
 class Programmer(object):
