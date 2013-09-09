@@ -64,7 +64,7 @@ class Programmer(object):
     @age.setter
     def age(self, value):
         if age > 0:
-            self._age = age
+            self._age = value
         else:
             raise ValueError("Negative value not allowed: %s" % age)
 
@@ -104,7 +104,7 @@ class Programmer(object):
     @age.setter
     def age(self, value):
         if age > 0:
-            self._age = age
+            self._age = value
         else:
             raise ValueError("Negative value not allowed: %s" % age)
 
@@ -115,7 +115,7 @@ class Programmer(object):
     @age.setter
     def salary(self, value):
         if salary > 0:
-            self._salary = salary
+            self._salary = value
         else:
             raise ValueError("Negative value not allowed: %s" % age)
 
@@ -126,7 +126,7 @@ class Programmer(object):
     @age.setter
     def rating(self, value):
         if rating > 0:
-            self._rating = rating
+            self._rating = value
         else:
             raise ValueError("Negative value not allowed: %s" % age)
 {% endcodeblock %}
