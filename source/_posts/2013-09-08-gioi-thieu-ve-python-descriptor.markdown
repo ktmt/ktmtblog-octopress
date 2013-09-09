@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Giới thiệu về python descriptor"
-date: 2613-09-08 11:30
+date: 2013-09-08 11:30
 comments: true
 categories:  python
 ---
@@ -81,7 +81,7 @@ Cannot set negative value
 
 Cách chúng ta làm ở đây đó là tạo ra một biến private `_age` để chứa giá trị thật của `age`. Và sử dụng @getter và @setter để bind thuộc tính `age` với 2 method. Trong 2 method này, chúng ta sẽ cài đặt logic cho việc gán trị của `age`. Khi chúng ta gọi `kiennt.age = value`, python sẽ tự động gọi đến setter của `age`, còn nếu chỉ gọi `kiennt.age` (không có gán giá trị), thì getter sẽ được gọi.
 
-# 2. Vấn để của getter và setter
+# 2. Vấn đề của getter và setter
 
 Nếu giờ, chúng ta cũng muốn kiểm tra giá trị của hai thuộc tính `salary` và `rating`. Chúng ta có thể làm tương tự như sau
 
