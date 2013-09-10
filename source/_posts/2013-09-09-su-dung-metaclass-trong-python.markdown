@@ -73,7 +73,7 @@ Metaclass là một trong những `black magic` và rất ít khi được sử 
 
 (Tạm dịch: Metaclass sâu sắc hơn 99% những gì mà người dùng nên lo lắng. Nếu bạn phân vân khi nào bạn cần chúng, bạn sẽ không bao giờ cần (những người thực sự cần Metaclass, sẽ biết chính xác trong trường hợp nào họ cần, và không cần phải giải thích lý do vì sao)
 
-Tuy nhiên trong bài viết này, tôi vẫn trình bày 2 phương pháp sử dụng metaclass
+Tuy nhiên để giúp bạn đọc hiểu rõ metaclass, trong bài viết này, tôi trình bày 2 ví dụ về cách sử dụng metaclass
 
 ## 2.1. Sử dụng metaclass để can thiệp vào việc tạo instance của class
 
@@ -198,7 +198,9 @@ Tuy nhiên cách implement này thường it khi được sử dụng bằng cá
 
 
 # 3. Kết luận
-Bài viết trình bày về khái niệm metaclass và một số cách sử dụng metaclass trong python. Metaclass là một trong những vấn đề khó và ít khi gặp trong python. Để hiểu và sử dụng metaclass một cách dễ dàng,cách ngăn nhất là code và đọc code python thật nhiều
+Bài viết trình bày về khái niệm metaclass và một số cách sử dụng metaclass trong python. Với metaclass, chúng ta có thể thay đổi các thuộc tính ở mức class của một class thông qua hàm `__new__` và `__init__` của Metaclass, can thiệp vào quá trình tạo ra instance của class bằng cách thay đổi hàm `__call__` của metaclass.
+
+Metaclass là một trong những vấn đề khó và ít khi gặp trong python. Để hiểu và sử dụng metaclass một cách dễ dàng,cách ngăn nhất là code và đọc code python thật nhiều
 
 # 4. Tham khảo
 
