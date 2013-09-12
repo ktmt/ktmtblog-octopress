@@ -80,12 +80,24 @@ Chú ý rằng thuộc tính `retain` chỉ dùng cho những project không dù
 
 
 Và từ iOS5 trở đi Apple giới thiệu ARC giúp cho việc quản lý bộ nhớ đơn giản hơn. ARC không hoạt động như các `Garbage Collection` khác mà thực ra chỉ là phần front-end của compiler nhằm mục đich tự động chèn thêm các đoạn code gọi message như `retain` hay `release`. Từ đấy lập trình viên không phải gọi các message này nữa. Ví dụ như 1 object được tạo trong 1 method thì sẽ chèn thêm đoạn gửi message `release` tới object đó ở gần cuối method. Hay trong trường hợp là property của 1 class `Car` ở trên thì tự động chèn `[_name release]` trong method `dealloc` của class `Car` chẳng hạn.
+{% codeblock %}
+
+- (void)dealloc
+{
+  //...
+  [_name release];
+  //...
+}
+{% endcodeblock %}
 Khi project của bạn dùng ARC thì chúng ta sẽ dùng thuộc tính `strong` thay cho thuộc tính `retain`.
 `strong` cũng tương tự như `retain` sẽ giúp tạo ra setter, mà trong setter đó tạo ra ownership mới (tăng retainCount thêm 1). Và ngoài ra ARC sẽ thêm các đoạn gửi message `release` tới các property này trong method `dealloc` của class.
 
 
 Thế nhưng xuất hiện vấn đề có tên là `Strong Reference Cycles`. Mình sẽ lấy 1 ví dụ để thấy rõ hơn về vấn đề này.
 Một object A nào đấy có ownership của 1 object B. Object B lại có ownership của 1 object C. Object C lại có ownership của object B.
+
+{% img /images/ios_property_attributes/strong_reference_cycles.png %}
+
 Một khi object A ko cần thiết nữa thì trong method `dealloc` của A sẽ gửi message `release` tới object B. retainCount của object B giảm đi 1 nhưng vẫn còn 1 ( do object C retain ) thế nên method `dealloc` của object B không bao giờ được gọi, kéo theo message `release` cũng không bao giờ được gửi tới object C. Từ đó dẫn đến vùng nhớ của object B và object C không được giải phóng => xuất hiện hiện tượng Leak Memory.
 Vì vậy để tránh hiện tượng này ta sẽ dùng thuộc tính `weak` thay vì dùng thuộc tính `strong` trong class của object C.
 Với thuộc tính `weak` thì trong setter được sinh ra sẽ không `retain` (không tăng retainCount thêm 1) mà chỉ đơn thuần gán con trỏ trỏ đến vùng nhớ mới.
