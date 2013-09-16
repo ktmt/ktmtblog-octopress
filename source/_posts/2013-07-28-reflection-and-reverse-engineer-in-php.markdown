@@ -109,7 +109,7 @@ class Book
 
 Bạn thử chạy lại đoạn code sample.php bên trên, bạn sẽ thấy $book1 trả về Fatal Error nhưng $book2 sẽ chạy qua bình thường! 
 
-Vào thời điểm runtime $book2, PHP sẽ "inspect" object $author truyền vào cho `setAuthor` và tự hiểu $author là 1 instance của class Author và có 1 method là `getName()`.
+Vào thời điểm runtime $book2, PHP sẽ "inspect" object $author truyền vào cho `setAuthor()` và tự hiểu $author là 1 instance của class Author và có 1 method là `getName()`.
 
 ## Reverse engineer example
 
@@ -148,7 +148,7 @@ Bạn thử đoán xem đoạn var_dump sau sẽ ra kết quả gì :D
 <?php
 $book2 = new Book;
 $book2->setAuthor(new Author("Nam Cao","29-10-1915"));
-var_dump($book1->getAuthor()); // Suprisingly, 'Ngo Tat To' and not 'Nam Cao' here 
+var_dump($book1->getAuthor()); // Suprisingly, 'Ngo Tat To', not 'Nam Cao' here 
 ?>
 {% endcodeblock %} 
 
