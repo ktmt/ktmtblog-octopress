@@ -13,17 +13,15 @@ categories:
 
 Nếu bạn đã từng làm việc với DB, chắc hẳn đã nghe đến Hadoop và Map-Reduce.
 
-Map-Reduce, hay NoSQL style quả thực là một phương pháp tiếp cận ko thể thiếu cho các database lớn, tuy nhiên lượng knowhow cần phải có và phương pháp tư duy đặc thù là những rào cản lớn đối với những Data Analyser hay ngay cả những DB engineer thông thường.
+Map-Reduce, hay NoSQL style là một phương pháp tiếp cận ko thể thiếu cho các database lớn, tuy nhiên lượng knowhow cần phải có và phương pháp tư duy đặc thù là những rào cản lớn đối với những Data Analyser hay ngay cả những DB engineer thông thường.
 
 Một Data Analyser muốn viết được job cho Map-Reduce, trước hết phải có kỹ năng của 1 Java Engineer, phải re-invent 1 số hàm common (JOIN, FILTER ...)
 
 Yahoo đã giới thiệu 1 hướng tiệp cận khác: Pig Latin, là 1 programming language build trên top của Hadoop, cú pháp tương đối giống SQL thuần tuý, tuy nhiên ở tầng dưới có thể "translate" program execution thành các job Map-Reduce và trả lại kết quả với tốc độ của Map-Reduce.
 
-Pig Latin (kể từ đây sẽ gọi tắt là "Pig" :D ) với bộ engine đằng sau là Java, có thể extend bằng các thư viện viết = Java hay thậm chí Python.
+Pig Latin (kể từ đây sẽ gọi tắt là "Pig" :D ) với bộ engine đằng sau là Java, có thể extend bằng các thư viện viết = Java hay thậm chí Python. Pig có hiệu suất phát triển cao, nghĩa là thay vì bỏ ra 1 tiếng để viết job 100 lines Map-Reduce bằng Java, bạn có thể chỉ cần 10 phút với 10 lines Pig :D
 
-Pig có hiệu suất phát triển cao, nghĩa là thay vì bỏ ra 1 tiếng để viết job 100 lines Map-Reduce bằng Java, bạn có thể chỉ cần 10 phút với 10 lines Pig :D
-
-Ở các phần tiếp theo của bài viết này, bạn sẽ được giới thiệu những bước đầu tiên của Pig Developer.
+Ở các phần tiếp theo của bài viết này, bạn sẽ được giới thiệu những bước học hỏi đầu tiên của Pig Developer.
 
 ## Get Start
 Rất may là chúng ta không phải ngồi tưởng tượng chay cách hoạt động của Pig.
@@ -59,7 +57,7 @@ Bạn có thể xem cụ thể ở [Pig Latin Basics](http://pig.apache.org/docs
 
 ## Challenge 1: GROUP và FOREACH
 
-Bài toán đơn giản đầu tiên, với data đầu vào là thông tin của các công dân thành phố gotham như ở trên, ta cần tìm người giàu nhất (income cao nhát) trong các nhóm độ tuổi 20~30, 30~40, 40~50, v.v..
+Bài toán đơn giản đầu tiên, với data đầu vào là thông tin của các công dân thành phố gotham như ở trên, ta cần tìm người giàu nhất (income cao nhất) trong các nhóm độ tuổi 20~30, 30~40, 40~50, v.v..
 
 {% codeblock  sample.sql %}
 
@@ -78,24 +76,61 @@ STORE citizens INTO 'output/gotham/analysis2.txt'
 
 {% endcodeblock %}
 
-			city												city_classes
-╒=====================╕    ╒==============================================╕
-|	Batman, 25, 5000000 |    |		(2,{Batman,2,5000000},{Joker,2,2000000})  |
-|	Joker, 	24, 2000000 |    |    (3,{Bane,3,200000},{Gordon,3,500000})			|
-|	Bane, 	31,  200000 | 	 |		(6,{Alfred,6,500000})											|
-|	Alfred,	60,  500000 |    ╘==============================================╛
-|	Gordon,	35,  500000 |
-╘=====================╛
-
-			citizens
-╒=====================╕
-|		20,Batman,5000000 |
-|		30,Gordon, 500000 |
-|		60,Alfred, 500000 |
-╘=====================╛
-
 Đến đây chắc độc gỉả đã phần nào hình dung được data analyser dùng Pig Latin như thế nào :D
 
-
 ## Challende 2: JOIN
-... Còn tiếp ...
+Giả sử ngoài data về từng công dân của gotham, chúng ra có 1 data khác về các ..."super heroes", bao gồm "strength", "ability". Làm thế nào để biết các "super heroes" có thu nhập bao nhiêu trong cuộc sống thường ngày của họ ?
+
+{% codeblock  sample.sql %}
+
+city = LOAD '/input/gotham/people.txt' AS (name:chararray, age:int, income:int);
+heroes = LOAD '/input/gotham/heroes.txt' AS (name:chararray, strength:int, ability:chararray);
+
+op = JOIN city BY name, heroes BY name;
+opt = FOREACH op GENERATE
+	$0 AS name,
+	$1 AS age,
+	$2 AS income,
+	$4 AS strength,
+	$5 AS ability;
+STORE opt INTO 'output/gotham/analysis3.txt'
+
+{% endcodeblock %}
+
+Ở đây bạn có thể để ý $0, $1, $2 lần lượt là name, age, income của biến city, $3, $4, $5 là name, strength, ability của biến heroes. Như vậy kết quả sau khi JOIN gồm tất cả các fields của 2 biến JOIN thành phần!
+
+## Pig Tuning
+Qua 2 ví dụ trên đây, bạn có thể thế thấy Pig dễ phát triển như thế nào.
+Tuy nhiên khi engineer hoàn toàn không có kinh nghiệm về Map-Reduce viết Pig thì chắc chắn sẽ không thể biết cách optimize để các job Hadoop bên dưới đạt tốc độ nhanh nhất có thể.
+
+Để giữ có Pig program có hiệu suất xử lý cao, engineer có thể áp dụng các trick dưới đây:
+
+* Dùng FILTER nhiều nhất và sớm nhất có thể. Nếu bạn JOIN a và b rồi lại FILTER, thì hãy tìm cách FILTER a và b trước rồi hãy JOIN.
+
+* Loại bỏ các cột (các fields) không cần thiết. Giả sử biến a có 11 fields và bạn chỉ cần 7 fields, hãy "FOREACH a GENERATE ($0...$6)" để lập tức loại bỏ 4 fields.
+
+* PARALLEL là 1 magic keyword. Dùng PARALLEL để chỉ định số lượng reduceers.
+
+## UDFs
+
+Điều cuối cùng tác giả muốn chia sẻ, là khi bạn có những tasks xử lý nhỏ sử dụng nhiều lần với các fields, hãy cố gắng viết UDFs để xử lý. Pig được ship cùng với 1 package UDF viết sẵn [Piggy Bank](https://cwiki.apache.org/confluence/display/PIG/PiggyBank).
+
+UDF có thể viết bằng Java hoặc Python. Java UDFs có tốc độ và khả năng ứng dụng trong Pig tốt hơn. Khi đã làm chủ được cấu trúc dữ liệu giữa Python/Java và Pig, bạn sẽ thấy UDFs là một feature mạnh mẽ và không thể sống thiếu :D
+
+
+## Tóm tắt:
+* Pig Latin: Ngôn ngữ được build trên top của Hadoop, với bộ core Java và engine có thể translate logic sang 1 set các Map-Reduce Jobs.
+* VM có thể dùng cho mục đích học hỏi từ đầu [Cloudera Pig VM image](http://blog.cloudera.com/blog/2012/08/hadoop-on-your-pc-clouderas-cdh4-virtual-machine/).
+* Tất cả các hàm có thể tra cứu tại [Pig Latin Built In Functions](http://pig.apache.org/docs/r0.10.0/func.html).
+* UDFs được viết sẵn [Piggy Bank](https://cwiki.apache.org/confluence/display/PIG/PiggyBank).
+* [Slide giới thiệu tổng hợp của Cloudera](http://blog.cloudera.com/wp-content/uploads/2010/01/IntroToPig.pdf).
+
+
+
+
+
+
+
+
+
+
