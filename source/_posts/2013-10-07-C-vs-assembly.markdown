@@ -8,15 +8,15 @@ categories:
 
 # Giới thiệu
 
-> "Không ngôn ngữ lập trình nào có thể đánh bại được assembly"
+> "Không ngôn ngữ lập trình nào có thể sinh mã chạy nhanh hơn mã assembly được viết cẩn thận"
 
-Đây là điều đã được nói đến rất nhiều tại nhiều diễn đàn và blog công nghệ nhưng hầu như không có ví dụ minh hoạ nào cụ thể. Phải chăng đây là điều tất nhiên, không có gì phải bàn cãi? Để kiểm chứng tuyên bố trên, mình đã thử viết 1 chương trình bằng 2 ngôn ngữ assembly và C và đo thời gian chạy của 2 phiên bản. Và điều mình rút ra là thực sự 1 chương trình assembly chạy nhanh hơn hẳn chương trình C tương tự, đúng như tuyên bố.
+Đây là điều đã được nói đến rất nhiều tại nhiều diễn đàn và blog công nghệ nhưng hầu như không có ví dụ minh hoạ nào cụ thể?? Để kiểm chứng tuyên bố trên, mình đã thử viết 1 chương trình bằng ngôn ngữ C, sau đó thử optimize chương trình bằng mã assembly, và cuối cùng đo thời gian chạy của 2 phiên bản. Điều mình rút ra là thực sự 1 chương trình assembly chạy nhanh hơn hẳn chương trình C tương tự, đúng như tuyên bố.
 
 Bài viết này viết về quá trình mình kiểm chứng cũng như những điều rút ra từ quá trình này.
 
 # Bài toán
 
-Để đo tốc độ của 2 ngôn ngữ, ta sẽ giải quyết bài toán: "biểu diễn tập con bằng số nhị phân". 
+Ta sẽ giải quyết bài toán: "biểu diễn tập con bằng số nhị phân". 
 
 Ta có thể biểu diễn tập hợp con của 1 tập hợp bằng 1 chuỗi bit. Ví dụ xét tập hợp 4 phần tử, thì "0101" là 1 tập con. Ta có thể diễn giải chuỗi trên như sau: tập con có sự **xuất hiện** của phần tử vị trí 0 và 2. Nói 1 cách mình hoạ xét chuỗi ký tự "abcd" thì với chuỗi nhị phân ở trên ta có tập con "bd".
 
