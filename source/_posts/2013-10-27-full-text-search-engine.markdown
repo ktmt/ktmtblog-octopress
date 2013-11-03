@@ -10,9 +10,9 @@ categories:
 ---
 
 #Lời nói đầu
-Là một lập trình viên mà đã từng phải thao tác với cơ sở dữ liệu, hay đơn thuần là đã từng là một trang web bán hàng ,chắc hẳn các bạn đã từng nghe qua về khái niệm "Full text search". Khái niệm này đã được định nghĩa khá cụ thể và đầy đủ trên [wikipedia](http://en.wikipedia.org/wiki/Full_text_search). Nói một cách đơn giản, "Full text search" là kĩ thuật tìm kiếm trên "Full text database", ở đây "Full text database" là cơ sở dữ liệu chứa "toàn bộ" các kí tự (text) của một hoặc một số các tài liệu, bài báo.. (document), hoặc là của websites. Trong loạt bài viết này, mình sẽ giới thiệu về Full Text Search, từ khái niệm đến ứng dụng thực tiễn của kĩ thuật này.
+Là một lập trình viên mà đã từng phải thao tác với cơ sở dữ liệu, hay đơn thuần là đã từng là một trang web bán hàng ,chắc hẳn các bạn đã từng nghe qua về khái niệm "Full text search". Khái niệm này đã được định nghĩa khá cụ thể và đầy đủ trên [wikipedia](http://en.wikipedia.org/wiki/Full_text_search). Nói một cách đơn giản, "Full text search" là kĩ thuật tìm kiếm trên "Full text database", ở đây "Full text database" là cơ sở dữ liệu chứa "toàn bộ" các kí tự (text) của một hoặc một số các tài liệu, bài báo.. (document), hoặc là của websites. Trong loạt bài viết này, mình sẽ giới thiệu về Full Text Search, từ khái niệm đến ứng dụng thực tiễn của kĩ thuật này. Chuỗi bài viết không nhằm giúp bạn tìm hiểu cụ thể về Full Text Search technique trong MySQL, Lucene hay bất kì search engine nào nói riêng, mà sẽ giúp bạn hiểu thêm vầ bản chất của kĩ thuật này nói chung. Ở bài viết cuối cùng, mình sẽ cùng các bạn implement thử một "Full Text Search engine" sử dụng python, qua đó giúp các bạn nắm rõ hơn cốt lõi của vấn đề.
 
-Chuỗi bài viết sẽ gồm 4 phần, trong phần đầu tiên mình sẽ giới thiệu về định nghĩa của Full text search, và khái niệm cơ bản nhất trong Full Text Search, đó là Inverted Index. 
+Trong phần đầu tiên mình sẽ giới thiệu về định nghĩa của Full text search, và khái niệm cơ bản nhất trong Full Text Search, đó là Inverted Index. 
 
 #Introduction
 Chắc hẳn các bạn đã từng dùng qua một kĩ thuật tìm kiếm rất cơ bản, đó là thông qua câu lệnh **LIKE** của SQL.
