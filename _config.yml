@@ -57,8 +57,11 @@ default_asides: [asides/recent_posts.html, asides/github.html, asides/delicious.
 #   3rd Party Settings    #
 # ----------------------- #
 
+# Facebook user
+facebook_user: pages/ktmtgithubio/486208978117754
+
 # Github repositories
-github_user:
+github_user: 
 github_repo_count: 0
 github_show_profile_link: true
 github_skip_forks: true
