@@ -9,8 +9,6 @@ categories: [iOS, Objective-C, Modules, Clang, Compiler]
 # Mở đầu
 
 Happy New Year! Chúc mọi người năm mới vui vẻ, hạnh phúc.
-Sau 1 tuần nghỉ tết ăn chơi và giành được cúp vô địch giải bi-a danh giá, 
-tối hôm nay mình lại gấp rút ngồi viết bài blog đầu năm (do thế lực ngầm đang thúc giục). 
 
 Như các bạn cũng biết gần đây XCode5 cùng iOS7 đã được giới thiệu. 
 Đi cùng XCode5 là feature mới “modules” của Clang, một giải pháp nhằm giải quyết một số vấn đề như tăng tốc độ compile source code của ứng dụng.
@@ -45,13 +43,13 @@ Với việc sử dụng `#include` tồn tại vấn đề gọi là recursive 
 
 {% codeblock lang:objc FirstFile.h %}
 #include "SecondFile.h"
- 
+
 /* Some code */
 {% endcodeblock %}
 
-{% codeblock lang:objc SecondFile.h %} 
+{% codeblock lang:objc SecondFile.h %}
 #include "FirstFile.h"
-  
+
 /* Some other code */
 {% endcodeblock %}
 
@@ -107,12 +105,12 @@ Tất cả những đoạn NSURL của Foundation.h đều bị preprocessor tha
 Từ đó ta thấy với việc dùng `#include` hay `#import` thông thường thì các header của các file khác, 
 hay của thư viện mà chúng ta dùng đều có thể bị ảnh hưởng như việc dùng `#define` ở trên. 
 
-Về vấn đề performance thì như ở trên ta đã thấy `#include` và `#import` sẽ copy toàn bộ file header mà nó include vào (đệ quy). 
+Về vấn đề performance thì như ở trên ta đã thấy `#include` và `#import` sẽ copy/paste toàn bộ file header mà nó include (đệ quy). 
 Như ở ví dụ đầu tiên chúng ta chỉ include mình Foundation.h nhưng sau khi preprocessing thì có tới hơn 92000 dòng là của 
-Foundation.h (và các file header mà nó include), chỉ 8 dòng cuối là code của chúng ta.
+Foundation.h (và các file header mà Foundation.h include), chỉ 8 dòng cuối là code của chúng ta.
 Thế nên thời gian compile sẽ trở nên nhiều hơn rất nhiều. 
 
-### Pre-compiled headers
+## Pre-compiled headers
 
 Để giải quyết 1 phần vấn đề performance chúng ta có thể dùng precompiled headers (.pch).
 Nếu các bạn chú ý thì tất cả iOS project khi được XCode tạo ra đều có file PROJECTNAME-Prefix.pch như sau:
@@ -143,7 +141,7 @@ nên hiệu quả của .pch chưa được cao.
 
 
 ## Modules
-Vào tháng 11 năm 2012, Doug Gregor ( một kỹ sư của Apple ) đã giới thiệu tính năng modules nhằm giải quyết vấn đề trên của proprocessor thay cho .pch. 
+Vào tháng 11 năm 2012, Doug Gregor (một kỹ sư của Apple) đã giới thiệu tính năng modules nhằm giải quyết vấn đề trên của proprocessor thay cho .pch. 
 Vậy module là gì? Module chính là một package mô tả một library, framework.
 
 Ví dụ chạy 2 lệnh dưới đây ta sẽ có thể xem được các module trong SDK của iOS7.
@@ -165,6 +163,7 @@ Ví dụ chạy 2 lệnh dưới đây ta sẽ có thể xem được các modul
 {% endcodeblock %}
 
 Với mỗi framework ta thấy có 1 file module.map để mô tả framework đấy. 
+
 Và để sử dụng framework chúng ta có thể thay `#import <Frameworkname.h>` bằng `@import Frameworkname;`
 Ví dụ khi sử dụng framework Foundation ta sẽ dùng `@import Foundation;` 
 Vậy khi trong một file header gặp đoạn import module thì compiler đã xử lý gì và tại sao lại giải quyết được vấn đề Fragility và 
@@ -190,6 +189,7 @@ Ví dụ như trước đây nếu trong file tmp.m có `#include <Foundation/Fo
 
 
 Thế nhưng khi sử dụng `@import` thì chúng ta không cần phải tự link tới framework nữa mà chỉ cần:
+
 `clang tmp.m -o tmp -fmodules`
 
 
@@ -198,12 +198,12 @@ Với XCode chúng ta sẽ không phải add thêm các framework mà mình mu�
 {% img /images/clang_modules/link_framework.png %}
 
 Đối với những project được tạo từ XCode5 thì tính năng module tự động được enable. 
-Nhưng những project được tạo trước đây các bạn phải tự enable trong phần `Build Settings`.
+Nhưng những project được tạo trước đây các bạn phải tự enable trong phần `Build Settings` (tức là set flag -fmodules).
 
 {% img /images/clang_modules/enable_module.png %}
 
 
-#Kết luận
+# Kết luận
 
 Bài viết này mình đã giới thiệu qua tính năng module của Clang trong được giới thiệu từ XCode5. 
 Và đồng thời cũng giải thích qua về `#include`, `#import`, pch. 
