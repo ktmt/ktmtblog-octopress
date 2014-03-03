@@ -76,7 +76,8 @@ Ranking cũng đang trở nên rất phổ biến.
 Idea của việc sử dụng Machine Learning trong ranking là chúng ta sẽ sử dụng một mô hình xác suất để tính toán.
 Cụ thể hơn là chúng ta sẽ sử dụng supervised learning, nghĩa là chúng ta sẽ có input là một tập dữ liệu X để training, một model M ban đầu,
 một hàm error để so sánh kết quả output X' có được từ việc áp dụng model M vào query term, và một hàm boost để từ kêt quả của hàm error
-chúng ta có thể tính lại được model M. 
+chúng ta có thể tính lại được model M. Việc này được lặp đi lặp lại mỗi lần có query, hoặc lặp lại một cách định kỳ (1 ngày 1 lần, 1 tháng 1 lần..)
+để model M luôn luôn được cải thiện.
 
 Thuật toán gần đây được sử dụng khá nhiều trong Ranking model chính là Gradient Boosting Decision Tree mà các bạn có thể tham khảo ở [đây](https://www.cse.cuhk.edu.hk/irwin.king/_media/presentations/gbdt-tom.pdf)
 
