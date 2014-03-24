@@ -41,32 +41,27 @@ Tư tưởng của thuật toán Floyd-Warshall trong việc tìm đường đi 
  
 Đề bài như sau (xin chịu khó đọc hiểu đề bài) 
 
-```
-You are arranging a weird game for a team building exercise. In this game there are certain locations that people can stand at, and from each location there are paths that lead to other locations, but there are not necessarily paths that lead directly back. You have everything set up, but you need to know two important numbers. There might be some locations from which every other location can be reached. There might also be locations that can be reached from every other location. You need to know how many of each of these there are.
+>You are arranging a weird game for a team building exercise. In this game there are certain locations that people can stand at, and from each location there are paths that lead to other locations, but there are not necessarily paths that lead directly back. You have everything set up, but you need to know two important numbers. There might be some locations from which every other location can be reached. There might also be locations that can be reached from every other location. You need to know how many of each of these there are.
+>
+>Create a class TeamBuilder with a method specialLocations that takes a String[] paths that describes the way the locations have been connected, and returns a int[] with exactly two elements, the first one is the number of locations that can reach all other locations, and the second one is the number of locations that are reachable by all other locations. Each element of paths will be a String containing as many characters as there are elements in paths. The i-th element of paths (beginning with the 0-th element) will contain a '1' (all quotes are for clarity only) in position j if there is a path that leads directly from i to j, and a '0' if there is not a path that leads directly from i to j.
+>
+>**Examples**
+>
+>- {"010","000","110"}
+>Returns: { 1,  1 }
+>Locations 0 and 2 can both reach location 1, and location 2 can reach both of the other locations, so we return {1,1}.
+>
+>- {"0010","1000","1100","1000"}
+>Returns: { 1,  3 }
+>Only location 3 is able to reach all of the other locations, but it must take more than one path to reach locations 1 and 2. Locations 0, 1, and 2 are reachable by all other locations. The method returns {1,3}.
+>
+>- {"01000","00100","00010","00001","10000"}
+>Returns: { 5,  5 }
+>Each location can reach one other, and the last one can reach the first, so all of them can reach all of the others.
+>
+>- {"0110000","1000100","0000001","0010000","0110000","1000010","0001000"}
+>Returns: { 1,  3 }
 
-Create a class TeamBuilder with a method specialLocations that takes a String[] paths that describes the way the locations have been connected, and returns a int[] with exactly two elements, the first one is the number of locations that can reach all other locations, and the second one is the number of locations that are reachable by all other locations. Each element of paths will be a String containing as many characters as there are elements in paths. The i-th element of paths (beginning with the 0-th element) will contain a '1' (all quotes are for clarity only) in position j if there is a path that leads directly from i to j, and a '0' if there is not a path that leads directly from i to j.
-
-Examples
-0)	
-    	
-{"010","000","110"}
-Returns: { 1,  1 }
-Locations 0 and 2 can both reach location 1, and location 2 can reach both of the other locations, so we return {1,1}.
-1)	
-    	
-{"0010","1000","1100","1000"}
-Returns: { 1,  3 }
-Only location 3 is able to reach all of the other locations, but it must take more than one path to reach locations 1 and 2. Locations 0, 1, and 2 are reachable by all other locations. The method returns {1,3}.
-2)	
-    	
-{"01000","00100","00010","00001","10000"}
-Returns: { 5,  5 }
-Each location can reach one other, and the last one can reach the first, so all of them can reach all of the others.
-3)	
-    	
-{"0110000","1000100","0000001","0010000","0110000","1000010","0001000"}
-Returns: { 1,  3 }
-```
 
 *Solution*
 Về cơ bản, bài này cần tìm số lượng các đỉnh mà từ đó có thể đi đến tất cả các đỉnh khác, và số lượng các đỉnh mà các đỉnh khác đều có thể đi tới. Một ví dụ rất tốt để áp dụng thuật toán Floyd-Warshall tìm tính chất kết nối giữa 2 đỉnh bất kì.
