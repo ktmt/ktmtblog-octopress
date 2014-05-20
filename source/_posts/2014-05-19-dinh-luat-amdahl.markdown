@@ -91,11 +91,17 @@ Nếu bạn dùng 4 threads:
 Nếu dùng 8 threads, bạn mong chờ tốc độ tăng tốc là 1.7! Sai lầm!
 Lý do: giống như quan sát ở trên, bản thân việc chia việc cho CPU không phải là việc làm song song được. Nói cách khác CPU chỉ thực hiện được cùng 1 lúc 4 tác vụ. Nếu có nhiều hơn 4 tác vụ, tỉ lệ thực hiện song song (số task thực hiện đồng thời không đổi, nhưng só task phải thực hiện tăng lên) sẽ giảm khiến hiệu năng toàn hệ thống giảm xuống.
 
-Ví dụ ta có 4 threads, thì số task có thể tận dụng được CPU là 100%. Khi ta có 5 threads, số threads có thể tận dụng được CPU sẽ giảm xuống 80%. Như vậy theo công thức Amdahl, độ tăng tốc sẽ bị giảm trên lý thuyết:
+Ví dụ ta có 4 threads, thì số task có thể tận dụng được CPU là 100%. Khi ta có 5 threads, số threads có thể tận dụng được CPU sẽ giảm xuống 80%. Ta có thể xem sự thay đổi về hiệu năng so sánh tương đối với trường hợp 1 thread như sau:
 
-   Độ tăng tốc giảm = 1 / (0.2 + 0.8/4) = 2.5 lần.
+4 threads:
+        Độ tăng tốc = 1 / (0 + 1 / 4) = 4
 
-Nói cách khác, khi các cores đã làm việc thì việc tăng threads sẽ chỉ làm tăng thêm phần không thể tính song song, khiến hiệu năng hệ thống giảm. Ngoài ra còn có các chi phí khác mà ta chưa kể đến như: tạo một thread cũng tốn thời gian, bộ nhớ v.v. Nói cách khác việc tăng thread không làm tăng tốc độ chương trình mà nhiều trường hợp còn làm giảm tốc độ chạy. Suy nghĩ lúc đầu của bạn mình là sai lầm!
+5 threads:
+        Độ tăng tốc = 1 / (0.2 + 0.8 / 4) = 1 / 0.4 = 2.5
+
+Như vậy độ tăng tốc tương đối với trường hợp chỉ sử dụng 1 thread đã giảm từ 4 lần xuông còn 2.5 lần.
+
+Nói cách khác, khi tất cả các cores đã làm việc thì việc tăng threads sẽ chỉ làm tăng thêm phần không thể tính song song, khiến hiệu năng hệ thống giảm. Ngoài ra còn có các chi phí khác mà ta chưa kể đến như: tạo một thread cũng tốn thời gian, bộ nhớ v.v. Nói cách khác việc tăng thread không làm tăng tốc độ chương trình mà nhiều trường hợp còn làm giảm tốc độ chạy. Suy nghĩ lúc đầu của bạn mình là sai lầm!
 
 ### Design nhờ định luật Amdahl
 
