@@ -132,7 +132,7 @@ Trường hợp 3 khá lý thú. CPU của bạn được dùng cho những tín
 Trường hợp 4 là trường hợp bạn đang sử dụng CPU một cách hiệu quả nhất. Mỗi cores đều bận rộn tính toán và hầu hết các cores đều được cho sử dụng. Tùy bài toán tính toán mà trường hợp này có thể là tốt hay xấu. Nếu đây là máy chủ web có lẽ đã đến lúc bạn mua thêm máy tính.
 
 
-# Trường hợp thực tế.
+# Trường hợp thực tế
 
 Hiểu được ý nghĩa của tải trung bình, chúng ta hiểu rằng sử dụng CPU hiệu quả có nghĩa là phải overload CPU. Một máy tính với CPU được sử dụng hết công suất suất là một máy tính được sử dụng tốt. Nắm được cách sử dụng vũ khí tải trung bình, chúng ta sẽ thử áp dụng cho 2 trường hợp thực tế. 
 
@@ -146,7 +146,7 @@ Giả sử bạn có máy chủ web 12 cores (logic :-)) và load average hiện
 
 Trả lời: Không biết :-). Nếu máy chủ của bạn dành phần lớn thời gian idle đợi dữ liệu từ đĩa cứng hoặc cơ sở dữ liệu, nút thắt cổ chai hệ thống của bạn không phải là CPU mà có thể là cơ sở dữ liệu hoặc là đĩa cứng (thao tác I/O). Nếu cơ sở dữ liệu của bạn chưa hết công suất (I/O chưa hết công suất), bạn hoàn toàn không cần mua thêm máy chủ web. Bạn có thể cầu hình lại nginx / gunicorn...) để load average cao hơn (không quá 12 - số lượng cores) nhằm tận dụng hết năng lực của CPU của máy tính hiện tại).
 
-### Cầu hình hadoop
+### Cấu hình hadoop
 hadoop nổi tiếng trong giới BigData. Một datanode chạy các thủ tục map / reduce viết bằng java để lấy 1 block dữ liệu từ ổ cứng; chạy thao tác map để trích xuất dữ liệu; chạy thao tác reduce để tổng hợp dữ liệu. Một datanode thực hiện rất nhiều truy vấn dữ liệu từ ổ cúng cũng như sử dụng rất nhiều cpu cho thao tác sắp xếp, tổng hợp dữ liệu. Với 1 máy tính 12 cores, bạn sẽ cấu hình bao nhiêu java process cho thao tác map/reduce?
 
 Trả lời: Không biết :-) nhưng chắc chắn là lớn hơn 12. Bạn sẽ bất ngờ vì thấy câu trả lời hơi khác máy chủ web dù rằng bài toán có vẻ giống nhau! Lý do là: mô hình map/reduce của hadoop cần rất nhiều dữ liệu do vậy truy vấn đĩa cứng sẽ rất cao, thao tác I/O lớn. Dù thao tác sắp xếp dữ liệu cũng khá tốn CPU nhưng để có dữ liệu sắp xếp, 1 map process vẫn cần thời gian để chờ dữ liệu từ ổ cúng. Trong khoảng thời gian này CPU sẽ idle. Nếu bạn chỉ cấu hình số lượng map/reduce là 12 (bằng số lượng cores), sẽ có 1 khoảng thời gian mà các cores không làm việc vì phải chờ đĩa cứng. Vì vậy CPU thực chất sẽ có những lúc rất bận và những lúc rất rảnh. Để hạn chế thời gian rảnh của CPU, "best-practice" sẽ là overload CPU bằng cách cấu hình cho số lượng process lớn hơn số cores. Tỉ lệ được khuyến cáo là 1.5 lần. Nhờ vậy trong khi có những process đợi I/O, CPU sẽ bận rộn với các process trước đó.
