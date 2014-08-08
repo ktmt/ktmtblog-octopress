@@ -32,7 +32,7 @@ Khi bạn bắt đầu viết một phần mềm mã nguồn mở, điều quan 
 
 Và từ đó [Rainbow Stream][3] ra đời. Bạn có thể nhận ra 2 điểm nêu trên khi nhìn vào cách thức hoạt động của app dưới đây:
 
-![gif][4]
+![][4]
 
 
 # Tạo nên sự khác biệt
@@ -48,7 +48,7 @@ Chúng ta sẽ đi vào cụ thể trong các phần tiếp theo.
 
 Hầu hết các terminal hiện đại đều hỗ trợ hiển thị *256 ANSI colors*. Trên shell bạn có thể dễ dàng in ra chữ theo các màu định sẵn bẳng các dùng *Escape character* như dưới đây
 
-```bash
+{% codeblock  color.sh %}
 $ echo -e "\e[31mRed"
 $ echo -e "\e[32mGreen"
 $ echo -e "\e[33mYellow"
@@ -56,10 +56,11 @@ $ echo -e "\e[34mBlue"
 $ echo -e "\e[35mMagenta"
 $ echo -e "\e[36mCyan"
 $ echo -e "\e[37mLight gray"
-```
+{% endcodeblock %} 
+
 Hiện thị màu trên Python có thể được viết gọn theo function như sau
 
-```python
+{% codeblock  color.py %}
 def basic_color(code):
     """
     16 colors supported
@@ -80,11 +81,11 @@ def term_color(code):
         c = code
         return "\033[38;5;%sm%s\033[0m" % (c, text)
     return inner
-```
+{% endcodeblock %} 
 
 Sử dụng những function ở trên thực tế rất đơn giản:
 
-```python
+{% codeblock  color.py %}
 black = basic_color('30')
 red = basic_color('31')
 green = basic_color('32')
@@ -95,11 +96,11 @@ cyan = basic_color('36')
 # Print
 print green("Green text") 
 print term_color('112')("A text with ANSI color 112")
-```
+{% endcodeblock %} 
 
 Giả sử chúng ta có một tập vô hạn các word không biết trước. muốn mỗi word có một màu và các word lặp lại sẽ có màu giống nhau, chúng ta có thể dùng *Memoization* trong Python như sau:
 
-```python
+{% codeblock  color.py %}
 import itertools
 from functools import wraps
 cyc = itertools.cycle([black,red,green,yellow,blue,magenta,cyan])
@@ -119,7 +120,8 @@ def cycle_color(s):
 
 for s in ["w1","w2","w3","w1","w4"]:
     print cycle_color(s) # Now every word will has its color, while the 1st "w1" and 3nd "w2" ends up with same color
-```
+{% endcodeblock %} 
+
 Các màu sắc hiển thị trong [Rainbow Stream][3] đều dựa theo nguyên lý nói trên.
 
 
@@ -142,8 +144,8 @@ Như vậy "ảnh" ở trên terminal thực chất là các ký tự Space vớ
 ## Các vấn đề kỹ thuật khác
 Để hoàn thiện [Rainbow Stream][3] thực ra cần một kỹ năng khác như lập trình với thread, tạo interactive input bẳng readline, gọi chương trình C compile sẵn hay xử lý chung cho cả Python 2 và Python 3 ... Trong khuôn khổ một bài viết tôi khó có thể trình bày hết những vấn đề trên, vì vậy nếu bạn quan tâm hãy mở thẳng [Github repo][3] và đọc source code. [Rainbow Stream][3] là một phần mềm mã nguồn mở với MIT license.
 
-(... còn tiếp - Làm thế nào để mang phần mềm của mình đến với thế giới hacker ...)
 
+*(... còn tiếp - Làm thế nào để mang phần mềm của mình đến với thế giới hacker ...)*
 
 
 
