@@ -128,8 +128,8 @@ Các màu sắc hiển thị trong [Rainbow Stream][3] đều dựa theo nguyên
 ## Hiển thị ảnh trên terminal
 Để nói cụ thể về phần này sẽ hơi dài dòng, nhưng có thể tóm gọn trong các ý sau đây:
 
-* Python có một thư viện xử lý ảnh rất tốt là `Pillow`. `Pillow` cung cấp những tính năng cở bản để tháo tác với lượng thông tin trong một tấm ảnh. Nhược điểm của Pillow là khá buggy khi install và không hỗ trợ Window.
-* Tôi dùng Pillow để đọc thông tin về từng Pixel trong một ảnh, mỗi pixel sẽ có 4 chỉ số gồm 3 chỉ số màu (R,G,B) và 1 chỉ số về độ trong (A).
+* Python có một thư viện xử lý ảnh rất tốt là `Pillow`. `Pillow` cung cấp những tính năng cở bản để tháo tác với lượng thông tin trong một tấm ảnh. Nhược điểm của `Pillow` là khá buggy khi install và không hỗ trợ Window.
+* Tôi dùng `Pillow` để đọc thông tin về từng Pixel trong một ảnh, mỗi pixel sẽ có 4 chỉ số gồm 3 chỉ số màu (R,G,B) và 1 chỉ số về độ trong (A).
 * Màu sắc của 1 pixel nói trên được quy đổi về tập 256 màu ANSI hiển thị được trên terminal (phương pháp xem ở dưới).
 * Với mỗi pixel, tôi in ra như 1 ký tự Space với màu ANSI tương ứng, sử dụng hàm `term_color` ở đoạn trên.
 
