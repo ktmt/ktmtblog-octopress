@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Tôi đã xây dựng 1 phần mềm mã nguồn mở như thế nào"
+title: "Tôi đã xây dựng một phần mềm mã nguồn mở như thế nào"
 date: 2014-08-01 20:00
 comments: true
 categories:
