@@ -83,7 +83,7 @@ def term_color(code):
     return inner
 {%endcodeblock%}
 
-Sử dụng những function ở trên thực tế rất đơn giản: gọi thẳng function với parameter là mã ANSI color, trả về là *một function khác* và lần này nhận parameter là string để đổi thành string màu tương ứng.
+Sử dụng những function ở trên thực tế rất đơn giản: gọi thẳng function với parameter là mã ANSI color, trả về là *một function khác* và lần này nhận parameter là string để đổi thành string có màu tương ứng.
 
 {%codeblock color - color.py %}
 black = basic_color('30')
@@ -129,7 +129,7 @@ Các màu sắc hiển thị trong [Rainbow Stream][3] đều dựa theo nguyên
 Để nói cụ thể về phần này sẽ hơi dài dòng, nhưng có thể tóm gọn trong các ý sau đây:
 
 
-* Python có một thư viện xử lý ảnh rất tốt là `Pillow`. `Pillow` cung cấp những tính năng cở bản để tháo tác với lượng thông tin trong một tấm ảnh. Nhược điểm của Pillow là khá buggy khi install và không hỗ trợ Window.
+* Python có một thư viện xử lý ảnh rất tốt là `Pillow`. `Pillow` cung cấp những tính năng cơ bản để thao tác với lượng thông tin trong một tấm ảnh. Nhược điểm của Pillow là khá buggy khi install và không hỗ trợ Window.
 * Tôi dùng `Pillow` để đọc thông tin về từng Pixel trong một ảnh, mỗi pixel sẽ có 4 chỉ số gồm 3 chỉ số màu (R,G,B) và 1 chỉ số về độ trong (A).
 * Màu sắc của 1 pixel nói trên được quy đổi về tập 256 màu ANSI hiển thị được trên terminal (phương pháp xem ở dưới).
 * Với mỗi pixel, tôi in ra như 1 ký tự Space với màu ANSI tương ứng, sử dụng hàm `term_color` ở đoạn trên.
@@ -143,7 +143,7 @@ Trong các bước trên thì bước quy đổi màu là quan trọng nhất. T
 Như vậy "ảnh" ở trên terminal thực chất là các ký tự Space với màu ANSI đã được quy đổi và in ra liên tiếp :)
 
 # Các vấn đề kỹ thuật khác
-Để hoàn thiện [Rainbow Stream][3] thực ra cần một kỹ năng khác như lập trình với thread, tạo interactive input bẳng readline, gọi chương trình C compile sẵn hay xử lý chung cho cả Python 2 và Python 3 ... Trong khuôn khổ một bài viết tôi khó có thể trình bày hết những vấn đề trên, vì vậy nếu bạn quan tâm hãy mở thẳng [Github repo][3] và đọc source code. [Rainbow Stream][3] là một phần mềm mã nguồn mở với MIT license.
+Để hoàn thiện [Rainbow Stream][3] thực ra cần một số kỹ năng khác như lập trình với thread, tạo interactive input bẳng readline, gọi chương trình C compile sẵn hay xử lý chung cho cả Python 2 và Python 3... Trong khuôn khổ một bài viết tôi khó có thể trình bày hết những vấn đề trên, vì vậy nếu bạn quan tâm hãy mở thẳng [Github repo][3] và đọc source code. [Rainbow Stream][3] là một phần mềm mã nguồn mở với MIT license.
 
 
 *(... còn tiếp - Làm thế nào để mang phần mềm của mình đến với thế giới hacker ...)*
