@@ -6,13 +6,13 @@ comments: true
 categories: 
 ---
 
-Thời gian vừa rồi blog ktmt có tạo một bản điều tra về các thói quen của lập trình viên ở Việt Nam nói chung. Bản điều tra đó nằm ở đường link này: 
+Thời gian vừa rồi blog ktmt có tạo một bản điều tra về các thói quen của lập trình viên ở Việt Nam nói chung. Bản điều tra nằm ở đường link:
 
-https://ktmt.typeform.com/to/WzOLiB
+[https://ktmt.typeform.com/to/WzOLiB](https://ktmt.typeform.com/to/WzOLiB)
 
 Những bạn nào vẫn chưa làm mà có hứng thú làm thì nhóm bọn mình vẫn hết sức welcome.
 
-Bản điều tra không có mục đích chính là để tìm hiểu thực trạng và thói quen của các lập trình viên Việt Nam, qua đó điều chỉnh các bài viết của blog sao cho có ích với càng nhiều người càng tốt.Ở bài viết này mình sẽ tổng kết về một số con số mà mình cảm thấy thú vị, hy vọng có ích với mọi người.
+Bản điều tra có mục đích chính là để tìm hiểu thực trạng và thói quen của các lập trình viên Việt Nam, qua đó điều chỉnh các bài viết của blog sao cho có ích với càng nhiều người càng tốt.Ở bài viết này mình sẽ tổng kết về một số con số mà mình cảm thấy thú vị, hy vọng có ích với mọi người.
 
 Đầu tiên là tính đến thời điểm viết bài này, bản điều tra nhận được 256 câu trả lời trên tổng số 416 lượt visits (tỉ lệ là cứ 5 người xem  thì 3 người trả lời). Thời gian trả lời trung bình mất tầm 4 phút, và tỉ lệ hoàn thành 100% bản điều tra là 62% (Tuy nhiên phần lớn các câu hỏi đều có tỉ lệ trả lời tiệm cận 99%, thế nên con số 62% này không có giá trị lắm)
 
