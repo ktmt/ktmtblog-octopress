@@ -62,6 +62,7 @@ Chạy đoạn code trên như sau:
 ```
 
 Ảnh gốc:
+
  {% img /images/pythonopencv/original.gif %}
 Kết quả trả về
 ```
@@ -107,11 +108,17 @@ Chạy đoạn code trên như sau:
 % python create_avatar_circle.py -i obama_fun.jpg
 ```
 Kết quả:
-* Bức ảnh ban đầu
+
+- Bức ảnh ban đầu
+
  {% img /images/pythonopencv/original.gif %}
-* `mask`
+
+- `mask`
+
 {% img /images/pythonopencv/mask.gif %}
-* `avatar`
+
+- `avatar`
+
 {% img /images/pythonopencv/avatar.gif %}
 
 Tất nhiên, tôi đã sử dụng file ảnh có mặt tổng thống Obama ở ngay giữa tấm ảnh và mask được đặt ở chính giữa tâm bức ảnh. Không phải mọi tấm ảnh đều như vậy; trong trường hợp đó chúng ta sẽ sử dụng kĩ thuật face detection. Nhưng đó là chủ đề của một bài viết sau.
