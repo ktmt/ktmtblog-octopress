@@ -28,7 +28,7 @@ Như tôi vừa nói ở trên, trong cái game mà tôi đang phụ trách,  lo
 
 Như vậy thì với flow code hiện tại thì với điểm yếu của android tôi đã nói ở trên thì một người có chút kiến thức lập trình có thể dễ dàng dịch ngược đoạn logic dùng để xác thực mà tôi đã nói ở trên. Mà trong đó có việc ```mã hoá uuid người dùng``` mà khi bạn nhìn được logic code thì mã hoá cũng bằng thừa. Lý do tại sao lại bằng thừa vì code hiện tại đang sử dụng "Symmetric Cryptography Algorithm". Symmetric ở đây có nghĩa là thuật toán mã hoá đối xứng, mà điển hình gồm có những thuật toán như blowfish, AES, DES. 
 
-Nói một cách đơn giản thì các loại thuật toán symmetric thì **bên gửi và bên nhận sẽ dùng cùng một key, cùng một intitialize vector** (Các khái niệm này tôi sẽ trình bày kĩ hơn ở dưới) , do đó chỉ cần dịch ngược được code thì user A (người xấu) sẽ có được key và initialize vector để tạo ra một request hợp lệ sử dụng uuid của user B.
+Nói một cách đơn giản thì các loại thuật toán symmetric thì **bên gửi và bên nhận sẽ dùng cùng một key, cùng một intitialize vector** (Các khái niệm này tôi sẽ trình bày kĩ hơn ở phần sau) , do đó chỉ cần dịch ngược được code thì user A (người xấu) sẽ có được key và initialize vector để tạo ra một request hợp lệ sử dụng uuid của user B.
 
 Vậy thì chúng ta phải giải quyết vấn đề này thế nào? Sau một hồi thảo luận với công ty thì tôi nghĩ ra một giải pháp "chữa cháy" tạm thời, đấy là chuyển logic vào native code sử dụng ndk và C, mục đích để đạt được là:
 
