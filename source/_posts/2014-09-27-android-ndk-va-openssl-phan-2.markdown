@@ -15,7 +15,7 @@ OpenSSL là một bộ thư viện/tiện ích dùng trong mã hoá (cryptograph
 
 Như cái tên của nó, OpenSSL được sinh ra chủ yếu để hỗ trợ cho việc truyên tin qua internet một cách bảo mật thông qua SSL (Secure Socket Layer) và TLS (Transport Layer Security), mà ví dụ rõ ràng nhất là việc sử dụng trên các browser hay là các web server để dành cho các kết nối https. 
 
-Tuy nhiên OpenSSL vẫn được sử dụng rộng rãi trong nhiều hoàn cảnh khác nhau, ví dụ như khi bạn chỉ cần tính giá trị SHA1 hash, hay là muốn sử dụng một số thuật toán mã hoá đối xứng như là AES hay DES  cho các ứng dụng không quá chú trọng đến tính bảo mật.
+Tuy nhiên OpenSSL vẫn được sử dụng rộng rãi trong nhiều hoàn cảnh khác nhau, ví dụ như khi bạn chỉ cần tính giá trị SHA1 hash, hay là muốn sử dụng một số thuật toán mã hoá đối xứng như là AES hay DES  cho các ứng dụng yêu cầu về tốc độ và thực hiện đơn giản.
 
 Trong thực tế OpenSSL được sử dụng rất nhiều, ví dụ như trong git, để tính giá trị HMAC khi nhận message thông qua imap, git sẽ sử dụng openssl trong trường hợp máy client có cài đặt sẵn bộ thư viện openssl:
 
@@ -76,10 +76,7 @@ Block cipher có khá nhiều "mode". Mỗi "mode" có thể hiểu là các cá
 
 Ở bài toán của chúng ta, có thể thấy rằng CBC mode là lựa chọn tốt nhất. Việc tiếp theo là lựa chọn thuật toán mã hoá. 
 
-Có thể kể ra một vài thuật toán mã hoá đối xứng, sử dụng BlockCipher tiêu biểu gồm có : ***AES, BlowFish, DES, TripleDES***. Trong đó AES (Advanced Encryption Standard) là thuật toán được tạo ra gần đây, có thể sử dụng key và độ dài block lên tới 256 bit. OpenSSL không hỗ trợ để sử dụng AES trên CFB và OFB.
-
-Vậy chúng ta đã hình dung được vấn đề cần giải quyết: thông qua openssl chúng ta cần sử dụng thuật toán **AES** đễ mã hoá, thông qua **CBC mode**.
-
+Có thể kể ra một vài thuật toán mã hoá đối xứng, sử dụng BlockCipher tiêu biểu gồm có : ***AES, BlowFish, DES, TripleDES***. Trong đó AES (Advanced Encryption Standard) là thuật toán được tạo ra gần đây, có thể sử dụng key và độ dài block lên tới 256 bit. AES được chính phủ Mĩ sử dụng làm tiêu chuẩn mã hoá, và là một thuật toán mã hoá đã được nghiên cứu rất kỹ lưỡng trong vòng 5 năm. Do vậy mà so với các thuật toán còn lại như Blowfish hay DES, AES đảm bảo được độ an toàn cao hơn. Trong lần này chúng ta sẽ sử dụng AES 256 bit, trên CBC mode.
 
 ##Openssl thông qua EVP interface
 Như chúng ta đã thấy ở trên, mỗi loại thuật toán mã hoá, mỗi mode đều có những con đường (routines) khác nhau để thực hiện. Do đó nếu mỗi con đường đó được thực hiện với những interface khác nhau sẽ rất khó nhớ và khó để thực hiện. Rât may mắn, OpenSSL cung cấp sẵn cho chúng ta một interface **thống nhất** cho một loạt các thuật toán mã hoá khác nhau, gọi là EVP. Thông qua EVP thì qui trình mã hoá trở nên rất đơn giản thông qua việc gọi lần lượt các hàm của EVP. Để tiến hành mã hoá
