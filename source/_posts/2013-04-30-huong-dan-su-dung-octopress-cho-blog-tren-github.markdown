@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "blogging with github and octpress"
+title: "blogging with github and octopress"
 date: 2013-04-30 23:20
 comments: true
 categories: 
@@ -18,7 +18,7 @@ trên github, trong đấy có chứa các static file, và được trỏ đế
 ### 2. Jekyll và github page
 Khi bạn push bất kì thứ gì lên repo của github page, github sẽ chạy site generator sử dụng jekyll. 
 Tại sao phải sử dụng site generator? Vì github không chỉ hỗ trợ html mà còn hộ trợ markdown, một markup language khá đơn giản và dễ sử dụng (
-bạn có thể tham khảo thêm ở [đây][http://en.wikipedia.org/wiki/Markdown]. Vậy bạn có thể đoán ra jekyll là gì: jekyll là 
+bạn có thể tham khảo thêm ở [đây](http://en.wikipedia.org/wiki/Markdown). Vậy bạn có thể đoán ra jekyll là gì: jekyll là 
 một sản phẩm của Tom Preston-Werner, ceo của github. Jekyll sẽ nhận input là một template directory, chạy qua một cái converter
 engine để convert từ (Textile | Markdown | Liquid) sang html, tạo ra một static website.
 Như vậy bạn đã có thể hình dung ra cách để tạo ra một github page:
@@ -51,7 +51,7 @@ Viết blog (dùng markdown/..) => generate qua jekyll => deploy lên github pag
 
 {% img /images/OctopressGuide/octopress2.png %}
 
-Octopress đã chuẩn bị sẵn cho bạn một Rakefile (bạn có thể tìm hiểu về rake ở [đây][http://rake.rubyforge.org/doc/rakefile_rdoc.html])
+Octopress đã chuẩn bị sẵn cho bạn một Rakefile (bạn có thể tìm hiểu về rake ở [đây](http://rake.rubyforge.org/doc/rakefile_rdoc.html)
 .Trong đấy có rất nhiều task octopress đã chuẩn bị sẵn cho bạn để giúp cho việc cài theme, deploy lên github page trở nên đơn giản 
 hơn bao giờ hết.
 
@@ -77,8 +77,9 @@ Sau bước này thì thì octopress sẽ tạo ra một cái git repo trong oct
 Như vậy bạn có thể hình dung là sau này khi deploy thì octopress sẽ gen ra file vào trong _deploy và git push lên git@github:ktmt/ktmt.github.com.git
 .  
 Một chú ý nữa là sau bước này octopress sẽ:
-*  Đổi tên remote branch hiện tại của bạn từ 'origin' sang 'octopress'
-*  Add git@github:your_username/your_username.github.com vào remote branch và đổi thành 'origin'
+
+-  Đổi tên remote branch hiện tại của bạn từ 'origin' sang 'octopress'
+-  Add git@github:your_username/your_username.github.com vào remote branch và đổi thành 'origin'
 
 {% img /images/OctopressGuide/octopress4.png %}
 
