@@ -1,6 +1,6 @@
 ---
 layout: post
-title: “Tầm quan trọng của kiêu dữ liệu”
+title: “Tầm quan trọng của kiểu dữ liệu”
 date: 2014-12-15 16:56
 comments: true
 categories: mysql type
