@@ -27,9 +27,9 @@ Chú ý: Hiện tại tôi test trên máy tính của tôi (Windows 7). Tôi đ
 
 Bạn sẽ dành khá nhiều thời gian trong GHCi, nên chúng ta sẽ dành chút thời gian để config GHCi sao cho thuận tiện nhất. File config của GHCi là `.ghci`, vị trí của file này tùy thuộc vào hệ thống bạn đang sử dụng, bạn tham khảo ở đây: [GHCi dot files](https://downloads.haskell.org/~ghc/7.4.2/docs/html/users_guide/ghci-dot-files.html). Tôi tạo mới một file `.ghci` trong Home folder với nội dung: 
 
-{% highlight bash %}
+``` bash
 :set prompt "h> "
-{% endhighlight %}
+```
 
 Làm vậy, mỗi lần mở GHCi, prompt của bạn chỉ đơn giản là `h> ` chứ không phải là tên tất cả các module đã load (bạn hãy thử xem khác nhau như thế nào nếu không có dòng setting trên)
 
@@ -40,15 +40,15 @@ Trên Windows 7, mỗi khi sử dụng cabal, các package sẽ được install
 
 Sau đây là những thao tác đầu tiên bạn nên làm với `cabal`:
 
-{% highlight bash %}
-cabal update
-{% endhighlight %}
+``` bash
+$ cabal update
+```
 
 Dùng để update list các package phiên bản mới nhất trên `hackage.haskell.org`. 
 
-{% highlight bash %}
-cabal install cabal-install
-{% endhighlight %}
+``` bash
+$ cabal install cabal-install
+```
 
 Dùng để update phiên bản `cabal-install` mới nhất
 
@@ -60,7 +60,7 @@ Với Haskell, `sandbox` cho phép chúng ta build các package một cách đ�
 
 [Bài viết này](http://coldwa.st/e/blog/2013-08-20-Cabal-sandbox.html) trình bày khá dễ hiểu về tại sao nên sử dụng `sandbox` để tránh dependency hell, bạn có thể tham khảo thêm. Một số thao tác cơ bản với cabal sandbox gồm có: 
 
-``` haskell
+``` bash 
 $ cd /path/to/my/haskell/project
 $ cabal sandbox init                    # Init the sandbox
 $ cabal install --only-dependencies     # Install dependencies into the sandbox
@@ -72,7 +72,7 @@ Chú ý ở đây, cabal sandbox là một feature của cabal từ version 1.18
 # Ví dụ đầu tiên: Hello World 
 Chúng ta sẽ bắt đầu với ví dụ muôn thuở khi bắt đầu ngôn ngữ lập trình mới: In ra màn hình consle dòng chữ `Hello World`. 
 
-``` haskell
+``` bash
 $ mkdir haskell-hello-world
 $ cd haskell-hello-world
 $ cabal init
@@ -124,13 +124,13 @@ main = putStrLn "Hello World!"
 
 Tiếp theo, chúng ta tạo một Cabal sandbox để chứa toàn bộ các dependencies (ví dụ Hello World này của tôi hơi trivial, vì không dùng library nào cả, nhưng vì tính đầy đủ, tôi vẫn xin trình bày về sandbox ở đây):
 
-``` haskell
+``` bash 
 $ cabal sandbox init
 ```
 
 Sau bước này, chúng ta sẽ có file `cabal.sandbox.config` chứa thông tin về package environment, và sandbox nằm ở thư mục `.cabal-sandbox`
 
-``` haskell 
+``` bash 
 $ cabal install --only-dependencies
 $ cabal install
 ```
