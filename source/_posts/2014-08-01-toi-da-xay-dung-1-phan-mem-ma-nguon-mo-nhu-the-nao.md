@@ -17,7 +17,7 @@ categories:
 
 # Ý tưởng
 
-Nếu bạn là một hacker làm việc nhiều với Mac hoặc Linux, chắc các bạn chẳng xa lạ gì với terminal - giao diện dòng lệnh cơ bản nhất của hệ điều hành Unix. Tôi là một hacker bị "cuồng terminal", `zsh`, `prezto`, `tmux`, `irssi`, `vim`, `tig` là những tools ưa thích nhất. Tôi từng có ước mơ muốn từ bỏ các giao diện đồ hoạ, có thể lập trình, chat chit, nghe nhạc v.v.. ngay trên môi trường không-đồ-hoạ. 
+Nếu bạn là một hacker làm việc nhiều với Mac hoặc Linux, chắc các bạn chẳng xa lạ gì với terminal - giao diện dòng lệnh cơ bản nhất của hệ điều hành Unix. Tôi là một hacker bị "cuồng terminal", `zsh`, `prezto`, `tmux`, `irssi`, `vim`, `tig` là những tools ưa thích nhất. Tôi từng có ước mơ muốn từ bỏ các giao diện đồ hoạ, có thể lập trình, chat chit, nghe nhạc v.v.. ngay trên môi trường không-đồ-hoạ.
 
 Bên cạnh đó, mặc dù không mấy mặn mà với Facebook nhưng gần đây lại bị nghiện Twitter, trong đầu tôi luôn hiện lên câu hỏi: làm thế nào để cũng có thể tương tác với Twitter chỉ qua terminal của MacOSX ?
 
@@ -28,7 +28,7 @@ Trong bài viết này, tôi sẽ giới thiệu với các bạn tôi đã xây
 
 # Xác định mục tiêu
 
-Khi bạn bắt đầu viết một phần mềm mã nguồn mở, điều quan trọng đầu tiên sẽ là : **đã có ai thực hiện ý tưởng của bạn chưa** và họ **đã thực hiện được tốt đến đâu**. Khi chuẩn bị viết phần mềm của mình, tôi nhận thấy [t][1] giống như *1 twitter command trên Unix*, focus vào khả năng pipe với các command khác. Ngược lại, [earthquake][2] là 1 app hoàn chỉnh nhưng *xử lý hiển thị tweets lại chưa thật tốt*. 
+Khi bạn bắt đầu viết một phần mềm mã nguồn mở, điều quan trọng đầu tiên sẽ là : **đã có ai thực hiện ý tưởng của bạn chưa** và họ **đã thực hiện được tốt đến đâu**. Khi chuẩn bị viết phần mềm của mình, tôi nhận thấy [t][1] giống như *1 twitter command trên Unix*, focus vào khả năng pipe với các command khác. Ngược lại, [earthquake][2] là 1 app hoàn chỉnh nhưng *xử lý hiển thị tweets lại chưa thật tốt*.
 
 Và từ đó [Rainbow Stream][3] ra đời. Bạn có thể nhận ra 2 điểm nêu trên khi nhìn vào cách thức hoạt động của app dưới đây:
 
@@ -94,7 +94,7 @@ blue = basic_color('34')
 magenta = basic_color('35')
 cyan = basic_color('36')
 
-print green("Green text") 
+print green("Green text")
 print term_color('112')("A text with ANSI color 112")
 {%endcodeblock%}
 
@@ -136,7 +136,7 @@ Các màu sắc hiển thị trong [Rainbow Stream][3] đều dựa theo nguyên
 
 Trong các bước trên thì bước quy đổi màu là quan trọng nhất. Thuật toán quy đổi dùng ở đây là phương pháp tính khoảng cách vector trong không gian Euclide 3 chiều:
 
-* Mỗi màu RGB coi như 1 vector với 3 chiều là R (Red), G (Green), B (Blue). 
+* Mỗi màu RGB coi như 1 vector với 3 chiều là R (Red), G (Green), B (Blue).
 * Mỗi màu ANSI (trong tập 256 màu của terminal) cũng tương ứng với 1 vector 3 chiều. Chúng ta có tập tiêu chuẩn 256 vector ở đây.
 * Mỗi vector RGB của 1 pixel sẽ được quy về vector tiêu chuẩn ANSI *gần nhất*. Công thức tính khoảng cách giữa 2 đầu vector như trong hình học 3 chiều : `((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)**0.5`
 

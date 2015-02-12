@@ -1,0 +1,146 @@
+---
+layout: post
+title: "Đem sản phẩm đến với thế giới Hacker"
+date: 2015-01-08 19:54
+comments: true
+categories:
+  - programming
+  - linux
+  - macosx
+  - twitter
+  - python
+---
+
+*Bài viết này là phần tiếp theo của bài viết [Tôi đã xây dựng một phần mềm mã nguồn mở như thế nào][1]. Cách sử dụng từ "Hacker" là thống nhất với phần 1.*
+
+# Vai trò của cộng đồng
+
+"Đem sản phẩm đến với cộng đồng" luôn là phần khó đối với một người làm kỹ thuật.
+
+Chúng ta có thể say mê, thức ngày thức đêm để viết lib, viết tool, hoàn thành đoạn code mà bản thân cảm thấy tâm đắc.
+Tuy nhiên mọi chuyện thường kết thúc ở đó.
+Thiếu quảng bá và truyền thông sẽ khiến sản phẩm chỉ loanh quanh ở mức bạn bè dùng thử rồi bạn bè cho ý kiến,
+sản phẩm làm ra chẳng bao giờ thực sự đến được với *cộng đồng*.
+
+Xây dựng xong [Rainbow Stream][2]. Tôi đã bắt đầu đi học hỏi và tìm cách quảng bá, giới thiệu.
+Bỏ bên lề những vấn đề kỹ thuật đã trình bày trong phần 1, phần 2 này sẽ tập trung nói về quá trình quảng bá và giới thiệu đó.
+
+# Kênh quảng bá
+
+Người dùng của sản phẩm mã nguồn mở được xác định sẽ là chính những hacker như bản thân tác giả.
+Bước đầu tiên tôi đã thực hiện là tìm hiểu xem cộng đồng hacker trên thế giới đang đọc gì ? ở đâu ?
+Bản danh sách tóm tắt dưới đây sẽ đưa ra những câu trả lời theo thứ tự.
+
+* [Hacker News][3] là nơi tập trung nhiều view nhất. Lên được front page của [Hacker News][3] là ước mơ của mọi dự án mã nguồn mở, và featured trên front page là cột mốc đáng nhớ đối với mọi hacker. Thuật toán ranking của [Hacker News][3] đã được đề cập trong [một bài biết khác][4] của blog KTMT, có đặc điểm là sẽ đào thải những item cũ rất nhanh dù upvote có nhiều thế nào đi nữa.
+* [Reddit][5] là nguồn thông tin tiếp theo. Reddit có rất nhiều sub nhưng dành cho hacker thì chúng ta có *r/programmingp*, *r/coolgithubprojects*, v.v... Nếu giữ được upvote cao thì thời gian trên front page của Reddit sẽ dài hơn [Hacker News][3]. Tuy nhiên Reddit có rất nhiều downvoter (những user/bot chuyên đi downvote).
+* [Twitter][6] của những blog/tạp chí/hacker nổi tiếng. Kênh này tỏ ra hiệu quả bát ngờ so với dự tính.
+* Các blog kỹ thuật - trang chủ của những tài khoản Twitter đề cập ở trên.
+
+# Chuẩn bị trước khi bắt đầu chiến dịch
+
+Những kênh ở phần trước có thể đem lại cho bạn lượng view đầu vào rất lớn, nhưng để user **nán lại và đọc hết**, **dùng thử** sản phẩm và tốt hơn nữa là đi **giới thiệu lại** sản phẩm hộ bạn,
+bạn cần chuẩn bị thật tốt những chỉ mục sau đây
+
+## Một cái tên tốt
+Một cái tên dễ nhớ, dễ đánh vần, và quan trọng hơn là *chưa thuộc về một sản phẩm khác* là điều đầu tiên cần thiết.
+Hãy dùng Chrome incognito mode để kiểm tra mọi ý tưởng.
+
+## Source code được open trên Github.
+Hoặc Bitbucket hay Google Code. Tuy nhiên cộng đồng trên Github đang phát triển mạnh mẽ và nhanh chóng hơn cả.
+Host source code trên Github sẽ nhận được nhiều feedback và Pull Request.
+
+## Official homepage
+Thực tế Github Project đã có thể làm official homepage.
+Tuy nhiên tôi vẫn mua thêm domain [rainbowstream.org][7], làm một cái Github Page, lấy một cái theme đẹp và trỏ vào domain làm homepage thứ 2.
+Tại sao ư ? 2 link homepage sẽ đem lại 2 cơ hội giới thiệu trên [Hacker News][3].
+Theme đẹp cho một trang homepage đơn giản có thể tìm thấy ở [HTML5up][8].
+
+## README.md
+README.md là cái đầu tiên đập vào mắt user khi họ đến homepage. Một file README tốt sẽ nói với user :
+
+* Project của bạn **tạo nên cái gì** và **tại sao** user cần dùng nó.
+* Hướng dẫn cài dặt.
+* Hướng dẫn sử dụng.
+* Đường dẫn đến full document. Document cần phải làm riêng trên một file khác hoặc một dịch vụ khác.
+* License. License là một điểm rất quan trọng trong cộng đồng mã nguồn mở. Rất tiết bài viết này không có điều kiện trình bày cụ thể về các loại license. Ở đây [Rainbow Stream][2] dùng MIT license.
+* Nơi user có thể nhận được sự giúp đỡ của bạn (đặt câu hỏi, yêu cầu tính năng hay báo cáo bug).
+* Cách user có thể đóng góp cho project.
+* Ảnh minh hoạ. Đối với các sản phẩm về UI, ảnh minh hoạ sẽ gây ấn tượng mạnh nhất về thị giác. Tôi thậm chí đã dùng [ttygif][9] tạo ảnh gif để cho ấn tượng mạnh hơn nữa :D
+
+## Viết UT cho project
+Chưa cần nói đến chất lượng sản phẩm, source code được viết test sẽ có độ tin tưởng khác hẳn với những source code không có.
+Đặc biệt nếu project của bạn là một library với mục đích được dùng lại, không có testcase là đồng nghĩa với không có người dùng.
+
+##  Một tài khoản Twitter
+Đối với cộng đồng hacker thì Twitter gần như trở thành định danh chính thức vậy.
+Twitter dùng để giao tiếp với user, phát đi thông báo nâng cấp hay tương tác với các tài khoản của người nổi tiếng.
+
+# Sử dụng các kênh quảng bá
+
+## Twitter và các blog kỹ thuật
+Xác định được các tài khoản Twitter nổi tiếng là bước quan trọng đầu tiên.
+Bạn cần tìm ra keyword thể hiện được lĩnh vực mà sản phẩm của bạn đang hướng đến, lên [FollowerWork ][10] và tìm kiếm account của các blogger xếp theo số lượng follower.
+Tìm được profile rồi, hãy google ra homepage của họ (hoặc của trang tin kỹ thuật), mở phần contact để lấy email.
+Bước tiếp theo là soạn một email để nhờ họ giới thiệu về sản phẩm của bạn.
+Hãy nhớ, nội dung phải lịch sự và nhã nhặn, tóm gọn được sơ lược về sản phẩm và có *đường link đến homepage*.
+Đừng tở ra ngại ngùng ở tư thế người đi nhờ. Bản thân các blogger cũng cần những sản phẩm hay để thu hút view cho trang web của chính họ.
+
+Đến khi sản phẩm được nhắc đến trong 1 tweet hoặc được viết hẳn thành 1 bài trên trang tin thì bạn sẽ ngạc nhiên với độ lan truyền của nó :D
+
+{% img /images/rs/Twitter.png %}
+
+## Reddit
+Giới thiệu sản phẩm mã nguồn mở trên [Reddit][5] là cách dễ dàng ở mức tiếp theo.
+[Reddit][5] được chia thành rất nhiều các subreddit(kênh nhỏ) về các chủ đề cụ thể khác nhau.
+Bạn cần tìm kênh đông thành viên và liên quan đến chủ đề của sản phẩm.
+Sau đây là danh sách các subreddit tôi đã thử với [Rainbow Stream][2]
+
+* [r/programming](http://www.reddit.com/r/programming/)
+* [r/coolgithubprojects](http://www.reddit.com/r/coolgithubprojects/)
+* [r/Python](http://www.reddit.com/r/Python/)
+* [r/commandline](http://www.reddit.com/r/commandline/)
+* [r/linux](http://www.reddit.com/r/linux/)
+* [r/unixporn](http://www.reddit.com/r/unixporn/)
+
+Muốn tin đăng trông bắt mắt và gây ấn tượng với người đọc, bạn nên post kèm 1 ảnh được up thông qua [Imgur][11]. Một tin được tỉ lệ upvote cao (>70%) có thể ở nguyên trên frontpage của subreddit khoảng vài ngày.
+
+{% img /images/rs/Reddit.png %}
+
+## Hacker News
+Chúng ta sẽ nói về phần khó nhất.
+Đã có vô số bài nghiên cứu về traffic của [Hacker News][3], thời gian nào up lên là tốt nhất, chiến thuật lên front, bám front (lên được trang chủ và trụ lại trang chủ) trong thời gian dài.
+Bất kỳ ai cũng có thể post link lên [Hacker News][3], tuy nhiên để post link có phần đầu là *[Show HN]* thì đòi hỏi phải có account đăng ký được một thời gian.
+Tôi đã lập account và đọc [Hacker News][3] trước khi làm [Rainbow Stream][2], nên may mắn có thể gửi link luôn khi hoàn thành sản phẩm.
+
+Lên front được khoảng 20 tiếng đã đem lại 5000~6000 view và ít nhất 300+ star trên Github, rất ấn tượng phải không :)
+Sau đây là một vài lời khuyên nhỏ
+
+* Tiêu đề đăng link cần thể hiện được *khả năng của sản phẩm* theo một *góc nhìn sáng tạo*. Hãy tham khảo [Show HN page][12]
+* Cần điểm nhấn về thị giác khi user click vào link điến trang chủ của bạn (Ảnh gif trên README.md hay trang Github Page ấn tượng)
+* Cần phâi post link vào 1 giờ chiều giờ Mỹ.
+* Cần vận động bạn bè khoảng 5~10 người upvote luôn trong 10 phút đầu tiên Hãy nhờ bảo bạn bè của bạn vào thẳng trang chủ của [Hacker News][3] để vote, không thông qua link gửi trực tiếp.
+
+{% img /images/rs/HN.png %}
+
+## Tổng kết
+Bài viết này đã tổng kết các kinh nghiệm quảng bá của một sản phẩm mã nguồn mở đối với cộng đồng hacker trên thế giới.
+Mặc dù chúng ta có thể áp dụng rất nhiều các mẹo vặt, hướng dẫn để tăng view cho sản phẩm, nhưng bạn hãy nhớ, điều cốt yếu nhất vẫn là chất lượng sản phẩm của bạn.
+
+Chất lượng bao gồm cả chất lượng trong quá trình làm ra và chất lượng support trong cả thời gian phát triển.
+Hãy cố gắng fix hết bug, trả lời mọi câu hỏi và review mọi Pull Request một cách cẩn thận.
+Bạn sẽ nhận lại không chỉ sự tôn trọng trong giới hacker mà cả những cơ hội từ trước đến nay chưa bao giờ nghĩ tới.
+Happy hacking!
+
+
+[1]:http://ktmt.github.io/blog/2014/08/01/toi-da-xay-dung-1-phan-mem-ma-nguon-mo-nhu-the-nao/
+[2]:https://github.com/DTVD/rainbowstream
+[3]:https://news.ycombinator.com/
+[4]:http://ktmt.github.io/blog/2013/08/06/a-little-bit-about-news-ranking/
+[5]:http://www.reddit.com/
+[6]:http://twitter.com/
+[7]:http://www.rainbowstream.org/
+[8]:http://html5up.net/
+[9]:https://github.com/icholy/ttygif
+[10]:https://followerwonk.com/bio/
+[11]:http://imgur.com/
+[12]:https://news.ycombinator.com/show
