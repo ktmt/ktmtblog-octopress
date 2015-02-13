@@ -33,6 +33,7 @@ Bản danh sách tóm tắt dưới đây sẽ đưa ra những câu trả lời
 
 * [Hacker News][3] là nơi tập trung nhiều view nhất. Lên được front page của [Hacker News][3] là ước mơ của mọi dự án mã nguồn mở, và featured trên front page là cột mốc đáng nhớ đối với mọi hacker. Thuật toán ranking của [Hacker News][3] đã được đề cập trong [một bài biết khác][4] của blog KTMT, có đặc điểm là sẽ đào thải những item cũ rất nhanh dù upvote có nhiều thế nào đi nữa.
 * [Reddit][5] là nguồn thông tin tiếp theo. Reddit có rất nhiều sub nhưng dành cho hacker thì chúng ta có *r/programmingp*, *r/coolgithubprojects*, v.v... Nếu giữ được upvote cao thì thời gian trên front page của Reddit sẽ dài hơn [Hacker News][3]. Tuy nhiên Reddit có rất nhiều downvoter (những user/bot chuyên đi downvote).
+* [Github Trending][13] tổng hợp những project có lượng star tăng nhanh trong ngày, trong tuần và có thể chia theo ngôn ngữ. Nếu một ngày tăng khoảng 50 star thì ngay lập tức sẽ "lên trend", kéo theo hàng loạt các newsletter đưa tin, bạn "tự nhiên" sẽ nổi tiếng :D
 * [Twitter][6] của những blog/tạp chí/hacker nổi tiếng. Kênh này tỏ ra hiệu quả bát ngờ so với dự tính.
 * Các blog kỹ thuật - trang chủ của những tài khoản Twitter đề cập ở trên.
 
@@ -89,6 +90,13 @@ Hãy nhớ, nội dung phải lịch sự và nhã nhặn, tóm gọn được s
 
 {% img /images/rs/Twitter.png %}
 
+## Github Trending
+Nếu bạn dồn đủ số star tăng xấp xỉ 40~50 trong 1 ngày, Github sẽ liệt kê sản phẩm của bạn vào [Trending list][13], là nơi rất nhiều các newsletter nhìn vào để gửi mail cho user của họ.
+Python Weekly sẽ nhìn Python Github Trending, Ruby Weekly sẽ nhìn Ruby Github Trending. Tương tự đối với IOS hay Android.
+
+Tôi không biết chính xác tên của các newsletter nhiều người đọc nhất, nhưng biết chắc chắn tất cả đều lấy trên trang trending của Github.
+Hãy cố gắng giữ được độ tăng đều trong thời gian càng lâu, độ phủ sóng của sản phẩm lên các newsletter sẽ càng lớn.
+
 ## Reddit
 Giới thiệu sản phẩm mã nguồn mở trên [Reddit][5] là cách dễ dàng ở mức tiếp theo.
 [Reddit][5] được chia thành rất nhiều các subreddit(kênh nhỏ) về các chủ đề cụ thể khác nhau.
@@ -144,3 +152,4 @@ Happy hacking!
 [10]:https://followerwonk.com/bio/
 [11]:http://imgur.com/
 [12]:https://news.ycombinator.com/show
+[13]:https://github.com/trending
