@@ -33,8 +33,11 @@ Blog ktmt sẽ không chỉ bao gồm bài viết của nhóm tác giả hiện 
 
 Tiêu chí biên tập là điều bọn mình đã suy nghĩ nhưng vẫn chưa tìm ra đuợc những tiêu chí xác đáng. Vì vậy truớc mắt bọn mình tạm đề ra các tiêu chí biên tập như duới đây:
 
-* Bài viết phải có nội dung về kỹ thuật và máy tính. Bài viết nên viết về chủ đề mà tác giả đã hoặc đang nghiên cứu. Bài viết nên đuợc đầu tư thời gian về ý tuởng và cách diễn đạt. Bài viết có tính mới mẻ và sáng tạo là hoàn hảo!
+* Bài viết phải có nội dung về kỹ thuật và máy tính.
 * Bài viết nên đuợc viết bằng tiếng Việt và có bố cục rõ ràng.
+* Bài viết nên viết về chủ đề mà tác giả đã hoặc đang nghiên cứu.
+* Bài viết nên đuợc đầu tư thời gian về ý tuởng và cách diễn đạt.
+* Bài viết có tính mới mẻ và sáng tạo là hoàn hảo!
 * Bài viết nếu có mã nguồn demo thì càng tốt. Linux Torvalds đã từng nói: "Talk is cheap. Show me the code". Mã nguồn chuơng trình chạy được sẽ như một bức tranh đáng giá hàng ngàn từ ngữ.
 
 Ngoài ra bọn mình cũng đã thiết lập [một trang Facebook group của blog](https://www.facebook.com/groups/714123448709763/). Các thảo luận xung quanh bài viết sẽ đuợc thực hiện thông qua page này.
