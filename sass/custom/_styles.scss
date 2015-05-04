@@ -1,2 +1,44 @@
 // This File is imported last, and will override other styles in the cascade
 // Add styles here to make changes without digging in too much
+$notif-height: 2.5em;
+$smart-notif-height: 4.5em;
+$octopress-bg: #3D4349;
+$notif-bg: #2c4762;
+$notif-bg: lighten($octopress-bg, 5%);
+$notif-fg: #fff;
+
+.notif {
+  z-index: 2;
+  position: fixed;
+  width: 100%;
+  line-height: $notif-height;
+  text-align: center;
+  background-color: $notif-bg;
+  p {
+    color: $notif-fg;
+  }
+}
+.container {
+  padding-top: $notif-height;
+}
+
+.hint {
+  p {
+    color: #FFFFFF;
+    margin-top: 2em;
+  }
+}
+
+@media only screen and (max-width: 568px) {
+  .notif {
+    padding: .5em 0;
+    line-height: 1.8em;
+    p {
+      width: 90%;
+      margin: 0 auto;
+    }
+  }
+  .container {
+    padding-top: $smart-notif-height;
+  }
+}
