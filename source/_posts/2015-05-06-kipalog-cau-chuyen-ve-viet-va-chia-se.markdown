@@ -6,14 +6,7 @@ comments: true
 categories: writing, programming, blogging, technical platform, KTMT, Kipalog
 ---
 
-# Giới thiệu
-Đầu tiên, chúng tôi muốn cảm ơn các bạn đọc đã gắn bó với KTMT trong suốt thời gian qua. Chúng tôi thật sự rất vui vì những kiến thức mình viết ra đã đem lại lợi ích cho một số lượng không nhỏ bạn đọc. Sự đón đọc của các bạn giúp chúng tôi thêm tin tưởng vào những việc chúng tôi đang thực hiện.
-
-![](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_chuju0zn2l)
-
-Hôm nay, chúng tôi muốn chia sẻ câu chuyện và những suy nghĩ của chúng tôi về việc **viết**, để qua đó thuyết phục các bạn về tầm quan trọng của việc chia sẻ kiến thức nói chung, và **viết lách** nói riêng.
-
-# Vòng lặp
+# Lập trình bằng Google
 
 Trước khi viết KTMT, công việc hàng ngày của chúng tôi đã từng theo một vòng lặp như sau:
 
@@ -73,7 +66,7 @@ Bắt đầu viết không hề đơn giản. Chúng tôi đã từng [thử kh�
 > Tôi có thể code tốt, nhưng viết thì chịu, viết  câu cú đúng ngữ pháp, có nội dung hợp lý với tôi như một cực hình.
 
 Điều này chúng tôi hoàn toàn đông ý với bạn. Viết tốt là một trong những điều khó nhất mà tôi từng biết. Viết để cho mình hiểu đã khó, cho người khác, đặc biệt là cho những người không cùng kĩ năng với bạn hiểu được còn khó hơn.
-Tuy nhiên trong công việc hàng ngày, 50% việc bạn phải là là **giao tiếp**.
+Tuy nhiên trong công việc hàng ngày, 50% việc bạn phải làm là **giao tiếp**.
 Và giao tiếp chính là "nói cái mình hiểu cho người khác hiểu". Việc tập luyện kĩ năng "viết" cho "người khác hiểu" chính là giúp tăng kĩ năng giao tiếp của bạn lên. Hãy kiên trì và sẽ đến một lúc các bạn nhận ra rằng việc **viết tốt** giúp bạn nhiều đến thế nào.
 
 Hy vọng bài viết đến đây đã truyền tải được phần nào những gì chúng tôi đang suy nghĩ về việc chia sẻ các vấn đề kĩ thuật bằng cách viết ra.
@@ -96,8 +89,8 @@ Vậy bạn có thể làm gì với Kipalog:
 
 Tại sao bạn nên bắt tay vào đăng ký và viết bài trên Kipalog:
 
-- Tại Kipalog chúng tôi đảm bảo việc chia sẻ và phản hồi dựa trên tinh thần tôn trọng lẫn nhau. Bạn có thể chia sẻ những gì mình biết mà không sợ bị "ném đá" hay coi thường.
-- Bạn có thể tạo được *portfolio cá nhân* dựa trên những gì bạn biết và viết ra. Những bài viết tốt, chứ không phải là số năm kinh nghiệm, thể hiện bạn là một kĩ sư chuyên nghiệp và có trình độ cao.
+- Tại Kipalog, chúng tôi đảm bảo việc chia sẻ và phản hồi đều dựa trên tinh thần tôn trọng lẫn nhau.
+- Năng lực của bạn sẽ được thể hiện qua những gì bạn viết. Những bài viết tốt chứ không phải là số năm kinh nghiệm thể hiện bạn là một kĩ sư chuyên nghiệp và có trình độ cao.
 - Bạn sẽ có cơ hội kết bạn và giao lưu với những người cùng đam mê kĩ thuật khác (trong đó có những người viết của chính blog KTMT).
 
 # Vậy KTMT sẽ ra sao?
