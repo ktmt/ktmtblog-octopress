@@ -43,25 +43,25 @@ Khi chúng ta không viết ra, chúng ta chỉ *tưởng* là chúng ta đã bi
 
 *Hãy giải thích một cách đơn giản* và *hãy viết ra* là thông điệp của 2 vĩ nhân trên. Do vậy chúng tôi tin tưởng viết chính là cách giải quyết cho vấn đề của chúng tôi.
 
-# Viết liệu có khó khăn ?
+# Viết liệu có khó khăn?
 
 Bắt đầu viết không hề đơn giản. Chúng tôi đã từng [thử khảo sát](http://ktmt.github.io/blog/2014/09/08/tong-ket-ban-dieu-tra-ve-thoi-quen-programmer-cua-blog-ktmt/) và nhận ra viết lách thật sự không hề dễ. Các bạn trả lời cho điều tra trên gặp những vấn đề sau đây:
 
-#### Suy nghĩ: "Chỉ chuyên gia mới viết được bài viết kĩ thuật ?"
+#### Suy nghĩ: "Chỉ chuyên gia mới viết được bài viết kĩ thuật?"
 
-> Tôi không phải là một chuyên gia về một vấn đề gì cả, vậy nên chả biết viết về cái gì cả !!
+> Tôi không phải là một chuyên gia về một vấn đề gì cả, vậy nên chả biết viết về cái gì cả!!
 
 Đây có lẽ là một lý do thiếu thuyết phục nhất. Bạn không cần phải là chuyên gia mới viết được blog. Trong 85 bài viết của KTMT blog, có những chủ đề mà chúng tôi hoàn toàn chưa hiểu rõ cho đến khi bắt tay vào tìm hiểu và viết lại. Và chính nhờ việc nghiên cứu rất nhiều để viết đã giúp chúng tôi hiểu ra nhiều điều.
 
-#### Viết sai làm tôi trông như một đứa ngớ ngẩn ?
+#### Viết sai làm tôi trông như một đứa ngớ ngẩn?
 
 > Nếu tôi viết một thứ gì đó không đúng, hay viết sai, tôi sẽ bị nhìn như một thằng đần trên internet
 
-Đây có lẽ là một lý do làm nhiều bạn "sợ" viết nhất. Chúng tôi cũng như bạn, chúng tôi cũng dễ mắc phải các sai lầm. Không phải 100% kiến thức chúng tôi viết ra ngay lần đầu tiên là chính xác. Và chính các bạn, những người đọc là những người giúp chúng tôi nhận ra điều đó, trách nhiệm của chúng tôi là sửa lại cho đúng. Vậy ai là người có lợi ở đây: người viết ra, hay người không viết ra ? Chắc các bạn có thể tự trả lời được câu hỏi này.
+Đây có lẽ là một lý do làm nhiều bạn "sợ" viết nhất. Chúng tôi cũng như bạn, chúng tôi cũng dễ mắc phải các sai lầm. Không phải 100% kiến thức chúng tôi viết ra ngay lần đầu tiên là chính xác. Và chính các bạn, những người đọc là những người giúp chúng tôi nhận ra điều đó, trách nhiệm của chúng tôi là sửa lại cho đúng. Vậy ai là người có lợi ở đây: người viết ra, hay người không viết ra? Chắc các bạn có thể tự trả lời được câu hỏi này.
 
 > Điều quan trọng nhất tự việc nhầm lẫn (make mistake) là việc thu dọn những nhầm lẫn đó, và học những điều mới từ nó.
 
-#### Viết tốt quá khó !
+#### Viết tốt quá khó!
 
 > Tôi có thể code tốt, nhưng viết thì chịu, viết  câu cú đúng ngữ pháp, có nội dung hợp lý với tôi như một cực hình.
 
