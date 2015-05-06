@@ -23,7 +23,7 @@ while (còn vấn đề kỹ thuật cần giải quyết) {
 
 Chúng tôi nhận ra có rất nhiều vấn đề ở vòng lặp này: vấn đề tìm kiếm cũng như lời giải hoàn toàn vụn vặt và thiếu tính khái quát, cùng một vấn đề hoặc vấn đề tương tự nhau nhưng nhiều khi phải google rất nhiều, nhiều khi giải quyết được vấn đề nhưng đấy lại không phải là cách giải quyết tốt nhất, cách giải quyết tốt nhất nhiều khi lại đến từ bạn bè xung quanh mình.
 
-Chúng tôi nhận thấy nếu như không tổng hợp lại những điều mình đã tìm hiểu thì sẽ không có cách nào nhớ được cách giải quyết. Cách đơn giản nhất mà chúng tôi đã nhận thấy là **viết** và **chia sẻ** cho bạn bè. **Viết** giúp tổng hợp các cách giải quyết vấn đề đồng thời giúp lưu lại cách giải quyết đó cho những lần sau. Viết cũng chính là **giải thích** lại vấn đề cho chính bản thân sau này. **Chia sẻ** giúp nhận được góp ý từ những người giỏi hơn mình. Do vậy chúng tôi đã bắt đầu blog KTMT. Giống như đã viết ở [KTMT blog nguồn mở](http://ktmt.github.io/blog/2015/03/08/ktmt-blog-nguon-mo/), chúng tôi nhận thấy chúng tôi dần dần thoát khỏi vòng lặp nói trên.
+Chúng tôi nhận thấy nếu như không tổng hợp lại những điều mình đã tìm hiểu thì sẽ không có cách nào nhớ được cách giải quyết. Cách đơn giản nhất mà chúng tôi đã nhận thấy là **viết** và **chia sẻ** cho bạn bè. **Viết** giúp tổng hợp các cách giải quyết vấn đề, giúp lưu lại cách giải quyết đó cho những lần sau. Viết cũng chính là **giải thích** lại vấn đề cho chính bản thân sau này. **Chia sẻ** giúp nhận được góp ý từ những người giỏi hơn mình. Do vậy chúng tôi đã bắt đầu blog KTMT. Giống như đã viết ở [KTMT blog nguồn mở](http://ktmt.github.io/blog/2015/03/08/ktmt-blog-nguon-mo/), chúng tôi nhận thấy chúng tôi dần dần thoát khỏi vòng lặp nói trên.
 
 ![](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_6ynsrhkggx)
 
@@ -49,9 +49,9 @@ Bắt đầu viết không hề đơn giản. Chúng tôi đã từng [thử kh�
 
 #### Suy nghĩ: "Chỉ chuyên gia mới viết được bài viết kĩ thuật ?"
 
-> Tôi không phải là một chuyên gia về một vấn đề gì cả, vậy nên chả biết viết về cái gì cả!!
+> Tôi không phải là một chuyên gia về một vấn đề gì cả, vậy nên chả biết viết về cái gì cả !!
 
-Đây có lẽ là một lý do thiếu thuyết phục nhất. Bạn không cần phải là chuyên gia mới viết được blog. Trong 85 bài viết của KTMT blog, có những chủ đề mà chúng tôi hoàn toàn chưa hiểu rõ, cho đến khi bắt tay vào viết và tìm hiểu để viết ra. Và chính nhờ việc nghiên cứu rất nhiều để viết ra một thứ gì đó, đã giúp chúng tôi hiểu ra rất nhiều điều.
+Đây có lẽ là một lý do thiếu thuyết phục nhất. Bạn không cần phải là chuyên gia mới viết được blog. Trong 85 bài viết của KTMT blog, có những chủ đề mà chúng tôi hoàn toàn chưa hiểu rõ cho đến khi bắt tay vào tìm hiểu và viết lại. Và chính nhờ việc nghiên cứu rất nhiều để viết đã giúp chúng tôi hiểu ra nhiều điều.
 
 #### Viết sai làm tôi trông như một đứa ngớ ngẩn ?
 
@@ -66,8 +66,7 @@ Bắt đầu viết không hề đơn giản. Chúng tôi đã từng [thử kh�
 > Tôi có thể code tốt, nhưng viết thì chịu, viết  câu cú đúng ngữ pháp, có nội dung hợp lý với tôi như một cực hình.
 
 Điều này chúng tôi hoàn toàn đông ý với bạn. Viết tốt là một trong những điều khó nhất mà tôi từng biết. Viết để cho mình hiểu đã khó, cho người khác, đặc biệt là cho những người không cùng kĩ năng với bạn hiểu được còn khó hơn.
-Tuy nhiên trong công việc hàng ngày, 50% việc bạn phải làm là **giao tiếp**.
-Và giao tiếp chính là "nói cái mình hiểu cho người khác hiểu". Việc tập luyện kĩ năng "viết" cho "người khác hiểu" chính là giúp tăng kĩ năng giao tiếp của bạn lên. Hãy kiên trì và sẽ đến một lúc các bạn nhận ra rằng việc **viết tốt** giúp bạn nhiều đến thế nào.
+Tuy nhiên trong công việc hàng ngày, 50% việc bạn phải làm là **giao tiếp**, là *nói cái mình hiểu cho người khác hiểu*. Việc tập luyện kĩ năng *viết* cho *người khác hiểu* chính là giúp tăng kĩ năng giao tiếp của bạn lên. Hãy kiên trì và sẽ đến một lúc các bạn nhận ra rằng việc **viết tốt** giúp bạn nhiều đến thế nào.
 
 Hy vọng bài viết đến đây đã truyền tải được phần nào những gì chúng tôi đang suy nghĩ về việc chia sẻ các vấn đề kĩ thuật bằng cách viết ra.
 Chính vì tầm quan trọng của việc chia sẻ các kiến thức kĩ thuật, và muốn phủ rộng hơn văn hoá viết ra và chia sẻ với cộng đồng kĩ thuật tại Việt Nam nói chung, chúng tôi đã quyết định làm một điều lớn hơn là chỉ [open blog](http://ktmt.github.io/blog/2015/03/08/ktmt-blog-nguon-mo/).
