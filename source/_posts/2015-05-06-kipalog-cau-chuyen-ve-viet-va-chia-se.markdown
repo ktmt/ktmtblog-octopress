@@ -13,37 +13,35 @@ Chúng tôi thật sự rất vui vì những kiến thức mình viết ra đã
 
 ------
 
-Hôm nay chúng tôi muốn chia sẻ câu chuyện và những suy nghĩ của chúng tôi về việc **viết**, để qua đó thuyết phục các bạn về tầm quan trọng của việc chia sẻ kiến thức nói chung, và ***viết lách*** nói riêng. Bài viết khá dài, nhưng tôi hy vọng các bạn sẽ kiên trì đọc đến cuối bài, bởi cái hay nhất của bài viết này sẽ nằm ở phần cuối :D.
+Hôm nay chúng tôi muốn chia sẻ câu chuyện và những suy nghĩ của chúng tôi về việc **viết**, để qua đó thuyết phục các bạn về tầm quan trọng của việc chia sẻ kiến thức nói chung, và **viết lách** nói riêng. Bài viết khá dài, nhưng tôi hy vọng các bạn sẽ kiên trì đọc đến cuối bài, bởi cái hay nhất của bài viết này sẽ nằm ở phần cuối :D.
 
- Đầu tiên hãy bắt đầu bằng cách kể cho chúng tôi công việc hàng ngày của bạn diễn ra thế nào. Chúng tôi đoán chắc rằng phần lớn nó sẽ diễn ra như thế này:
+Đầu tiên hãy bắt đầu bằng cách kể cho chúng tôi công việc hàng ngày của bạn diễn ra thế nào. Chúng tôi đoán chắc rằng phần lớn nó sẽ diễn ra như thế này:
 
 {% codeblock proc.sh %}
  while (chưa hết giờ làm việc) {
-  while (còn việc để làm) {
-    while (chưa biết cách làm) {
-      search google
-      search một hồi, ra rất nhiều lời giải !
-      thử từng lời giải ......
-    }
-  }
+   while (còn việc để làm) {
+     while (chưa biết cách làm) {
+       search google
+       search một hồi, ra rất nhiều lời giải !
+       thử từng lời giải ......
+     }
+   }
  }
 {% endcodeblock %}
 
- Bạn có thấy vấn đề ở cái vòng xoay cuộc sống thế này không.
+Bạn có thấy vấn đề ở cái vòng xoay cuộc sống thế này không.
 
- - Bạn đọc rất nhiều, bạn tìm hiểu rất nhiều, nhưng bạn không giữ những kiến thức đó lại!
- - Bạn có thể nghĩ
+- Bạn đọc rất nhiều, bạn tìm hiểu rất nhiều, nhưng bạn không giữ những kiến thức đó lại!
+- Bạn có thể nghĩ
 
- > tôi làm một lần là nhớ, cần gì phải ghi lại ????
+> tôi làm một lần là nhớ, cần gì phải ghi lại ????
 
- Chúng tôi đã gặp rất nhiều những người làm kĩ thuật giỏi, có những người tầm cỡ thế giới. Và trong số đó chúng tôi chưa thấy ai có thể tự tin về việc **đọc một lần và nhớ ngay** . Đã không biết bao nhiều lần bạn phải tìm đi tìm lại những đoạn setting của nginx, hay phải tìm đi tìm lại những thứ vô cùng đơn giản như: "làm thế nào để đọc từ file bẳng java"....
+Chúng tôi đã gặp rất nhiều những người làm kĩ thuật giỏi, có những người tầm cỡ thế giới. Và trong số đó chúng tôi chưa thấy ai có thể tự tin về việc **đọc một lần và nhớ ngay** . Đã không biết bao nhiều lần bạn phải tìm đi tìm lại những đoạn setting của nginx, hay phải tìm đi tìm lại những thứ vô cùng đơn giản như: "làm thế nào để đọc từ file bẳng java"....
 
- Vậy chúng ta có thể chắc chắn một điều là **đọc một vài lần không thể nhớ ngay**.
- Và cách giải quyết cho vẫn đề này như thế nào, rất đơn giản, bạn cần một cách để giữ lại những kiến thức đó, và cách đơn giản nhất mà chúng tôi đã nhận thấy là ***viết ra***.
+Vậy chúng ta có thể chắc chắn một điều là **đọc một vài lần không thể nhớ ngay**.
+Và cách giải quyết cho vẫn đề này như thế nào, rất đơn giản, bạn cần một cách để giữ lại những kiến thức đó, và cách đơn giản nhất mà chúng tôi đã nhận thấy là ***viết ra***.
 
- ![](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_6ynsrhkggx)
-
-------
+![](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_6ynsrhkggx)
 
 Nếu bạn vẫn chưa tin những lời chúng tôi nói, vậy thì lời ***Albert Einstein*** nói thì sao:
 
@@ -53,7 +51,7 @@ Vậy để hiểu rõ một thứ gì đó, việc bạn cần làm là "thử 
 
 **Leslie B. Lamport**, một nhà nghiên cứu từng được giải thưởng turing, người góp phần tạo ra latex đã từng nói
 
-![](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_zw3krc6uif)
+> If you’re thinking without writing, you only think you’re thinking.
 
 Vậy nếu bạn không viết ra, tức là các bạn chỉ "tưởng" các bạn đã biết thôi, thực ra là chưa biết gì cả.
 
@@ -63,11 +61,11 @@ Và cuối cùng **google** nói gì:
 
 Tôi tin rằng 2 con người trên, cộng với 615 triệu kết quả trên google đã đủ thuyết phục bạn 2 điều đơn giản:
 
-> - Nếu bạn không viết ra được, thì chứng tỏ bạn chả hiểu gì cả
-> - Bạn nên bắt đầu một blog kĩ thuật ngay khi có thể
+- Nếu bạn không viết ra được, thì chứng tỏ bạn chả hiểu gì cả
+- Bạn nên bắt đầu một blog kĩ thuật ngay khi có thể
 
 
-------
+# Khó khăn khi viết blog kĩ thuật
 
 Để start một blog kĩ thuật không hề đơn giản, chúng tôi đã nhận được những băn khoăn như ở dưới đây:
 
@@ -99,8 +97,6 @@ Ngoài ra còn không kể đến việc, có một blog kĩ thuật tốt sẽ 
 Vậy các bạn đã hết băn khoăn rồi chứ!!!!
 Tôi đoán chắc các bạn đang hừng hực khí thế muốn **viết** ra ngay những gì bạn biết, nhưng bạn đang băn khoăn là: Bạn nên viết vào đâu???
 
------
-
 # Ngôi nhà mới KIPALOG.COM
 
 Bài viết đã dài, nhưng đây mới là phần chính chúng tôi muốn nói đến.
@@ -109,7 +105,7 @@ Chính vì tầm quan trọng của việc viết và chia sẻ các kiến th�
 Chúng tôi đã quyết định xây dựng một nền tảng, mà ở đó ai cũng có thể viết được, và chia sẻ những kiến thức kĩ thuật của mình một cách dễ dàng nhất. Chúng tôi đặt tên nền tảng đó là **Kipalog**.
 Nền tảng được đặt tại trang web:
 
-> http://kipalog.com
+> [http://kipalog.com](http://kipalog.com)
 
 Kipalog là viết tắt của "keep a log", cũng chính là concept của nền tảng này. Đó là coi trọng việc "log" hay là giữ lại các kiến thức của bạn, bằng cách "viết ra".
 
@@ -131,7 +127,7 @@ Chúng tôi hy vọng kipalog sẽ trở thành
 
 Chúng tôi sẽ chuyển thành một **tổ chức** ở trên kipalog.com.
 
-> http://kipalog.com/organizations/KTMT
+> [http://kipalog.com/organizations/KTMT](http://kipalog.com/organizations/KTMT)
 
 Blog ktmt sẽ vẫn được giữ ở trạng thái hoạt động, nhưng sẽ không cập nhật các bài viết mới.
 
