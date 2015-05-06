@@ -6,6 +6,7 @@ $octopress-bg: #3D4349;
 $notif-bg: #2c4762;
 $notif-bg: lighten($octopress-bg, 5%);
 $notif-fg: #fff;
+$notif-link: #3fb1a3;
 
 .notif {
   z-index: 2;
@@ -16,6 +17,9 @@ $notif-fg: #fff;
   background-color: $notif-bg;
   p {
     color: $notif-fg;
+    a {
+      color: $notif-link;
+    }
   }
 }
 .container {
