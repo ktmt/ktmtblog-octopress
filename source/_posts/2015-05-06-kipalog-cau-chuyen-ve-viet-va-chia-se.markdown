@@ -72,12 +72,12 @@ Bắt đầu viết không hề đơn giản. Chúng tôi đã từng [thử kh�
 
 > Tôi có thể code tốt, nhưng viết thì chịu, viết  câu cú đúng ngữ pháp, có nội dung hợp lý với tôi như một cực hình.
 
-Cái này chúng tôi hoàn toàn đông ý với bạn. Viết tốt là một trong những điều khó nhất mà tôi từng biết. Viết để cho mình hiểu đã khó, cho người khác, đặc biệt là cho những người không cùng kĩ năng với bạn hiểu được còn khó hơn.
+Điều này chúng tôi hoàn toàn đông ý với bạn. Viết tốt là một trong những điều khó nhất mà tôi từng biết. Viết để cho mình hiểu đã khó, cho người khác, đặc biệt là cho những người không cùng kĩ năng với bạn hiểu được còn khó hơn.
 Tuy nhiên trong công việc hàng ngày, 50% việc bạn phải là là **giao tiếp**.
 Và giao tiếp chính là "nói cái mình hiểu cho người khác hiểu". Việc tập luyện kĩ năng "viết" cho "người khác hiểu" chính là giúp tăng kĩ năng giao tiếp của bạn lên. Hãy kiên trì và sẽ đến một lúc các bạn nhận ra rằng việc **viết tốt** giúp bạn nhiều đến thế nào.
 
-Chúng tôi hy vọng bài viết đến đây đã giúp truyền tải được phần nào những gì chúng tôi đang suy nghĩ về việc chia sẻ các vấn đề kĩ thuật mà mình biết bằng cách viết ra.
-Chính vì tầm quan trọng của việc viết và chia sẻ các kiến thức kĩ thuật, và muốn phủ rộng hơn văn hoá viết ra và chia sẻ với cộng đồng kĩ thuật tại Việt Nam nói chung, chúng tôi đã quyết định làm một điều lớn hơn là chỉ [open blog](http://ktmt.github.io/blog/2015/03/08/ktmt-blog-nguon-mo/).
+Hy vọng bài viết đến đây đã truyền tải được phần nào những gì chúng tôi đang suy nghĩ về việc chia sẻ các vấn đề kĩ thuật bằng cách viết ra.
+Chính vì tầm quan trọng của việc chia sẻ các kiến thức kĩ thuật, và muốn phủ rộng hơn văn hoá viết ra và chia sẻ với cộng đồng kĩ thuật tại Việt Nam nói chung, chúng tôi đã quyết định làm một điều lớn hơn là chỉ [open blog](http://ktmt.github.io/blog/2015/03/08/ktmt-blog-nguon-mo/).
 
 # Ngôi nhà mới [kipalog.com](http://kipalog.com)
 
