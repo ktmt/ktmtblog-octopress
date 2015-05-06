@@ -6,70 +6,58 @@ comments: true
 categories:
 ---
 
-Đầu tiên tôi muốn cám ơn các bạn đọc của ktmt blog, các bạn là những người đã gắn bó với chúng tôi trong suốt thời gian qua, hay cũng là những người đã tin tưởng chúng tôi là một nơi cung cấp những kiến thức có ích.
-Chúng tôi thật sự rất vui vì những kiến thức mình viết ra đã đem lại lợi ích cho một số không nhỏ những người Việt trên toàn thế giới.
+# Giới thiệu
+Đầu tiên, chúng tôi muốn cảm ơn các bạn đọc đã gắn bó với ktmt trong suốt thời gian qua. Chúng tôi thật sự rất vui vì những kiến thức mình viết ra đã đem lại lợi ích cho một số lượng không nhỏ bạn đọc. Sự đón đọc của các bạn giúp chúng tôi thêm tin tưởng vào những việc chúng tôi đang thực hiện.
 
-![](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_chuju0zn2l)
+![Thank you](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_chuju0zn2l)
 
-------
+Hôm nay, chúng tôi muốn chia sẻ câu chuyện và những suy nghĩ của chúng tôi về việc **viết**, để qua đó thuyết phục các bạn về tầm quan trọng của việc chia sẻ kiến thức nói chung, và **viết lách** nói riêng. 
 
-Hôm nay chúng tôi muốn chia sẻ câu chuyện và những suy nghĩ của chúng tôi về việc **viết**, để qua đó thuyết phục các bạn về tầm quan trọng của việc chia sẻ kiến thức nói chung, và **viết lách** nói riêng. Bài viết khá dài, nhưng tôi hy vọng các bạn sẽ kiên trì đọc đến cuối bài, bởi cái hay nhất của bài viết này sẽ nằm ở phần cuối :D.
+# Vòng lặp
 
-Đầu tiên hãy bắt đầu bằng cách kể cho chúng tôi công việc hàng ngày của bạn diễn ra thế nào. Chúng tôi đoán chắc rằng phần lớn nó sẽ diễn ra như thế này:
+Trước khi viết ktmt, công việc hàng ngày của chúng tôi đã từng theo một vòng lặp như sau:
 
 {% codeblock proc.sh %}
- while (chưa hết giờ làm việc) {
-   while (còn việc để làm) {
-     while (chưa biết cách làm) {
-       search google
-       search một hồi, ra rất nhiều lời giải !
-       thử từng lời giải ......
-     }
-   }
- }
+  while (còn vấn đề kỹ thuật cần giải quyết) {
+    while (chưa biết cách giải quyết) {
+      Google   #google trả lời bằng rất nhiều lời giải...
+        foreach(kết quả) 
+	      Thử từng kết quả
+      }
+    }
+  }
 {% endcodeblock %}
 
-Bạn có thấy vấn đề ở cái vòng xoay cuộc sống thế này không.
+Chúng tôi nhận ra có rất nhiều vấn đề ở vòng lặp này.
+- Vấn đề tìm kiếm cũng như lời giải hoàn toàn vụn vặt và thiếu tính khái quát.
+- Cùng một vấn đề hoặc vấn đề tương tự nhau nhưng nhiều khi phải google rất nhiều.
+- Nhiều khi giải quyết được vấn đề nhưng đấy lại không phải là cách giải quyết tốt nhất. Cách giải quyết tốt nhất nhiều khi lại đến từ bạn bè xung quanh mình.
 
-- Bạn đọc rất nhiều, bạn tìm hiểu rất nhiều, nhưng bạn không giữ những kiến thức đó lại!
-- Bạn có thể nghĩ
-
-> tôi làm một lần là nhớ, cần gì phải ghi lại ????
-
-Chúng tôi đã gặp rất nhiều những người làm kĩ thuật giỏi, có những người tầm cỡ thế giới. Và trong số đó chúng tôi chưa thấy ai có thể tự tin về việc **đọc một lần và nhớ ngay** . Đã không biết bao nhiều lần bạn phải tìm đi tìm lại những đoạn setting của nginx, hay phải tìm đi tìm lại những thứ vô cùng đơn giản như: "làm thế nào để đọc từ file bẳng java"....
-
-Vậy chúng ta có thể chắc chắn một điều là **đọc một vài lần không thể nhớ ngay**.
-Và cách giải quyết cho vẫn đề này như thế nào, rất đơn giản, bạn cần một cách để giữ lại những kiến thức đó, và cách đơn giản nhất mà chúng tôi đã nhận thấy là ***viết ra***.
+Chúng tôi nhận thấy nếu như không tổng hợp lại những điều mình đã tìm hiểu, chúng tôi sẽ không co cách nào nhớ được cách giải quyết. Cách đơn giản nhất mà chúng tôi đã nhận thấy là ***viết*** và ***chia sẻ*** cho bạn bè. ***Viết*** giúp chúng tôi tổng hợp các cách giải quyết vấn đề đồng thời giúp chúng tôi lưu lại cách giải quyết đó cho những lần sau. Viết cũng chính là **giải thích** lại vấn đề cho chính bản thân sau này. Chia sẻ giúp chúng tôi nhận được feedback nhanh chóng từ những người giỏi hơn mình. Do vậy chúng tôi đã bắt đầu blog ktmt. Giống như đã viết ở [ktmt blog nguồn mở](http://ktmt.github.io/blog/2015/03/08/ktmt-blog-nguon-mo/), chúng tôi nhận thấy chúng tôi dần dần thoát khỏi vòng lặp trên.
 
 ![](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_6ynsrhkggx)
 
-Nếu bạn vẫn chưa tin những lời chúng tôi nói, vậy thì lời ***Albert Einstein*** nói thì sao:
+# "Viết" có chắc chắn là cách giải quyết vấn đề? 
 
-![](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_t1aodwath4)
+* **Albert Einstein** đã từng nói:
 
-Vậy để hiểu rõ một thứ gì đó, việc bạn cần làm là "thử giải thích" thứ đó một cách đơn giản nhất, đúng không.
+![If you can't explain it simply, you don't understand it well enough](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_t1aodwath4)
 
-**Leslie B. Lamport**, một nhà nghiên cứu từng được giải thưởng turing, người góp phần tạo ra latex đã từng nói
+Để hiểu rõ một điều gì đó, hãy "thử giải thích" điều đó một cách **đơn giản** nhất.
 
-> If you’re thinking without writing, you only think you’re thinking.
+* **Leslie B. Lamport** đã từng nói:
 
-Vậy nếu bạn không viết ra, tức là các bạn chỉ "tưởng" các bạn đã biết thôi, thực ra là chưa biết gì cả.
+![If you’re thinking without writing, you only think you’re thinking.](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_q6wz91nezj)
 
-Và cuối cùng **google** nói gì:
+Vậy chúng ta không viết ra, chúng ta chỉ **tưởng** là chúng ta đã biết thôi. Thực sự là chúng ta là **chưa biết** gì cả.
 
-![](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/blob_q6wz91nezj)
+Hãy giải thích một cách đơn giản và hãy viết ra là thông điệp của 2 vĩ nhân trên. Do vậy chúng tôi tin tưởng viết chính là cách giải quyết cho vấn đề của chúng tôi.
 
-Tôi tin rằng 2 con người trên, cộng với 615 triệu kết quả trên google đã đủ thuyết phục bạn 2 điều đơn giản:
+# Viết liệu có khó khăn.
 
-- Nếu bạn không viết ra được, thì chứng tỏ bạn chả hiểu gì cả
-- Bạn nên bắt đầu một blog kĩ thuật ngay khi có thể
+Bắt đầu viết không hề đơn giản. Chúng tôi đã từng [thử khảo sát](http://ktmt.github.io/blog/2014/09/08/tong-ket-ban-dieu-tra-ve-thoi-quen-programmer-cua-blog-ktmt/) và nhận ra viết lách thật sự không hề dễ. Các bạn trả lời cho điều tra trên gặp những vấn đề sau đây:
 
-
-# Khó khăn khi viết blog kĩ thuật
-
-Để start một blog kĩ thuật không hề đơn giản, chúng tôi đã nhận được những băn khoăn như ở dưới đây:
-
-#### Chỉ chuyên gia mới viết được bài viết kĩ thuật?
+#### Suy nghĩ: "Chỉ chuyên gia mới viết được bài viết kĩ thuật?"
 
 > Tôi không phải là một chuyên gia về một vấn đề gì cả, vậy nên chả biết viết về cái gì cả!!
 
@@ -90,52 +78,39 @@ Cái này chúng tôi hoàn toàn đông ý với bạn. Viết tốt là một 
 Tuy nhiên hãy để tôi nhắc lại rằng trong cuộc sống hàng ngày, 50% việc bạn phải là là **giao tiếp**.
 Và giao tiếp chính là "nói cái mình hiểu cho người khác hiểu". Việc tập luyện kĩ năng "viết" cho người khác hiểu chính là giúp tăng kĩ năng giao tiếp của bạn lên. Hãy kiên trì và sẽ đến một lúc các bạn nhận ra rằng việc **viết tốt** giúp bạn nhiều đến thế nào.
 
-Vậy các bạn có thể nhận thấy lợi ích của việc viết lách rồi chứ :D.
+Bởi vì viết và chia sẻ là khá khó khăn, nên nếu có một nơi viết và chia sẻ trở nên thật sự đơn giản thì sao?
 
-Ngoài ra còn không kể đến việc, có một blog kĩ thuật tốt sẽ giúp việc tìm việc, hay chuyển việc trở nên đơn giản hơn bao giờ hết. Nhà tuyển dụng sẽ biết bạn là ai, và sẽ biết bạn biết những gì, qua đó giúp ích cho cả 2 bên trong quá trình tuyển dụng
+# Ngôi nhà mới [kipalog.com](http://kipalog.com)
 
-Vậy các bạn đã hết băn khoăn rồi chứ!!!!
-Tôi đoán chắc các bạn đang hừng hực khí thế muốn **viết** ra ngay những gì bạn biết, nhưng bạn đang băn khoăn là: Bạn nên viết vào đâu???
-
-# Ngôi nhà mới KIPALOG.COM
-
-Bài viết đã dài, nhưng đây mới là phần chính chúng tôi muốn nói đến.
 Chính vì tầm quan trọng của việc viết và chia sẻ các kiến thức kĩ thuật, và muốn phủ rộng hơn văn hoá viết ra và chia sẻ với cộng đồng kĩ thuật tại Việt Nam nói chung, chúng tôi đã quyết định làm một điều lớn hơn chỉ là [open blog](http://ktmt.github.io/blog/2015/03/08/ktmt-blog-nguon-mo/).
 
 Chúng tôi đã quyết định xây dựng một nền tảng, mà ở đó ai cũng có thể viết được, và chia sẻ những kiến thức kĩ thuật của mình một cách dễ dàng nhất. Chúng tôi đặt tên nền tảng đó là **Kipalog**.
 Nền tảng được đặt tại trang web:
 
-> [http://kipalog.com](http://kipalog.com)
-
-Kipalog là viết tắt của "keep a log", cũng chính là concept của nền tảng này. Đó là coi trọng việc "log" hay là giữ lại các kiến thức của bạn, bằng cách "viết ra".
+Kipalog là cách gọi tắt của "keep a log", cũng chính là khái niệm chủ đạo của nền tảng này. Đó là coi trọng việc "log" hay là giữ lại các kiến thức của bạn bằng cách "viết ra".
 
 Vậy bạn có thể làm gì với kipalog:
 
-- Bạn có thể đăng ký account, và **viết** để chia sẻ kiến thức kĩ thuật của bạn với người khác. Chúng tôi cung cấp cho bạn editor sử dụng markdown với live rendering, syntax highlight và nhiều tiện ích khác, giúp bạn có thể thấy thoải mái để viết một tài liệu kĩ thuật mà không gặp phải khó khăn gì. Các bạn có thể tự tin viết mà không sợ bị "ném đá" hay chê cười. Chúng tôi sẽ đảm bảo kipalog.com là một môi trường an toàn ngay cả với những người mới bắt đầu.
-- Bạn có thể giữ lại những bài viết hay để đọc lại sau với nút **kipalog**
-- Bạn có thể tương tác với những writer khác thông qua hệ thống **comment, like, follow**...
-
+- Bạn có thể **viết** để chia sẻ kiến thức kĩ thuật của bạn với người khác. Chúng tôi cung cấp cho bạn editor sử dụng markdown với live rendering, syntax highlight và nhiều tiện ích khác, giúp bạn cảm thấy thoải mái khi viết một tài liệu kĩ thuật. 
+- Bạn có thể kipalog kiến thức của người khác. Việc kipalog giúp bạn nhanh chóng tìm lại những kiến thức trong kho log của bản thân.
+- Trao đổi, cung cấp feedback cho các bạn khác. Nếu bạn có cách giải quyết tốt hơn, hãy đóng góp thông qua bình luận.
+- Các công ty và tổ chức chia sẻ công nghệ cũng như kinh nghiệm của bản thân công ty mình, đồng thời thu lợi được từ các công ty và tổ chức khác.
 
 Chúng tôi hy vọng kipalog sẽ trở thành
 
-- Nơi để những người làm kĩ thuật chuyên nghiệp ở Việt Nam có một nơi **chất lượng** để trao đổi kiến thức.
-- Nơi để những **người mới vào nghề** tự do viết lại những kiến thức cá nhân, để tạo nên **portfolio** cho cá nhân, cũng như nhận ra những lỗ hổng về kiến thức của bản thân.
-- Sẽ thành một **Kho** kiến thức có ích cho tất cả những người làm kĩ thuật tại Việt Nam.
+- Nơi để những người làm kĩ thuật chuyên nghiệp ở Việt Nam trao đổi kiến thức.
+- Sẽ thành một **Kho** kiến thức có ích cho tất cả những người làm kĩ thuật.
 
-
-### Vậy KTMT sẽ ra sao?
+# Vậy KTMT sẽ ra sao?
 
 Chúng tôi sẽ chuyển thành một **tổ chức** ở trên kipalog.com.
 
 > [http://kipalog.com/organizations/KTMT](http://kipalog.com/organizations/KTMT)
 
-Blog ktmt sẽ vẫn được giữ ở trạng thái hoạt động, nhưng sẽ không cập nhật các bài viết mới.
-
+Blog ktmt sẽ vẫn được giữ ở trạng thái hoạt động, nhưng sẽ không cập nhật các bài viết mới. Các bài viết mới sẽ được viết dưới tổ chức KTMT. Bạn nào muốn viết blog cho KTMT có thể tham gia tổ chức KTMT trên kipalog cùng chúng tôi! 
 
 # Kết luận
 
-Cám ơn bạn đã đủ kiên nhẫn để đọc hết bài viết này của chúng tôi, các bạn quả thật là những bạn đọc rất tuyệt vời.
+Chúng tôi hy vọng bạn sẽ thích kipalog. Trên hơn cả, chúng tôi hy vọng các bạn xem kipalog **không chỉ là nơi để đọc**, mà còn là nơi các bạn **tích cực chia sẻ** vốn kiến thức của bản thân.
 
-Chúng tôi hy vọng bạn sẽ cảm thấy thoải mái với kipalog, và lớn hơn chúng tôi hy vọng bạn sẽ sử dụng kipalog không chỉ là nơi để đọc của người khác, mà còn là nơi các bạn tích cực chia sẻ những gì các bạn biết. Chúng tôi mong sẽ có thêm nhiều "bạn viết" bên cạnh các "bạn đọc" như hiện nay.
-Có như vậy mới có thể giúp nền IT Việt Nam phát triển, và các bạn chính là một nhân tố chính sẽ góp phần cho sự phát triển đó.
-Cám ơn và hẹn gặp lại các bạn ở kipalog.com nhé!
+Cám ơn các bạn. Đón đọc những tri thức của bạn tại kipalog.com!
